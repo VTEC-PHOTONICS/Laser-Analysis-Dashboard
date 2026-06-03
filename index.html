@@ -976,6 +976,60 @@
       return sorted.length % 2 === 1 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
     }
 
+    function linearRegression(points) {
+      if (points.length < 2) {
+        return null;
+      }
+      const xMean = points.reduce((sum, point) => sum + point.x, 0) / points.length;
+      const yMean = points.reduce((sum, point) => sum + point.y, 0) / points.length;
+      const denominator = points.reduce((sum, point) => sum + ((point.x - xMean) ** 2), 0);
+      if (!Number.isFinite(denominator) || denominator === 0) {
+        return null;
+      }
+      const slope = points.reduce((sum, point) => sum + ((point.x - xMean) * (point.y - yMean)), 0) / denominator;
+      const intercept = yMean - (slope * xMean);
+      if (!Number.isFinite(slope) || !Number.isFinite(intercept)) {
+        return null;
+      }
+      return { slope, intercept };
+    }
+
+    function formatEquation(slope, intercept) {
+      return `y = ${slope.toFixed(4)}x ${intercept >= 0 ? "+" : "-"} ${Math.abs(intercept).toFixed(3)}`;
+    }
+
+    function aggregateSummaryMetricPoints(points, xField) {
+      const grouped = new Map();
+      points.forEach((point) => {
+        if (point.metricValue === null || point[xField] === null) {
+          return;
+        }
+        const key = [
+          point.temperatureC,
+          point.metricName,
+          normalizeChipId(point.chip),
+          point[xField],
+        ].join("|");
+        if (!grouped.has(key)) {
+          grouped.set(key, {
+            ...point,
+            workbookNames: new Set([point.workbookName]),
+            values: [point.metricValue],
+          });
+          return;
+        }
+        const existing = grouped.get(key);
+        existing.workbookNames.add(point.workbookName);
+        existing.values.push(point.metricValue);
+      });
+
+      return [...grouped.values()].map((entry) => ({
+        ...entry,
+        workbookName: [...entry.workbookNames].sort((left, right) => left.localeCompare(right, undefined, { numeric: true })).join(", "),
+        metricValue: median(entry.values),
+      }));
+    }
+
     function detectCurveKinks(curvePoints, deviationLimit) {
       const valid = curvePoints
         .filter((point) => point.powerMw !== null)
@@ -1198,18 +1252,38 @@
 
     function renderSummaryPlots() {
       const summaryPoints = filteredSummaryPoints(true);
-      renderMetricGrid(elements.summaryGrid, summaryPoints, "chipNumeric", "Chip Number", "summary");
-      const ridgePoints = summaryPoints.filter((point) => point.temperatureC !== "Supplier75" && point.ridgeWidthUm !== null);
+      const chipPoints = aggregateSummaryMetricPoints(
+        summaryPoints.filter((point) => point.chipNumeric !== null),
+        "chipNumeric"
+      );
+      renderMetricGrid(elements.summaryGrid, chipPoints, {
+        xField: "chipNumeric",
+        xTitle: "Chip Number",
+        prefix: "summary",
+        scatterOnly: false,
+        showFitLines: false,
+      });
+      const ridgePoints = aggregateSummaryMetricPoints(
+        summaryPoints.filter((point) => point.temperatureC !== "Supplier75" && point.ridgeWidthUm !== null),
+        "ridgeWidthUm"
+      );
 
       const uniqueRidgeWidths = uniqueSorted(ridgePoints.map((point) => point.ridgeWidthUm), numericOrStringSort);
       if (uniqueRidgeWidths.length <= 1) {
         elements.ridgeGrid.innerHTML = '<div class="empty-box">No data available: ridge width variation not found in selected files.</div>';
       } else {
-        renderMetricGrid(elements.ridgeGrid, ridgePoints, "ridgeWidthUm", "Ridge Width (um)", "ridge");
+        renderMetricGrid(elements.ridgeGrid, ridgePoints, {
+          xField: "ridgeWidthUm",
+          xTitle: "Ridge Width (um)",
+          prefix: "ridge",
+          scatterOnly: true,
+          showFitLines: true,
+        });
       }
     }
 
-    function renderMetricGrid(container, points, xField, xTitle, prefix) {
+    function renderMetricGrid(container, points, options) {
+      const { xField, xTitle, prefix, scatterOnly, showFitLines } = options;
       container.innerHTML = "";
       if (!points.length) {
         container.innerHTML = `<div class="empty-box">No ${prefix === "ridge" ? "ridge-width" : "summary"} data matches the current filters.</div>`;
@@ -1235,23 +1309,59 @@
           return;
         }
 
-        const grouped = groupBy(metricPoints, (point) => `${point.workbookName}|${point.temperatureC}`);
+        const grouped = groupBy(metricPoints, (point) => point.temperatureC);
         const traces = [];
+        const annotations = [];
         for (const [key, group] of [...grouped.entries()].sort((a, b) => a[0].localeCompare(b[0], undefined, { numeric: true }))) {
           const sorted = [...group].sort((left, right) => left[xField] - right[xField]);
           const sample = sorted[0];
           const isSupplier = sample.temperatureC === "Supplier75";
+          const seriesName = isSupplier ? "Supplier 75C" : `${sample.temperatureC}C`;
           traces.push({
             x: sorted.map((point) => point[xField]),
             y: sorted.map((point) => point.metricValue),
-            text: sorted.map((point) => `Chip ${point.chip}`),
+            text: sorted.map((point) => `Chip ${point.chip}${point.workbookName ? `<br>Workbooks: ${point.workbookName}` : ""}`),
             type: "scatter",
-            mode: "markers+lines",
-            name: `${sample.workbookName} | ${isSupplier ? "Supplier 75C" : `${sample.temperatureC}C`}`,
+            mode: scatterOnly ? "markers" : "markers+lines",
+            name: seriesName,
             marker: { size: 8, symbol: isSupplier ? "triangle-up" : "circle" },
-            line: { width: 2, dash: isSupplier ? "dash" : "solid" },
+            line: scatterOnly ? undefined : { width: 2, dash: isSupplier ? "dash" : "solid" },
             hovertemplate: `${xTitle}=%{x}<br>${metric}=%{y:.4f}<br>%{text}<extra>%{fullData.name}</extra>`,
           });
+
+          if (showFitLines) {
+            const fit = linearRegression(sorted.map((point) => ({ x: point[xField], y: point.metricValue })));
+            if (fit) {
+              const xValues = sorted.map((point) => point[xField]);
+              const xMin = Math.min(...xValues);
+              const xMax = Math.max(...xValues);
+              traces.push({
+                x: [xMin, xMax],
+                y: [(fit.slope * xMin) + fit.intercept, (fit.slope * xMax) + fit.intercept],
+                type: "scatter",
+                mode: "lines",
+                name: `${seriesName} fit`,
+                line: { width: 2, dash: "dash" },
+                hovertemplate: `${seriesName}<br>${formatEquation(fit.slope, fit.intercept)}<extra>Fit</extra>`,
+              });
+              annotations.push({
+                x: 0.02,
+                y: 0.98 - (annotations.length * 0.09),
+                xref: "paper",
+                yref: "paper",
+                xanchor: "left",
+                yanchor: "top",
+                text: `${seriesName}: ${formatEquation(fit.slope, fit.intercept)}`,
+                showarrow: false,
+                align: "left",
+                font: { size: 11, color: "#3f3833" },
+                bgcolor: "rgba(255,250,243,0.9)",
+                bordercolor: "rgba(29,24,21,0.14)",
+                borderwidth: 1,
+                borderpad: 4,
+              });
+            }
+          }
         }
 
         Plotly.newPlot(plot.id, traces, {
@@ -1261,9 +1371,10 @@
           hovermode: "closest",
           paper_bgcolor: "rgba(0,0,0,0)",
           plot_bgcolor: "rgba(255,255,255,0.55)",
-          margin: { l: 60, r: 16, t: 58, b: 58 },
+          margin: { l: 60, r: showFitLines ? 36 : 16, t: 58, b: 58 },
           xaxis: { title: xTitle },
           yaxis: { title: metric },
+          annotations,
           legend: { orientation: "h", y: -0.24 },
         }, { responsive: true, displaylogo: false });
       });
