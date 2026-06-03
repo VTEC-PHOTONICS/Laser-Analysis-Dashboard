@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laser Data Analysis</title>
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+  <style>
+    :root {
+      --bg: #f5efe6;
+      --panel: rgba(255, 252, 247, 0.94);
+      --panel-strong: #fffaf3;
+      --ink: #1d1815;
+      --muted: #645a53;
+      --accent: #146f67;
+      --accent-2: #cb7a2f;
+      --line: rgba(29, 24, 21, 0.12);
+      --shadow: 0 18px 42px rgba(79, 62, 43, 0.12);
+      --radius: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(20, 111, 103, 0.14), transparent 28%),
+        radial-gradient(circle at top right, rgba(203, 122, 47, 0.16), transparent 24%),
+        linear-gradient(180deg, #fbf8f2 0%, #eee4d6 100%);
+      min-height: 100vh;
+    }
+
+    .shell {
+      width: min(1720px, calc(100% - 36px));
+      margin: 20px auto 36px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .hero-card,
+    .panel,
+    .stat,
+    .plot-card,
+    .table-card,
+    .kink-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .hero-card {
+      padding: 28px 30px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      inset: auto -40px -48px auto;
+      width: 240px;
+      height: 240px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(20, 111, 103, 0.14), transparent 70%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(2.2rem, 4vw, 4rem);
+      line-height: 0.96;
+      letter-spacing: -0.03em;
+      font-weight: 600;
+    }
+
+    .hero-copy {
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.55;
+      max-width: 760px;
+      margin: 0 0 16px;
+    }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .tag {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(20, 111, 103, 0.08);
+      border: 1px solid rgba(20, 111, 103, 0.12);
+      color: var(--accent);
+      font-size: 0.84rem;
+      letter-spacing: 0.04em;
+    }
+
+    .hero-side {
+      display: grid;
+      gap: 14px;
+    }
+
+    .panel {
+      padding: 18px;
+    }
+
+    .panel-title {
+      font-size: 0.82rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .folder-picker {
+      position: relative;
+      min-height: 154px;
+      border: 1.5px dashed rgba(20, 111, 103, 0.3);
+      border-radius: 18px;
+      background:
+        linear-gradient(160deg, rgba(255,255,255,0.72), rgba(255,249,241,0.45)),
+        radial-gradient(circle at bottom right, rgba(203, 122, 47, 0.14), transparent 42%);
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 24px;
+      transition: border-color 0.18s ease, transform 0.18s ease;
+    }
+
+    .folder-picker:hover {
+      border-color: rgba(20, 111, 103, 0.52);
+      transform: translateY(-1px);
+    }
+
+    .folder-picker input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .folder-picker strong {
+      display: block;
+      font-size: 1.25rem;
+      margin-bottom: 8px;
+    }
+
+    .folder-picker span {
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    button,
+    select {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid rgba(29, 24, 21, 0.14);
+      background: var(--panel-strong);
+      color: var(--ink);
+      font: inherit;
+      padding: 11px 12px;
+    }
+
+    button {
+      background: linear-gradient(135deg, var(--accent), #1d9c8f);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      box-shadow: 0 10px 22px rgba(20, 111, 103, 0.22);
+      transition: transform 0.16s ease;
+      width: auto;
+      min-width: 160px;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .button-secondary {
+      background: linear-gradient(135deg, #6d665f, #8a8179);
+      box-shadow: 0 10px 22px rgba(91, 84, 77, 0.16);
+    }
+
+    .status {
+      margin-top: 14px;
+      color: var(--muted);
+      min-height: 1.4em;
+      line-height: 1.45;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .stat {
+      padding: 16px 18px;
+    }
+
+    .stat-label {
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: clamp(1.5rem, 2vw, 2.2rem);
+      font-weight: 600;
+    }
+
+    .section {
+      margin-bottom: 18px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 1.32rem;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .section-note {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.45;
+      margin: 4px 0 0;
+    }
+
+    .filters-panel {
+      padding: 18px;
+      margin-bottom: 14px;
+    }
+
+    .filters-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1.2fr 1.2fr auto;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .control {
+      display: grid;
+      gap: 7px;
+    }
+
+    .control label,
+    .checkbox-label {
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+    }
+
+    select[multiple] {
+      min-height: 152px;
+      padding: 8px;
+    }
+
+    .checkbox-stack {
+      display: grid;
+      gap: 12px;
+      padding-top: 24px;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--ink);
+      font-size: 0.95rem;
+    }
+
+    .checkbox-item input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent);
+    }
+
+    .plots-column {
+      display: grid;
+      gap: 18px;
+    }
+
+    .plot-card,
+    .table-card,
+    .kink-card {
+      padding: 18px;
+    }
+
+    .card-title {
+      margin: 0 0 10px;
+      font-size: 0.98rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+    }
+
+    .plot {
+      width: 100%;
+      height: 560px;
+      min-height: 560px;
+    }
+
+    .table-wrap {
+      max-height: 520px;
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.55);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+    }
+
+    th,
+    td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+      white-space: nowrap;
+      vertical-align: top;
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      background: #f9f2e8;
+      z-index: 1;
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .summary-grid,
+    .ridge-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    .empty-box {
+      padding: 28px;
+      text-align: center;
+      color: var(--muted);
+      border: 1px dashed rgba(29, 24, 21, 0.18);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.45);
+    }
+
+    .note-list {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    @media (max-width: 1320px) {
+      .filters-grid {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+
+      .summary-grid,
+      .ridge-grid,
+      .hero,
+      .stats {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 860px) {
+      .shell {
+        width: min(100% - 18px, 100%);
+        margin: 10px auto 22px;
+      }
+
+      .hero,
+      .stats,
+      .summary-grid,
+      .ridge-grid,
+      .filters-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .plot {
+        min-height: 420px;
+        height: 420px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="hero">
+      <article class="hero-card">
+        <div class="eyebrow">HTML Dashboard</div>
+        <h1>Laser Data Analysis</h1>
+        <p class="hero-copy">
+          Choose one folder containing exported Excel workbooks and analyze LI, IV, supplier comparison,
+          summary metrics, ridge-width behavior, and LI kink locations directly in the browser.
+        </p>
+        <div class="hero-tags">
+          <div class="tag">Single folder load</div>
+          <div class="tag">All plots visible together</div>
+          <div class="tag">Supplier + measured overlay</div>
+          <div class="tag">Kink detection with current markers</div>
+        </div>
+      </article>
+      <aside class="hero-side">
+        <section class="panel">
+          <div class="panel-title">Workbook Folder</div>
+          <label class="folder-picker">
+            <input id="folderPicker" type="file" multiple webkitdirectory directory accept=".xlsx">
+            <div>
+              <strong>Select Folder</strong>
+              <span>Pick the folder once. The dashboard reuses the same data everywhere on the page.</span>
+            </div>
+          </label>
+          <div class="button-row">
+            <button id="reloadButton" type="button">Reload Selected Folder</button>
+            <button id="clearButton" type="button" class="button-secondary">Clear Data</button>
+          </div>
+          <div id="statusText" class="status">Choose a folder with exported .xlsx files to begin.</div>
+        </section>
+      </aside>
+    </section>
+
+    <section class="stats">
+      <article class="stat"><div class="stat-label">Workbooks</div><div class="stat-value" id="workbookCount">0</div></article>
+      <article class="stat"><div class="stat-label">LIV Points</div><div class="stat-value" id="livCount">0</div></article>
+      <article class="stat"><div class="stat-label">Summary Rows</div><div class="stat-value" id="summaryCount">0</div></article>
+      <article class="stat"><div class="stat-label">Kink Events</div><div class="stat-value" id="kinkCount">0</div></article>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Curve Analysis</h2>
+          <p class="section-note">Fixed-size plot windows in one column: LI first, then IV. Filters apply to all sections.</p>
+        </div>
+      </div>
+      <div class="panel filters-panel">
+        <div class="filters-grid">
+          <div class="control">
+            <label for="workbookFilter">Workbooks</label>
+            <select id="workbookFilter" multiple></select>
+          </div>
+          <div class="control">
+            <label for="sourceFilter">Source</label>
+            <select id="sourceFilter" multiple></select>
+          </div>
+          <div class="control">
+            <label for="temperatureFilter">Temperatures</label>
+            <select id="temperatureFilter" multiple></select>
+          </div>
+          <div class="control">
+            <label for="chipFilter">Chips</label>
+            <select id="chipFilter" multiple></select>
+          </div>
+          <div class="control">
+            <label for="kinkCriterion">Kink Slope Deviation</label>
+            <select id="kinkCriterion">
+              <option value="0.10" selected>10%</option>
+              <option value="0.08">8%</option>
+              <option value="0.12">12%</option>
+              <option value="0.15">15%</option>
+            </select>
+          </div>
+          <div class="checkbox-stack">
+            <label class="checkbox-label">Options</label>
+            <label class="checkbox-item"><input id="showKinksToggle" type="checkbox"> Show kinks on LI plot</label>
+            <label class="checkbox-item"><input id="showSupplierSummaryToggle" type="checkbox" checked> Show supplier series in summary plots</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="plots-column">
+        <article class="plot-card">
+          <h3 class="card-title">LI Curves</h3>
+          <div id="liPlot" class="plot"></div>
+        </article>
+        <article class="plot-card">
+          <h3 class="card-title">IV Curves</h3>
+          <div id="ivPlot" class="plot"></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Summary by Chip</h2>
+          <p class="section-note">All chip-number summary metrics are shown together using the same loaded dataset.</p>
+        </div>
+      </div>
+      <div id="summaryGrid" class="summary-grid"></div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Summary by Ridge Width</h2>
+          <p class="section-note">Ridge-width plots appear only when ridge data exists in the Summary sheet.</p>
+        </div>
+      </div>
+      <div id="ridgeGrid" class="ridge-grid"></div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Kink Detection</h2>
+          <p class="section-note">Detected kinks outside the selected slope-deviation threshold. Use the button to save as TXT.</p>
+        </div>
+      </div>
+      <article class="kink-card">
+        <div class="button-row">
+          <button id="downloadKinkTxtButton" type="button">Save Kink Data TXT</button>
+        </div>
+        <div class="table-wrap"><table id="kinkTable"></table></div>
+      </article>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">First Kink Current vs Chip Number</h2>
+          <p class="section-note">For each chip, this shows the first detected kink current in the filtered dataset.</p>
+        </div>
+      </div>
+      <article class="plot-card">
+        <div id="firstKinkPlot" class="plot"></div>
+      </article>
+    </section>
+  </div>
+
+  <script>
+    const LIV_TEMPERATURES = ["25", "50", "75"];
+    const SUMMARY_METRICS = [
+      "Threshold Current (mA)",
+      "Resistance (Ohm)",
+      "Slope Efficiency (mW/mA)",
+      "Peak Power (mW)",
+      "Power @ 350 mA (mW)",
+    ];
+
+    const state = {
+      livPoints: [],
+      summaryPoints: [],
+      kinkEvents: [],
+      workbookNames: [],
+      selectedFiles: [],
+    };
+
+    const elements = {
+      folderPicker: document.getElementById("folderPicker"),
+      reloadButton: document.getElementById("reloadButton"),
+      clearButton: document.getElementById("clearButton"),
+      statusText: document.getElementById("statusText"),
+      workbookCount: document.getElementById("workbookCount"),
+      livCount: document.getElementById("livCount"),
+      summaryCount: document.getElementById("summaryCount"),
+      kinkCount: document.getElementById("kinkCount"),
+      workbookFilter: document.getElementById("workbookFilter"),
+      sourceFilter: document.getElementById("sourceFilter"),
+      temperatureFilter: document.getElementById("temperatureFilter"),
+      chipFilter: document.getElementById("chipFilter"),
+      kinkCriterion: document.getElementById("kinkCriterion"),
+      showKinksToggle: document.getElementById("showKinksToggle"),
+      showSupplierSummaryToggle: document.getElementById("showSupplierSummaryToggle"),
+      downloadKinkTxtButton: document.getElementById("downloadKinkTxtButton"),
+      kinkTable: document.getElementById("kinkTable"),
+      firstKinkPlot: document.getElementById("firstKinkPlot"),
+      summaryGrid: document.getElementById("summaryGrid"),
+      ridgeGrid: document.getElementById("ridgeGrid"),
+    };
+
+    function coerceNumber(value) {
+      if (value === null || value === undefined || value === "") {
+        return null;
+      }
+      const number = Number(value);
+      return Number.isFinite(number) ? number : null;
+    }
+
+    function uniqueSorted(values, sorter = null) {
+      const unique = [...new Set(values.filter((value) => value !== null && value !== undefined && value !== ""))];
+      unique.sort(sorter || ((left, right) => String(left).localeCompare(String(right), undefined, { numeric: true })));
+      return unique;
+    }
+
+    function numericOrStringSort(left, right) {
+      const leftNumber = Number(left);
+      const rightNumber = Number(right);
+      const leftNumeric = Number.isFinite(leftNumber);
+      const rightNumeric = Number.isFinite(rightNumber);
+      if (leftNumeric && rightNumeric) {
+        return leftNumber - rightNumber;
+      }
+      if (leftNumeric) {
+        return -1;
+      }
+      if (rightNumeric) {
+        return 1;
+      }
+      return String(left).localeCompare(String(right));
+    }
+
+    function normalizeChipId(value) {
+      if (value === null || value === undefined || value === "") {
+        return "";
+      }
+      const numeric = Number(value);
+      if (Number.isFinite(numeric)) {
+        return String(Number.isInteger(numeric) ? Math.trunc(numeric) : numeric);
+      }
+      return String(value).trim().replace(/^0+(\d)/, "$1");
+    }
+
+    function propagateHeaders(row) {
+      const propagated = [];
+      let current = null;
+      for (const cell of row) {
+        if (cell !== null && cell !== undefined && cell !== "") {
+          current = String(cell).trim();
+        }
+        propagated.push(current);
+      }
+      return propagated;
+    }
+
+    function sheetToRows(sheet) {
+      return XLSX.utils.sheet_to_json(sheet, { header: 1, raw: true, defval: null, blankrows: false });
+    }
+
+    function parseLivSheet(workbookName, rows, temperatureC) {
+      const points = [];
+      const maxCols = Math.max(...rows.map((row) => row.length), 0);
+      const headerRow = rows[0] || [];
+      for (let startCol = 0; startCol < maxCols; startCol += 4) {
+        const header = headerRow[startCol];
+        if (typeof header !== "string" || !header.includes("_")) {
+          continue;
+        }
+        const chip = String(header).split("_").pop();
+        for (let rowIndex = 2; rowIndex < rows.length; rowIndex += 1) {
+          const row = rows[rowIndex] || [];
+          const current = coerceNumber(row[startCol]);
+          if (current === null) {
+            continue;
+          }
+          points.push({
+            workbookName,
+            source: "Measured",
+            temperatureC: String(temperatureC),
+            chip,
+            currentMa: current,
+            voltageV: coerceNumber(row[startCol + 1]),
+            powerMw: coerceNumber(row[startCol + 2]),
+          });
+        }
+      }
+      return points;
+    }
+
+    function parseSupplierSheet(workbookName, rows) {
+      const points = [];
+      const maxCols = Math.max(...rows.map((row) => row.length), 0);
+      const headerRow = rows[0] || [];
+      for (let startCol = 0; startCol < maxCols; startCol += 7) {
+        const header = headerRow[startCol];
+        if (typeof header !== "string" || !header.startsWith("Chip ")) {
+          continue;
+        }
+        const chip = header.replace("Chip ", "").trim();
+        for (let rowIndex = 2; rowIndex < rows.length; rowIndex += 1) {
+          const row = rows[rowIndex] || [];
+          const current = coerceNumber(row[startCol + 3]);
+          if (current === null) {
+            continue;
+          }
+          points.push({
+            workbookName,
+            source: "Supplier",
+            temperatureC: "75",
+            chip,
+            currentMa: current,
+            voltageV: coerceNumber(row[startCol + 4]),
+            powerMw: coerceNumber(row[startCol + 5]),
+          });
+        }
+      }
+      return points;
+    }
+
+    function parseSummarySheet(workbookName, rows) {
+      const points = [];
+      const row1 = propagateHeaders(rows[0] || []);
+      const row2 = rows[1] || [];
+      const metricMap = new Map();
+      const ridgeHeader = `${row1[1] ?? ""} ${row2[1] ?? ""}`.toLowerCase();
+      const hasRidgeColumn = ridgeHeader.includes("ridge") && ridgeHeader.includes("width");
+
+      for (let col = 0; col < Math.max(row1.length, row2.length); col += 1) {
+        const top = row1[col];
+        const sub = row2[col];
+        if (!top || !sub || !SUMMARY_METRICS.includes(sub)) {
+          continue;
+        }
+        const topNorm = String(top).toLowerCase().replace(/\s+/g, "");
+        const tempMatch = topNorm.match(/^(\d+)c$/);
+        if (tempMatch) {
+          metricMap.set(`${tempMatch[1]}|${sub}`, col);
+        } else if (topNorm.includes("supplier") && topNorm.includes("75")) {
+          metricMap.set(`Supplier75|${sub}`, col);
+        }
+      }
+
+      for (let rowIndex = 2; rowIndex < rows.length; rowIndex += 1) {
+        const row = rows[rowIndex] || [];
+        const chipCell = row[0];
+        if (chipCell === null || chipCell === undefined || chipCell === "") {
+          continue;
+        }
+        const chipNumeric = coerceNumber(chipCell);
+        const chip = chipNumeric === null
+          ? String(chipCell).trim()
+          : String(Number.isInteger(chipNumeric) ? Math.trunc(chipNumeric) : chipNumeric);
+        const ridgeWidth = hasRidgeColumn ? coerceNumber(row[1]) : null;
+
+        for (const temperature of LIV_TEMPERATURES) {
+          for (const metric of SUMMARY_METRICS) {
+            const col = metricMap.get(`${temperature}|${metric}`);
+            if (col === undefined) {
+              continue;
+            }
+            points.push({
+              workbookName,
+              chip,
+              chipNumeric,
+              ridgeWidthUm: ridgeWidth,
+              temperatureC: temperature,
+              metricName: metric,
+              metricValue: coerceNumber(row[col]),
+            });
+          }
+        }
+
+        for (const metric of SUMMARY_METRICS) {
+          const col = metricMap.get(`Supplier75|${metric}`);
+          if (col === undefined) {
+            continue;
+          }
+          points.push({
+            workbookName,
+            chip,
+            chipNumeric,
+            ridgeWidthUm: ridgeWidth,
+            temperatureC: "Supplier75",
+            metricName: metric,
+            metricValue: coerceNumber(row[col]),
+          });
+        }
+      }
+
+      return points;
+    }
+
+    async function parseWorkbookFile(file) {
+      const workbookName = file.name;
+      const workbook = XLSX.read(await file.arrayBuffer(), { type: "array" });
+      const livPoints = [];
+      const summaryPoints = [];
+
+      for (const temperature of LIV_TEMPERATURES) {
+        const sheetName = `LIV_${temperature}C`;
+        if (workbook.Sheets[sheetName]) {
+          livPoints.push(...parseLivSheet(workbookName, sheetToRows(workbook.Sheets[sheetName]), temperature));
+        }
+      }
+
+      if (workbook.Sheets["Supplier_LIV_75C"]) {
+        livPoints.push(...parseSupplierSheet(workbookName, sheetToRows(workbook.Sheets["Supplier_LIV_75C"])));
+      }
+
+      if (workbook.Sheets["Summary"]) {
+        summaryPoints.push(...parseSummarySheet(workbookName, sheetToRows(workbook.Sheets["Summary"])));
+      }
+
+      return { livPoints, summaryPoints };
+    }
+
+    async function loadSelectedFiles(files) {
+      const excelFiles = [...files].filter((file) => file.name.toLowerCase().endsWith(".xlsx"));
+      state.selectedFiles = excelFiles;
+      if (!excelFiles.length) {
+        clearData("No .xlsx files found in the selected folder.");
+        return;
+      }
+
+      setStatus(`Loading ${excelFiles.length} workbook(s)...`);
+      const livPoints = [];
+      const summaryPoints = [];
+      for (const file of excelFiles) {
+        const parsed = await parseWorkbookFile(file);
+        livPoints.push(...parsed.livPoints);
+        summaryPoints.push(...parsed.summaryPoints);
+      }
+
+      state.livPoints = livPoints;
+      state.summaryPoints = summaryPoints;
+      state.workbookNames = uniqueSorted(excelFiles.map((file) => file.name));
+      syncFilters();
+      recomputeKinks();
+      updateStats();
+      renderAll();
+      setStatus(`Loaded ${excelFiles.length} workbook(s). All sections now use the same dataset.`);
+    }
+
+    function setStatus(message) {
+      elements.statusText.textContent = message;
+    }
+
+    function clearSelect(selectElement) {
+      selectElement.innerHTML = "";
+    }
+
+    function fillMultiSelect(selectElement, values, selected = values) {
+      clearSelect(selectElement);
+      values.forEach((value) => {
+        const option = document.createElement("option");
+        option.value = String(value);
+        option.textContent = String(value);
+        option.selected = selected.includes(value);
+        selectElement.appendChild(option);
+      });
+    }
+
+    function selectedValues(selectElement) {
+      return [...selectElement.selectedOptions].map((option) => option.value);
+    }
+
+    function syncFilters() {
+      const workbooks = uniqueSorted(state.livPoints.map((point) => point.workbookName));
+      const summaryHasSupplier = state.summaryPoints.some((point) => point.temperatureC === "Supplier75" && point.metricValue !== null);
+      const sources = uniqueSorted([
+        ...state.livPoints.map((point) => point.source),
+        ...(summaryHasSupplier ? ["Supplier"] : []),
+      ]);
+      const temperatures = uniqueSorted(state.livPoints.map((point) => point.temperatureC), numericOrStringSort);
+      const chips = uniqueSorted(state.livPoints.map((point) => point.chip), numericOrStringSort);
+
+      fillMultiSelect(elements.workbookFilter, workbooks);
+      fillMultiSelect(elements.sourceFilter, sources);
+      fillMultiSelect(elements.temperatureFilter, temperatures);
+      fillMultiSelect(elements.chipFilter, chips, chips.slice(0, Math.min(16, chips.length)));
+    }
+
+    function updateStats() {
+      elements.workbookCount.textContent = String(state.workbookNames.length);
+      elements.livCount.textContent = state.livPoints.length.toLocaleString();
+      elements.summaryCount.textContent = state.summaryPoints.length.toLocaleString();
+      elements.kinkCount.textContent = state.kinkEvents.length.toLocaleString();
+    }
+
+    function clearData(message = "Cleared dashboard data.") {
+      state.livPoints = [];
+      state.summaryPoints = [];
+      state.kinkEvents = [];
+      state.workbookNames = [];
+      updateStats();
+      [elements.workbookFilter, elements.sourceFilter, elements.temperatureFilter, elements.chipFilter].forEach(clearSelect);
+      renderEmptyPlot("liPlot", "LI Curves");
+      renderEmptyPlot("ivPlot", "IV Curves");
+      renderEmptyPlot("firstKinkPlot", "First Kink Current vs Chip Number");
+      elements.summaryGrid.innerHTML = "<div class='empty-box'>Load workbooks to view summary plots.</div>";
+      elements.ridgeGrid.innerHTML = "<div class='empty-box'>Load workbooks to view ridge-width plots.</div>";
+      clearTable(elements.kinkTable, [], []);
+      setStatus(message);
+    }
+
+    function renderEmptyPlot(targetId, title) {
+      Plotly.newPlot(targetId, [], {
+        title,
+        template: "plotly_white",
+        paper_bgcolor: "rgba(0,0,0,0)",
+        plot_bgcolor: "rgba(0,0,0,0)",
+        xaxis: { visible: false },
+        yaxis: { visible: false },
+        annotations: [{
+          text: "No matching data",
+          x: 0.5,
+          y: 0.5,
+          xref: "paper",
+          yref: "paper",
+          showarrow: false,
+          font: { size: 18, color: "#645a53" },
+        }],
+        margin: { l: 28, r: 18, t: 60, b: 30 },
+      }, { responsive: true, displaylogo: false });
+    }
+
+    function groupBy(values, keyBuilder) {
+      const map = new Map();
+      values.forEach((value) => {
+        const key = keyBuilder(value);
+        if (!map.has(key)) {
+          map.set(key, []);
+        }
+        map.get(key).push(value);
+      });
+      return map;
+    }
+
+    function movingAverage(values, radius = 2) {
+      const result = [];
+      for (let index = 0; index < values.length; index += 1) {
+        const start = Math.max(0, index - radius);
+        const end = Math.min(values.length, index + radius + 1);
+        const window = values.slice(start, end).filter((value) => value !== null);
+        result.push(window.length ? window.reduce((sum, value) => sum + value, 0) / window.length : null);
+      }
+      return result;
+    }
+
+    function median(values) {
+      if (!values.length) {
+        return null;
+      }
+      const sorted = [...values].sort((left, right) => left - right);
+      const mid = Math.floor(sorted.length / 2);
+      return sorted.length % 2 === 1 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+    }
+
+    function detectCurveKinks(curvePoints, deviationLimit) {
+      const valid = curvePoints
+        .filter((point) => point.powerMw !== null)
+        .sort((left, right) => left.currentMa - right.currentMa);
+      if (valid.length < 8) {
+        return [];
+      }
+
+      const smoothedPower = movingAverage(valid.map((point) => point.powerMw), 2);
+      const maxPower = Math.max(...smoothedPower.filter((value) => value !== null));
+      if (!Number.isFinite(maxPower) || maxPower <= 0) {
+        return [];
+      }
+
+      const segments = [];
+      for (let index = 1; index < valid.length; index += 1) {
+        const x0 = valid[index - 1].currentMa;
+        const x1 = valid[index].currentMa;
+        const y0 = smoothedPower[index - 1];
+        const y1 = smoothedPower[index];
+        if (y0 === null || y1 === null || x1 === x0) {
+          continue;
+        }
+        const midpoint = (x0 + x1) / 2;
+        const meanPower = (y0 + y1) / 2;
+        segments.push({ midpoint, slope: (y1 - y0) / (x1 - x0), meanPower });
+      }
+
+      const lasingSegments = segments.filter((segment) => segment.meanPower >= maxPower * 0.25 && segment.slope > 0);
+      const referenceSlope = median(lasingSegments.map((segment) => segment.slope));
+      if (referenceSlope === null || referenceSlope === 0) {
+        return [];
+      }
+
+      const rawEvents = lasingSegments
+        .map((segment) => ({
+          currentMa: segment.midpoint,
+          slope: segment.slope,
+          deviationRatio: Math.abs((segment.slope - referenceSlope) / referenceSlope),
+        }))
+        .filter((segment) => segment.deviationRatio > deviationLimit);
+
+      if (!rawEvents.length) {
+        return [];
+      }
+
+      const groupedEvents = [];
+      for (const event of rawEvents) {
+        const previous = groupedEvents[groupedEvents.length - 1];
+        if (previous && Math.abs(previous.currentMa - event.currentMa) <= 3) {
+          if (event.deviationRatio > previous.deviationRatio) {
+            groupedEvents[groupedEvents.length - 1] = event;
+          }
+        } else {
+          groupedEvents.push(event);
+        }
+      }
+      return groupedEvents;
+    }
+
+    function recomputeKinks() {
+      const deviationLimit = Number(elements.kinkCriterion.value || 0.10);
+      const grouped = groupBy(
+        state.livPoints.filter((point) => point.powerMw !== null),
+        (point) => `${point.workbookName}|${point.source}|${point.temperatureC}|${point.chip}`
+      );
+      const events = [];
+      for (const [key, points] of grouped.entries()) {
+        const [workbookName, source, temperatureC, chip] = key.split("|");
+        const curveEvents = detectCurveKinks(points, deviationLimit);
+        curveEvents.forEach((event) => {
+          events.push({
+            workbookName,
+            source,
+            temperatureC,
+            chip,
+            currentMa: event.currentMa,
+            slope: event.slope,
+            deviationPercent: event.deviationRatio * 100,
+          });
+        });
+      }
+      state.kinkEvents = events.sort((left, right) => left.currentMa - right.currentMa);
+    }
+
+    function filteredLivPoints() {
+      const workbooks = selectedValues(elements.workbookFilter);
+      const sources = selectedValues(elements.sourceFilter);
+      const temperatures = selectedValues(elements.temperatureFilter);
+      const chips = selectedValues(elements.chipFilter);
+      return state.livPoints.filter((point) =>
+        workbooks.includes(point.workbookName)
+        && sources.includes(point.source)
+        && temperatures.includes(point.temperatureC)
+        && chips.includes(point.chip)
+      );
+    }
+
+    function filteredSummaryPoints(includeSupplier = true) {
+      const workbooks = selectedValues(elements.workbookFilter);
+      const sources = selectedValues(elements.sourceFilter);
+      const temperatures = selectedValues(elements.temperatureFilter);
+      const chips = selectedValues(elements.chipFilter);
+      const chipSet = new Set(chips.map(normalizeChipId));
+      const allowSupplier = includeSupplier && elements.showSupplierSummaryToggle.checked;
+      return state.summaryPoints.filter((point) => {
+        const sourceBucket = point.temperatureC === "Supplier75" ? "Supplier" : "Measured";
+        const temperatureBucket = point.temperatureC === "Supplier75" ? "75" : point.temperatureC;
+        return workbooks.includes(point.workbookName)
+          && sources.includes(sourceBucket)
+          && temperatures.includes(temperatureBucket)
+          && chipSet.has(normalizeChipId(point.chip))
+          && point.metricValue !== null
+          && (allowSupplier || point.temperatureC !== "Supplier75");
+      });
+    }
+
+    function renderCurves() {
+      const livPoints = filteredLivPoints();
+      renderCurvePlot("liPlot", livPoints, "powerMw", "LI Curves", "Optical Power (mW)");
+      renderCurvePlot("ivPlot", livPoints, "voltageV", "IV Curves", "Voltage (V)");
+    }
+
+    function renderCurvePlot(targetId, points, valueField, title, yAxisTitle) {
+      const valid = points.filter((point) => point[valueField] !== null);
+      if (!valid.length) {
+        renderEmptyPlot(targetId, title);
+        return;
+      }
+
+      const grouped = groupBy(valid, (point) => `${point.workbookName}|${point.source}|${point.temperatureC}|${point.chip}`);
+      const traces = [];
+
+      function shortWorkbookLabel(name) {
+        const stem = String(name || "").replace(/\.xlsx$/i, "");
+        return stem.length > 16 ? `${stem.slice(0, 16)}...` : stem;
+      }
+
+      for (const [key, group] of [...grouped.entries()].sort((a, b) => a[0].localeCompare(b[0], undefined, { numeric: true }))) {
+        const sorted = [...group].sort((left, right) => left.currentMa - right.currentMa);
+        const sample = sorted[0];
+        const fullName = `${sample.workbookName} | ${sample.source} | ${sample.temperatureC}C | C${sample.chip}`;
+        const name = `${shortWorkbookLabel(sample.workbookName)} ${sample.source[0]} ${sample.temperatureC}C C${sample.chip}`;
+        traces.push({
+          x: sorted.map((point) => point.currentMa),
+          y: sorted.map((point) => point[valueField]),
+          type: "scatter",
+          mode: "lines",
+          name,
+          line: { dash: sample.source === "Supplier" ? "dash" : "solid", width: 2.3 },
+          hovertemplate: `Current=%{x:.2f} mA<br>${yAxisTitle}=%{y:.4f}<extra>${fullName}</extra>`,
+        });
+      }
+
+      if (targetId === "liPlot" && elements.showKinksToggle.checked) {
+        const visibleCurveKeys = new Set(valid.map((point) => `${point.workbookName}|${point.source}|${point.temperatureC}|${point.chip}`));
+        const visibleKinks = state.kinkEvents.filter((event) => visibleCurveKeys.has(`${event.workbookName}|${event.source}|${event.temperatureC}|${event.chip}`));
+        if (visibleKinks.length) {
+          traces.push({
+            x: visibleKinks.map((event) => event.currentMa),
+            y: visibleKinks.map((event) => {
+              const curve = valid
+                .filter((point) => point.workbookName === event.workbookName && point.source === event.source && point.temperatureC === event.temperatureC && point.chip === event.chip && point.powerMw !== null)
+                .sort((left, right) => Math.abs(left.currentMa - event.currentMa) - Math.abs(right.currentMa - event.currentMa));
+              return curve.length ? curve[0].powerMw : null;
+            }),
+            type: "scatter",
+            mode: "markers",
+            name: "Kinks",
+            marker: {
+              size: 10,
+              symbol: "x",
+              color: "#c33434",
+              line: { color: "#ffffff", width: 1 },
+            },
+            hovertemplate: "Kink Current=%{x:.2f} mA<extra>Kink</extra>",
+          });
+        }
+      }
+
+      Plotly.newPlot(targetId, traces, {
+        title,
+        template: "plotly_white",
+        height: 560,
+        hovermode: "x unified",
+        paper_bgcolor: "rgba(0,0,0,0)",
+        plot_bgcolor: "rgba(255,255,255,0.55)",
+        margin: { l: 64, r: 220, t: 64, b: 60 },
+        xaxis: { title: "Current (mA)" },
+        yaxis: { title: yAxisTitle },
+        legend: {
+          orientation: "v",
+          x: 1.02,
+          xanchor: "left",
+          y: 1,
+          yanchor: "top",
+          font: { size: 11 },
+          itemwidth: 40,
+        },
+      }, { responsive: true, displaylogo: false });
+    }
+
+    function renderKinkTable() {
+      const workbooks = selectedValues(elements.workbookFilter);
+      const sources = selectedValues(elements.sourceFilter);
+      const temperatures = selectedValues(elements.temperatureFilter);
+      const chips = selectedValues(elements.chipFilter);
+      const rows = state.kinkEvents
+        .filter((event) => workbooks.includes(event.workbookName) && sources.includes(event.source) && temperatures.includes(event.temperatureC) && chips.includes(event.chip))
+        .map((event) => ({
+          Workbook: event.workbookName,
+          Source: event.source,
+          Temperature: `${event.temperatureC}C`,
+          Chip: event.chip,
+          KinkCurrent: event.currentMa.toFixed(2),
+          Deviation: `${event.deviationPercent.toFixed(2)}%`,
+        }));
+      clearTable(elements.kinkTable, ["Workbook", "Source", "Temperature", "Chip", "KinkCurrent", "Deviation"], rows);
+    }
+
+    function renderSummaryPlots() {
+      const summaryPoints = filteredSummaryPoints(true);
+      renderMetricGrid(elements.summaryGrid, summaryPoints, "chipNumeric", "Chip Number", "summary");
+      const ridgePoints = summaryPoints.filter((point) => point.temperatureC !== "Supplier75" && point.ridgeWidthUm !== null);
+
+      const uniqueRidgeWidths = uniqueSorted(ridgePoints.map((point) => point.ridgeWidthUm), numericOrStringSort);
+      if (uniqueRidgeWidths.length <= 1) {
+        elements.ridgeGrid.innerHTML = '<div class="empty-box">No data available: ridge width variation not found in selected files.</div>';
+      } else {
+        renderMetricGrid(elements.ridgeGrid, ridgePoints, "ridgeWidthUm", "Ridge Width (um)", "ridge");
+      }
+    }
+
+    function renderMetricGrid(container, points, xField, xTitle, prefix) {
+      container.innerHTML = "";
+      if (!points.length) {
+        container.innerHTML = `<div class="empty-box">No ${prefix === "ridge" ? "ridge-width" : "summary"} data matches the current filters.</div>`;
+        return;
+      }
+
+      SUMMARY_METRICS.forEach((metric, index) => {
+        const card = document.createElement("article");
+        card.className = "plot-card";
+        const title = document.createElement("h3");
+        title.className = "card-title";
+        title.textContent = metric;
+        const plot = document.createElement("div");
+        plot.className = "plot compact";
+        plot.id = `${prefix}Plot${index}`;
+        card.appendChild(title);
+        card.appendChild(plot);
+        container.appendChild(card);
+
+        const metricPoints = points.filter((point) => point.metricName === metric && point[xField] !== null && point.metricValue !== null);
+        if (!metricPoints.length) {
+          renderEmptyPlot(plot.id, metric);
+          return;
+        }
+
+        const grouped = groupBy(metricPoints, (point) => `${point.workbookName}|${point.temperatureC}`);
+        const traces = [];
+        for (const [key, group] of [...grouped.entries()].sort((a, b) => a[0].localeCompare(b[0], undefined, { numeric: true }))) {
+          const sorted = [...group].sort((left, right) => left[xField] - right[xField]);
+          const sample = sorted[0];
+          const isSupplier = sample.temperatureC === "Supplier75";
+          traces.push({
+            x: sorted.map((point) => point[xField]),
+            y: sorted.map((point) => point.metricValue),
+            text: sorted.map((point) => `Chip ${point.chip}`),
+            type: "scatter",
+            mode: "markers+lines",
+            name: `${sample.workbookName} | ${isSupplier ? "Supplier 75C" : `${sample.temperatureC}C`}`,
+            marker: { size: 8, symbol: isSupplier ? "triangle-up" : "circle" },
+            line: { width: 2, dash: isSupplier ? "dash" : "solid" },
+            hovertemplate: `${xTitle}=%{x}<br>${metric}=%{y:.4f}<br>%{text}<extra>%{fullData.name}</extra>`,
+          });
+        }
+
+        Plotly.newPlot(plot.id, traces, {
+          title: metric,
+          template: "plotly_white",
+          height: 500,
+          hovermode: "closest",
+          paper_bgcolor: "rgba(0,0,0,0)",
+          plot_bgcolor: "rgba(255,255,255,0.55)",
+          margin: { l: 60, r: 16, t: 58, b: 58 },
+          xaxis: { title: xTitle },
+          yaxis: { title: metric },
+          legend: { orientation: "h", y: -0.24 },
+        }, { responsive: true, displaylogo: false });
+      });
+    }
+
+    function clearTable(tableElement, columns, rows) {
+      if (!rows.length || !columns.length) {
+        tableElement.innerHTML = `<tbody><tr><td class="empty-box">No matching data.</td></tr></tbody>`;
+        return;
+      }
+      const header = `<thead><tr>${columns.map((column) => `<th>${column}</th>`).join("")}</tr></thead>`;
+      const body = rows.map((row) => `<tr>${columns.map((column) => `<td>${row[column] ?? ""}</td>`).join("")}</tr>`).join("");
+      tableElement.innerHTML = `${header}<tbody>${body}</tbody>`;
+    }
+
+    function renderAll() {
+      renderCurves();
+      renderSummaryPlots();
+      renderKinkTable();
+      renderFirstKinkPlot();
+    }
+
+    function renderFirstKinkPlot() {
+      const workbooks = selectedValues(elements.workbookFilter);
+      const sources = selectedValues(elements.sourceFilter);
+      const temperatures = selectedValues(elements.temperatureFilter);
+      const chips = selectedValues(elements.chipFilter);
+
+      const filtered = state.kinkEvents.filter((event) =>
+        workbooks.includes(event.workbookName)
+        && sources.includes(event.source)
+        && temperatures.includes(event.temperatureC)
+        && chips.includes(event.chip)
+      );
+
+      if (!filtered.length) {
+        renderEmptyPlot("firstKinkPlot", "First Kink Current vs Chip Number");
+        return;
+      }
+
+      const byChipKey = new Map();
+      filtered.forEach((event) => {
+        const key = `${event.workbookName}|${event.source}|${event.temperatureC}|${event.chip}`;
+        const existing = byChipKey.get(key);
+        if (!existing || event.currentMa < existing.currentMa) {
+          byChipKey.set(key, event);
+        }
+      });
+
+      const firstKinks = [...byChipKey.values()]
+        .map((event) => ({
+          ...event,
+          chipNumeric: coerceNumber(event.chip),
+        }))
+        .filter((event) => event.chipNumeric !== null);
+
+      if (!firstKinks.length) {
+        renderEmptyPlot("firstKinkPlot", "First Kink Current vs Chip Number");
+        return;
+      }
+
+      const grouped = groupBy(firstKinks, (event) => `${event.workbookName}|${event.source}|${event.temperatureC}`);
+      const traces = [];
+      for (const [key, group] of [...grouped.entries()].sort((a, b) => a[0].localeCompare(b[0], undefined, { numeric: true }))) {
+        const sorted = [...group].sort((left, right) => left.chipNumeric - right.chipNumeric);
+        const sample = sorted[0];
+        const traceName = `${sample.workbookName} | ${sample.source} | ${sample.temperatureC}C`;
+        traces.push({
+          x: sorted.map((event) => event.chipNumeric),
+          y: sorted.map((event) => event.currentMa),
+          text: sorted.map((event) => `Chip ${event.chip}`),
+          type: "scatter",
+          mode: "markers+lines",
+          name: traceName,
+          marker: { size: 8 },
+          line: { width: 2 },
+          hovertemplate: "Chip=%{x}<br>First Kink Current=%{y:.3f} mA<br>%{text}<extra>%{fullData.name}</extra>",
+        });
+      }
+
+      Plotly.newPlot("firstKinkPlot", traces, {
+        title: "First Kink Current vs Chip Number",
+        template: "plotly_white",
+        height: 560,
+        hovermode: "closest",
+        paper_bgcolor: "rgba(0,0,0,0)",
+        plot_bgcolor: "rgba(255,255,255,0.55)",
+        margin: { l: 64, r: 220, t: 64, b: 60 },
+        xaxis: { title: "Chip Number" },
+        yaxis: { title: "First Kink Current (mA)" },
+        legend: {
+          orientation: "v",
+          x: 1.02,
+          xanchor: "left",
+          y: 1,
+          yanchor: "top",
+          font: { size: 11 },
+        },
+      }, { responsive: true, displaylogo: false });
+    }
+
+    function buildKinkTxtContent() {
+      const workbooks = selectedValues(elements.workbookFilter);
+      const sources = selectedValues(elements.sourceFilter);
+      const temperatures = selectedValues(elements.temperatureFilter);
+      const chips = selectedValues(elements.chipFilter);
+      const rows = state.kinkEvents.filter((event) =>
+        workbooks.includes(event.workbookName)
+        && sources.includes(event.source)
+        && temperatures.includes(event.temperatureC)
+        && chips.includes(event.chip)
+      );
+
+      const lines = [
+        "Laser Data Analysis - Kink Detection",
+        `Generated: ${new Date().toISOString()}`,
+        "",
+        "Workbook\tSource\tTemperature_C\tChip\tKinkCurrent_mA\tDeviation_percent",
+      ];
+
+      rows.forEach((event) => {
+        lines.push([
+          event.workbookName,
+          event.source,
+          event.temperatureC,
+          event.chip,
+          event.currentMa.toFixed(4),
+          event.deviationPercent.toFixed(4),
+        ].join("\t"));
+      });
+
+      if (!rows.length) {
+        lines.push("No matching kinks for current filters.");
+      }
+
+      return lines.join("\n");
+    }
+
+    function downloadKinkTxt() {
+      const content = buildKinkTxtContent();
+      const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+      link.href = url;
+      link.download = `kink_detection_${stamp}.txt`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+
+    elements.folderPicker.addEventListener("change", async (event) => {
+      await loadSelectedFiles(event.target.files);
+    });
+
+    elements.reloadButton.addEventListener("click", async () => {
+      const files = elements.folderPicker.files.length ? elements.folderPicker.files : state.selectedFiles;
+      if (!files.length) {
+        setStatus("Select a folder first.");
+        return;
+      }
+      await loadSelectedFiles(files);
+    });
+
+    elements.clearButton.addEventListener("click", () => {
+      elements.folderPicker.value = "";
+      state.selectedFiles = [];
+      clearData("Cleared dashboard data.");
+    });
+
+    elements.downloadKinkTxtButton.addEventListener("click", downloadKinkTxt);
+
+    [
+      elements.workbookFilter,
+      elements.sourceFilter,
+      elements.temperatureFilter,
+      elements.chipFilter,
+      elements.showKinksToggle,
+      elements.showSupplierSummaryToggle,
+    ].forEach((element) => element.addEventListener("change", renderAll));
+
+    elements.kinkCriterion.addEventListener("change", () => {
+      recomputeKinks();
+      updateStats();
+      renderAll();
+    });
+
+    clearData("Choose a folder with exported .xlsx files to begin.");
+  </script>
+</body>
+</html>
