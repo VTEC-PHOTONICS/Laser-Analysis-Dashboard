@@ -721,7 +721,7 @@
       <div class="section-header">
         <div>
           <h2 class="section-title">Kink Detection</h2>
-          <p class="section-note">Kinks are raw dP/dI points whose percent change from the prior 10-point Savitzky-Golay average exceeds the selected cutoff. Use the button to save as TXT.</p>
+          <p class="section-note">Detects slope rolloffs only (negative dP/dI change). All matches are ranked by threshold-current distance, then kink size, then cutoff %, then limited by Max Kinks per Curve.</p>
         </div>
       </div>
       <article class="kink-card">
@@ -1701,24 +1701,90 @@
       return left.currentMa - right.currentMa;
     }
 
-    function compareKinkPriority(left, right, deviationLimit, thresholdCurrentMa) {
-      const leftCurrentDistance = Math.abs(left.currentMa - thresholdCurrentMa);
-      const rightCurrentDistance = Math.abs(right.currentMa - thresholdCurrentMa);
-      const leftWinsOnThresholdCurrent =
-        left.deviationRatio > right.deviationRatio && leftCurrentDistance < rightCurrentDistance;
-      const rightWinsOnThresholdCurrent =
-        right.deviationRatio > left.deviationRatio && rightCurrentDistance < leftCurrentDistance;
+    function buildKinkEventFromDetection(valid, dP_dI, detectionIndex, thresholdCurrentMa, avgBaselineDpDi, anomalyDpDi, percentChange, absPercentChange) {
+      const segment = dP_dI[detectionIndex];
+      const endPoint = valid[segment.segmentEndIndex];
 
-      if (leftWinsOnThresholdCurrent) return -1;
-      if (rightWinsOnThresholdCurrent) return 1;
+      return {
+        detectionCurrentMa: endPoint.currentMa,
+        currentMa: endPoint.currentMa,
+        powerMw: endPoint.powerMw,
+        thresholdCurrentMa,
+        slope: anomalyDpDi,
+        avgDpDi: avgBaselineDpDi,
+        anomalyDpDi,
+        percentChange,
+        absPercentChange,
+        deviationRatio: absPercentChange / 100,
+        segmentStartIndex: segment.segmentStartIndex,
+        segmentEndIndex: segment.segmentEndIndex,
+        dpDiIndex: detectionIndex,
+      };
+    }
 
-      const leftDeviationDistance = Math.abs(left.deviationRatio - deviationLimit);
-      const rightDeviationDistance = Math.abs(right.deviationRatio - deviationLimit);
-      if (leftDeviationDistance !== rightDeviationDistance) {
-        return leftDeviationDistance - rightDeviationDistance;
+    function interpolatePowerAtCurrent(curvePoints, currentMa) {
+      const sorted = curvePoints
+        .filter((point) => point.powerMw !== null && Number.isFinite(point.currentMa))
+        .sort((left, right) => left.currentMa - right.currentMa);
+      if (!sorted.length) return null;
+      if (currentMa <= sorted[0].currentMa) return sorted[0].powerMw;
+      if (currentMa >= sorted[sorted.length - 1].currentMa) return sorted[sorted.length - 1].powerMw;
+
+      for (let index = 1; index < sorted.length; index += 1) {
+        const rightPoint = sorted[index];
+        const leftPoint = sorted[index - 1];
+        if (currentMa > rightPoint.currentMa) continue;
+        const span = rightPoint.currentMa - leftPoint.currentMa;
+        if (span <= 0) return rightPoint.powerMw;
+        const weight = (currentMa - leftPoint.currentMa) / span;
+        return leftPoint.powerMw + weight * (rightPoint.powerMw - leftPoint.powerMw);
       }
 
-      return leftCurrentDistance - rightCurrentDistance;
+      return sorted[sorted.length - 1].powerMw;
+    }
+
+    function compareKinkSelectionPriority(left, right, deviationLimit, thresholdCurrentMa) {
+      const leftThresholdDistance = left.detectionCurrentMa - thresholdCurrentMa;
+      const rightThresholdDistance = right.detectionCurrentMa - thresholdCurrentMa;
+      if (leftThresholdDistance !== rightThresholdDistance) {
+        return leftThresholdDistance - rightThresholdDistance;
+      }
+
+      if (left.absPercentChange !== right.absPercentChange) {
+        return right.absPercentChange - left.absPercentChange;
+      }
+
+      const leftCutoffDistance = Math.abs(left.deviationRatio - deviationLimit);
+      const rightCutoffDistance = Math.abs(right.deviationRatio - deviationLimit);
+      return leftCutoffDistance - rightCutoffDistance;
+    }
+
+    function selectPrioritizedKinks(rawEvents, deviationLimit, thresholdCurrentMa, maxKinks) {
+      const sortedByPriority = [...rawEvents].sort((left, right) =>
+        compareKinkSelectionPriority(left, right, deviationLimit, thresholdCurrentMa)
+      );
+
+      const selected = [];
+      for (const event of sortedByPriority) {
+        const nearbyIndex = selected.findIndex((existing) =>
+          Math.abs(existing.detectionCurrentMa - event.detectionCurrentMa) <= 5
+        );
+        if (nearbyIndex === -1) {
+          selected.push(event);
+          if (selected.length >= maxKinks) break;
+          continue;
+        }
+
+        if (compareKinkSelectionPriority(event, selected[nearbyIndex], deviationLimit, thresholdCurrentMa) < 0) {
+          selected[nearbyIndex] = event;
+        }
+      }
+
+      if (selected.length) {
+        selected[0].isPrimary = true;
+      }
+
+      return selected.sort((left, right) => left.currentMa - right.currentMa);
     }
 
     function detectCurveKinks(curvePoints, deviationLimit, maxKinks = 10) {
@@ -1733,9 +1799,11 @@
         const dI = valid[i].currentMa - valid[i-1].currentMa;
         if (dI > 0) {
           dP_dI.push({
-            currentMa: (valid[i].currentMa + valid[i-1].currentMa) / 2,
-            slope: (valid[i].powerMw - valid[i-1].powerMw) / dI,
-            power: (valid[i].powerMw + valid[i-1].powerMw) / 2
+            segmentStartIndex: i - 1,
+            segmentEndIndex: i,
+            currentMa: (valid[i].currentMa + valid[i - 1].currentMa) / 2,
+            slope: (valid[i].powerMw - valid[i - 1].powerMw) / dI,
+            power: (valid[i].powerMw + valid[i - 1].powerMw) / 2,
           });
         }
       }
@@ -1757,51 +1825,38 @@
       const cutoffPercent = deviationLimit * 100;
 
       // Baseline: mean of 10 Savitzky-Golay dP/dI points before index i.
-      // Anomaly: raw dP/dI at index i. Kink if |percent change| >= cutoff.
+      // Anomaly: raw dP/dI at index i. Kink = negative rolloff only (ignore positive spikes).
       for (let i = thresholdIndex + baselineWindow; i < dP_dI.length; i += 1) {
         const savgolBaselineWindow = smoothedSlopes.slice(i - baselineWindow, i);
         if (savgolBaselineWindow.some((slope) => slope === null)) continue;
 
         const avgBaselineDpDi = savgolBaselineWindow.reduce((sum, slope) => sum + slope, 0) / baselineWindow;
         const anomalyDpDi = dP_dI[i].slope;
-        if (!Number.isFinite(avgBaselineDpDi) || Math.abs(avgBaselineDpDi) < 1e-9) continue;
+        if (!Number.isFinite(avgBaselineDpDi) || avgBaselineDpDi <= 0) continue;
 
         const percentChange = ((anomalyDpDi - avgBaselineDpDi) / avgBaselineDpDi) * 100;
         const absPercentChange = Math.abs(percentChange);
-        if (absPercentChange >= cutoffPercent) {
-          rawEvents.push({
-            currentMa: dP_dI[i].currentMa,
-            slope: anomalyDpDi,
-            avgDpDi: avgBaselineDpDi,
-            anomalyDpDi,
-            percentChange,
-            deviationRatio: absPercentChange / 100,
-          });
-        }
+        if (percentChange > -cutoffPercent) continue;
+
+        const kinkPoint = valid[dP_dI[i].segmentEndIndex];
+        if (!kinkPoint || kinkPoint.currentMa < thresholdCurrentMa) continue;
+
+        rawEvents.push(buildKinkEventFromDetection(
+          valid,
+          dP_dI,
+          i,
+          thresholdCurrentMa,
+          avgBaselineDpDi,
+          anomalyDpDi,
+          percentChange,
+          absPercentChange
+        ));
       }
 
       if (!rawEvents.length) return [];
 
-      // Prefer kinks closest to the slope-deviation cutoff; if another kink has a
-      // higher deviation but is closer to the 10% power threshold current, it wins.
-      const sortedByPriority = rawEvents.sort((left, right) =>
-        compareKinkPriority(left, right, deviationLimit, thresholdCurrentMa)
-      );
-
-      // Clear proximity: ensure kinks aren't right next to each other (5mA radius)
-      const uniqueEvents = [];
-      for (const event of sortedByPriority) {
-        if (!uniqueEvents.some(e => Math.abs(e.currentMa - event.currentMa) <= 5)) {
-          uniqueEvents.push(event);
-          if (uniqueEvents.length >= maxKinks) break;
-        }
-      }
-
-      if (uniqueEvents.length) {
-        uniqueEvents[0].isPrimary = true;
-      }
-
-      return uniqueEvents.sort((left, right) => left.currentMa - right.currentMa);
+      // Find all kinks first, rank by priority, then keep the top N from the UI limit.
+      return selectPrioritizedKinks(rawEvents, deviationLimit, thresholdCurrentMa, maxKinks);
     }
 
     function recomputeKinks() {
@@ -1822,6 +1877,9 @@
             temperatureC,
             chip,
             currentMa: event.currentMa,
+            detectionCurrentMa: event.detectionCurrentMa,
+            powerMw: event.powerMw,
+            thresholdCurrentMa: event.thresholdCurrentMa,
             slope: event.slope,
             avgDpDi: event.avgDpDi,
             anomalyDpDi: event.anomalyDpDi,
@@ -2038,10 +2096,14 @@
           traces.push({
             x: visibleKinks.map((event) => event.currentMa),
             y: visibleKinks.map((event) => {
-              const curve = valid
-                .filter((point) => point.workbookName === event.workbookName && point.source === event.source && point.temperatureC === event.temperatureC && point.chip === event.chip && point.powerMw !== null)
-                .sort((left, right) => Math.abs(left.currentMa - event.currentMa) - Math.abs(right.currentMa - event.currentMa));
-              return curve.length ? curve[0].powerMw : null;
+              if (Number.isFinite(event.powerMw)) return event.powerMw;
+              const curvePoints = valid.filter((point) =>
+                point.workbookName === event.workbookName
+                && point.source === event.source
+                && point.temperatureC === event.temperatureC
+                && point.chip === event.chip
+              );
+              return interpolatePowerAtCurrent(curvePoints, event.currentMa);
             }),
             type: "scatter",
             mode: "markers",
@@ -2052,7 +2114,7 @@
               color: "#c33434",
               line: { color: "#c33434", width: 2 },
             },
-            hovertemplate: "Kink Current=%{x:.2f} mA<extra>Kink</extra>",
+            hovertemplate: "Kink Current=%{x:.2f} mA<br>Power=%{y:.3f} mW<extra>Kink</extra>",
           });
         }
       }
@@ -2091,7 +2153,9 @@
           KinkCurrent: event.currentMa.toFixed(2),
           "Avg dP/dI (SavGol)": Number.isFinite(event.avgDpDi) ? event.avgDpDi.toFixed(4) : "",
           "Anomaly dP/dI (Raw)": Number.isFinite(event.anomalyDpDi) ? event.anomalyDpDi.toFixed(4) : "",
-          "Change %": Number.isFinite(event.absDeviationPercent) ? `${event.absDeviationPercent.toFixed(2)}%` : "",
+          "Change %": Number.isFinite(event.deviationPercent)
+            ? `${event.deviationPercent.toFixed(2)}%`
+            : (Number.isFinite(event.absDeviationPercent) ? `${(-event.absDeviationPercent).toFixed(2)}%` : ""),
         }));
       clearTable(elements.kinkTable, ["Workbook", "Source", "Temperature", "Chip", "KinkCurrent", "Avg dP/dI (SavGol)", "Anomaly dP/dI (Raw)", "Change %"], rows);
     }
@@ -2350,7 +2414,7 @@
           event.currentMa.toFixed(4),
           event.avgDpDi.toFixed(4),
           event.anomalyDpDi.toFixed(4),
-          event.absDeviationPercent.toFixed(4),
+          (event.deviationPercent ?? -event.absDeviationPercent).toFixed(4),
         ].join("\t"));
       });
 
