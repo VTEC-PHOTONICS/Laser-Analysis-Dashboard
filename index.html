@@ -21,576 +21,84 @@
       --shadow-soft: 0 10px 28px rgba(37, 57, 77, 0.08);
       --radius: 20px;
     }
-
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
       color: var(--ink);
-      background:
-        radial-gradient(circle at top left, rgba(60, 103, 214, 0.14), transparent 24%),
-        radial-gradient(circle at top right, rgba(79, 157, 105, 0.12), transparent 22%),
-        linear-gradient(180deg, #f4f7fa 0%, #e6ebf0 100%);
+      background: radial-gradient(circle at top left, rgba(60, 103, 214, 0.14), transparent 24%), radial-gradient(circle at top right, rgba(79, 157, 105, 0.12), transparent 22%), linear-gradient(180deg, #f4f7fa 0%, #e6ebf0 100%);
       min-height: 100vh;
     }
-
-    .shell {
-      width: min(1720px, calc(100% - 36px));
-      margin: 20px auto 36px;
-    }
-
-    .hero {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
-      margin-bottom: 18px;
-    }
-
-    .hero-card,
-    .panel,
-    .stat,
-    .plot-card,
-    .table-card,
-    .kink-card {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(12px);
-    }
-
-    .hero-card {
-      padding: 30px 32px;
-      position: relative;
-      overflow: hidden;
-      background:
-        linear-gradient(145deg, rgba(255,255,255,0.96), rgba(244,248,251,0.92)),
-        radial-gradient(circle at top right, rgba(60, 103, 214, 0.08), transparent 32%);
-    }
-
-    .hero-card::after {
-      content: "";
-      position: absolute;
-      inset: auto -40px -48px auto;
-      width: 240px;
-      height: 240px;
-      border-radius: 999px;
-      background: radial-gradient(circle, rgba(60, 103, 214, 0.14), transparent 70%);
-      pointer-events: none;
-    }
-
-    .brand-row {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 18px;
-    }
-
-    .brand-logo {
-      width: auto;
-      max-width: min(220px, 42%);
-      max-height: 72px;
-      height: auto;
-      object-fit: contain;
-      display: block;
-      filter: drop-shadow(0 6px 18px rgba(34, 87, 122, 0.12));
-    }
-
-    .brand-copy {
-      display: grid;
-      gap: 4px;
-    }
-
-    .brand-title {
-      font-size: 0.86rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--accent);
-      font-weight: 700;
-    }
-
-    .brand-subtitle {
-      font-size: 0.9rem;
-      color: var(--muted);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .eyebrow {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.2em;
-      color: var(--accent);
-      margin-bottom: 10px;
-      font-weight: 700;
-    }
-
-    h1 {
-      margin: 0 0 12px;
-      font-size: clamp(2.2rem, 4vw, 3.8rem);
-      line-height: 0.98;
-      letter-spacing: -0.04em;
-      font-weight: 700;
-    }
-
-    .hero-copy {
-      color: var(--muted);
-      font-size: 1rem;
-      line-height: 1.55;
-      max-width: 760px;
-      margin: 0 0 16px;
-    }
-
-    .hero-highlights {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 18px;
-    }
-
-    .hero-highlight {
-      padding: 12px 14px;
-      border-radius: 16px;
-      background: rgba(34, 87, 122, 0.06);
-      border: 1px solid rgba(34, 87, 122, 0.09);
-      box-shadow: var(--shadow-soft);
-    }
-
-    .hero-highlight strong {
-      display: block;
-      font-size: 0.84rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-bottom: 4px;
-      color: var(--accent);
-    }
-
-    .hero-highlight span {
-      color: var(--muted);
-      font-size: 0.92rem;
-      line-height: 1.4;
-    }
-
-    .hero-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .tag {
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(34, 87, 122, 0.08);
-      border: 1px solid rgba(34, 87, 122, 0.12);
-      color: var(--accent);
-      font-size: 0.84rem;
-      letter-spacing: 0.04em;
-    }
-
-    .hero-side {
-      display: grid;
-      gap: 14px;
-    }
-
-    .panel {
-      padding: 18px;
-      box-shadow: var(--shadow-soft);
-    }
-
-    .panel-title {
-      font-size: 0.82rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 10px;
-    }
-
-    .folder-picker {
-      position: relative;
-      min-height: 154px;
-      border: 1.5px dashed rgba(34, 87, 122, 0.28);
-      border-radius: 18px;
-      background:
-        linear-gradient(160deg, rgba(255,255,255,0.9), rgba(247,251,254,0.74)),
-        radial-gradient(circle at bottom right, rgba(60, 103, 214, 0.12), transparent 42%);
-      display: grid;
-      place-items: center;
-      text-align: center;
-      padding: 24px;
-      cursor: pointer;
-      transition: border-color 0.18s ease, transform 0.18s ease;
-    }
-
-    .folder-picker:hover {
-      border-color: rgba(34, 87, 122, 0.46);
-      transform: translateY(-1px);
-    }
-
-    .folder-picker input {
-      display: none;
-    }
-
-    .folder-picker strong {
-      display: block;
-      font-size: 1.25rem;
-      margin-bottom: 8px;
-    }
-
-    .folder-picker span {
-      color: var(--muted);
-      line-height: 1.45;
-    }
-
-    .button-row {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 14px;
-    }
-
-    button,
-    select {
-      width: 100%;
-      border-radius: 14px;
-      border: 1px solid rgba(29, 24, 21, 0.14);
-      background: var(--panel-strong);
-      color: var(--ink);
-      font: inherit;
-      padding: 11px 12px;
-    }
-
-    button {
-      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-      color: #fff;
-      border: none;
-      cursor: pointer;
-      font-weight: 600;
-      box-shadow: 0 10px 22px rgba(60, 103, 214, 0.22);
-      transition: transform 0.16s ease;
-      width: auto;
-      min-width: 160px;
-    }
-
-    button:hover {
-      transform: translateY(-1px);
-    }
-
-    .button-secondary {
-      background: linear-gradient(135deg, #5f7284, #7d90a0);
-      box-shadow: 0 10px 22px rgba(60, 78, 96, 0.16);
-    }
-
-    .status {
-      margin-top: 14px;
-      color: var(--muted);
-      min-height: 1.4em;
-      line-height: 1.45;
-      padding: 10px 12px;
-      border-radius: 12px;
-      background: rgba(34, 87, 122, 0.05);
-      border: 1px solid rgba(34, 87, 122, 0.08);
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 14px;
-      margin-bottom: 18px;
-    }
-
-    .stat {
-      padding: 16px 18px;
-    }
-
-    .stat-label {
-      font-size: 0.76rem;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      color: var(--muted);
-      margin-bottom: 8px;
-    }
-
-    .stat-value {
-      font-size: clamp(1.5rem, 2vw, 2.2rem);
-      font-weight: 600;
-    }
-
-    .section {
-      margin-bottom: 18px;
-    }
-
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      gap: 16px;
-      margin-bottom: 12px;
-    }
-
-    .section-title {
-      font-size: 1.32rem;
-      font-weight: 600;
-      margin: 0;
-    }
-
-    .section-note {
-      color: var(--muted);
-      font-size: 0.95rem;
-      line-height: 1.45;
-      margin: 4px 0 0;
-    }
-
-    .filters-panel {
-      padding: 18px;
-      margin-bottom: 14px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.9), rgba(247,250,253,0.92));
-    }
-
-    .filters-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1.15fr 1fr 1fr auto;
-      gap: 14px;
-      align-items: start;
-    }
-
-    .control {
-      display: grid;
-      gap: 7px;
-    }
-
-    .kink-controls-stack {
-      display: grid;
-      gap: 14px;
-    }
-
-    .control label,
-    .checkbox-label {
-      font-size: 0.76rem;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      color: var(--muted);
-    }
-
-    select[multiple] {
-      min-height: 152px;
-      padding: 8px;
-    }
-
-    .checkbox-stack {
-      display: grid;
-      gap: 10px;
-      padding-top: 24px;
-      min-width: 250px;
-    }
-
-    .checkbox-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: var(--ink);
-      font-size: 0.95rem;
-    }
-
-    .checkbox-item input {
-      width: 18px;
-      height: 18px;
-      accent-color: var(--accent);
-    }
-
-    .checkbox-list-container {
-      display: grid;
-      gap: 7px;
-    }
-
-    .checkbox-list {
-      display: block;
-      background: var(--panel-strong);
-      border: 1px solid rgba(29, 24, 21, 0.14);
-      border-radius: 14px;
-      padding: 8px;
-      max-height: 160px;
-      overflow-y: auto;
-      user-select: none;
-    }
-
-    .checkbox-list-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 6px 10px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 0.92rem;
-      transition: background 0.1s;
-    }
-
-    .checkbox-list-item:hover {
-      background: rgba(34, 87, 122, 0.05);
-    }
-
-    .checkbox-list-item input {
-      width: 16px;
-      height: 16px;
-      pointer-events: none;
-      accent-color: var(--accent);
-    }
-
-    .checkbox-list-item span {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .plots-column {
-      display: grid;
-      gap: 18px;
-    }
-
-    .plot-card,
-    .table-card,
-    .kink-card {
-      padding: 18px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.94), rgba(247,250,253,0.92));
-    }
-
-    .card-title {
-      margin: 0 0 10px;
-      font-size: 0.98rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--muted);
-    }
-
-    .plot-subtitle {
-      margin: -2px 0 10px;
-      color: var(--muted);
-      font-size: 0.92rem;
-      line-height: 1.4;
-    }
-
-    .plot {
-      width: 100%;
-      height: 560px;
-      min-height: 560px;
-    }
-
-    .table-wrap {
-      max-height: 520px;
-      overflow: auto;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: rgba(255, 255, 255, 0.55);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.92rem;
-    }
-
-    th,
-    td {
-      padding: 10px 12px;
-      text-align: left;
-      border-bottom: 1px solid var(--line);
-      white-space: nowrap;
-      vertical-align: top;
-    }
-
-    th {
-      position: sticky;
-      top: 0;
-      background: #f9f2e8;
-      z-index: 1;
-      font-size: 0.78rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    .summary-grid,
-    .ridge-grid,
-    .spectrum-grid,
-    .wavelength-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 18px;
-      contain: layout style paint;
-    }
-
-    .subsection-title {
-      margin: 22px 0 10px;
-      font-size: 1rem;
-      color: var(--accent);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .empty-box {
-      padding: 28px;
-      text-align: center;
-      color: var(--muted);
-      border: 1px dashed rgba(29, 24, 21, 0.18);
-      border-radius: 14px;
-      background: rgba(255,255,255,0.45);
-    }
-
-    .note-list {
-      margin: 0;
-      padding-left: 18px;
-      color: var(--muted);
-      line-height: 1.5;
-    }
-
-    @media (max-width: 1320px) {
-      .filters-grid {
-        grid-template-columns: 1fr 1fr 1fr;
-      }
-
-      .summary-grid,
-      .ridge-grid,
-      .spectrum-grid,
-      .wavelength-grid,
-      .hero,
-      .stats,
-      .hero-highlights {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-
-    @media (max-width: 860px) {
-      .shell {
-        width: min(100% - 18px, 100%);
-        margin: 10px auto 22px;
-      }
-
-      .hero,
-      .stats,
-      .summary-grid,
-      .ridge-grid,
-      .filters-grid,
-      .hero-highlights {
-        grid-template-columns: 1fr;
-      }
-
-      .brand-row {
-        align-items: flex-start;
-      }
-
-      .brand-logo {
-        width: 112px;
-      }
-
-      .plot {
-        min-height: 420px;
-        height: 420px;
-      }
-    }
+    .shell { width: min(1720px, calc(100% - 36px)); margin: 20px auto 36px; }
+    .hero { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+    .hero-card, .panel, .stat, .plot-card, .table-card, .kink-card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); backdrop-filter: blur(12px); }
+    .hero-card { padding: 30px 32px; position: relative; overflow: hidden; background: linear-gradient(145deg, rgba(255,255,255,0.96), rgba(244,248,251,0.92)), radial-gradient(circle at top right, rgba(60, 103, 214, 0.08), transparent 32%); }
+    .hero-card::after { content: ""; position: absolute; inset: auto -40px -48px auto; width: 240px; height: 240px; border-radius: 999px; background: radial-gradient(circle, rgba(60, 103, 214, 0.14), transparent 70%); pointer-events: none; }
+    .brand-row { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; }
+    .brand-logo { width: auto; max-width: min(220px, 42%); max-height: 72px; height: auto; object-fit: contain; display: block; filter: drop-shadow(0 6px 18px rgba(34, 87, 122, 0.12)); }
+    .brand-copy { display: grid; gap: 4px; }
+    .brand-title { font-size: 0.86rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); font-weight: 700; }
+    .brand-subtitle { font-size: 0.9rem; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
+    .eyebrow { font-size: 12px; text-transform: uppercase; letter-spacing: 0.2em; color: var(--accent); margin-bottom: 10px; font-weight: 700; }
+    h1 { margin: 0 0 12px; font-size: clamp(2.2rem, 4vw, 3.8rem); line-height: 0.98; letter-spacing: -0.04em; font-weight: 700; }
+    .hero-copy { color: var(--muted); font-size: 1rem; line-height: 1.55; max-width: 760px; margin: 0 0 16px; }
+    .hero-highlights { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 18px; }
+    .hero-highlight { padding: 12px 14px; border-radius: 16px; background: rgba(34, 87, 122, 0.06); border: 1px solid rgba(34, 87, 122, 0.09); box-shadow: var(--shadow-soft); }
+    .hero-highlight strong { display: block; font-size: 0.84rem; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; color: var(--accent); }
+    .hero-highlight span { color: var(--muted); font-size: 0.92rem; line-height: 1.4; }
+    .hero-side { display: grid; gap: 14px; }
+    .panel { padding: 18px; box-shadow: var(--shadow-soft); }
+    .panel-title { font-size: 0.82rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+    .folder-picker { position: relative; min-height: 154px; border: 1.5px dashed rgba(34, 87, 122, 0.28); border-radius: 18px; background: linear-gradient(160deg, rgba(255,255,255,0.9), rgba(247,251,254,0.74)), radial-gradient(circle at bottom right, rgba(60, 103, 214, 0.12), transparent 42%); display: grid; place-items: center; text-align: center; padding: 24px; cursor: pointer; transition: border-color 0.18s ease, transform 0.18s ease; }
+    .folder-picker:hover { border-color: rgba(34, 87, 122, 0.46); transform: translateY(-1px); }
+    .folder-picker input { display: none; }
+    .folder-picker strong { display: block; font-size: 1.25rem; margin-bottom: 8px; }
+    .folder-picker span { color: var(--muted); line-height: 1.45; }
+    .button-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
+    button, select { width: 100%; border-radius: 14px; border: 1px solid rgba(29, 24, 21, 0.14); background: var(--panel-strong); color: var(--ink); font: inherit; padding: 11px 12px; }
+    button { background: linear-gradient(135deg, var(--accent), var(--accent-strong)); color: #fff; border: none; cursor: pointer; font-weight: 600; box-shadow: 0 10px 22px rgba(60, 103, 214, 0.22); transition: transform 0.16s ease; width: auto; min-width: 160px; }
+    button:hover { transform: translateY(-1px); }
+    .button-secondary { background: linear-gradient(135deg, #5f7284, #7d90a0); box-shadow: 0 10px 22px rgba(60, 78, 96, 0.16); }
+    .status { margin-top: 14px; color: var(--muted); min-height: 1.4em; line-height: 1.45; padding: 10px 12px; border-radius: 12px; background: rgba(34, 87, 122, 0.05); border: 1px solid rgba(34, 87, 122, 0.08); }
+    .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 18px; }
+    .stat { padding: 16px 18px; }
+    .stat-label { font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); margin-bottom: 8px; }
+    .stat-value { font-size: clamp(1.5rem, 2vw, 2.2rem); font-weight: 600; }
+    .section { margin-bottom: 18px; }
+    .section-header { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; margin-bottom: 12px; }
+    .section-title { font-size: 1.32rem; font-weight: 600; margin: 0; }
+    .section-note { color: var(--muted); font-size: 0.95rem; line-height: 1.45; margin: 4px 0 0; }
+    .filters-panel { padding: 18px; margin-bottom: 14px; background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(247,250,253,0.92)); }
+    .filters-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1.15fr 1fr 1fr auto; gap: 14px; align-items: start; }
+    .control { display: grid; gap: 7px; }
+    .kink-controls-stack { display: grid; gap: 14px; }
+    .control label, .checkbox-label { font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); }
+    select[multiple] { min-height: 152px; padding: 8px; }
+    .checkbox-stack { display: grid; gap: 10px; padding-top: 24px; min-width: 250px; }
+    .checkbox-item { display: flex; align-items: center; gap: 10px; color: var(--ink); font-size: 0.95rem; }
+    .checkbox-item input { width: 18px; height: 18px; accent-color: var(--accent); }
+    .checkbox-list-container { display: grid; gap: 7px; }
+    .checkbox-list { display: block; background: var(--panel-strong); border: 1px solid rgba(29, 24, 21, 0.14); border-radius: 14px; padding: 8px; max-height: 160px; overflow-y: auto; user-select: none; }
+    .checkbox-list-item { display: flex; align-items: center; gap: 10px; padding: 6px 10px; border-radius: 8px; cursor: pointer; font-size: 0.92rem; transition: background 0.1s; }
+    .checkbox-list-item:hover { background: rgba(34, 87, 122, 0.05); }
+    .checkbox-list-item input { width: 16px; height: 16px; pointer-events: none; accent-color: var(--accent); }
+    .checkbox-list-item span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .plots-column { display: grid; gap: 18px; }
+    .plot-card, .table-card, .kink-card { padding: 18px; background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(247,250,253,0.92)); }
+    .card-title { margin: 0 0 10px; font-size: 0.98rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+    .plot-subtitle { margin: -2px 0 10px; color: var(--muted); font-size: 0.92rem; line-height: 1.4; }
+    .plot { width: 100%; height: 560px; min-height: 560px; }
+    .table-wrap { max-height: 520px; overflow: auto; border: 1px solid var(--line); border-radius: 14px; background: rgba(255, 255, 255, 0.55); }
+    table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+    th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--line); white-space: nowrap; vertical-align: top; }
+    th { position: sticky; top: 0; background: #f9f2e8; z-index: 1; font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+    .summary-grid, .ridge-grid, .spectrum-grid, .wavelength-grid { display: grid; grid-template-columns: 1fr; gap: 18px; contain: layout style paint; }
+    .subsection-title { margin: 22px 0 10px; font-size: 1rem; color: var(--accent); letter-spacing: 0.08em; text-transform: uppercase; }
+    .empty-box { padding: 28px; text-align: center; color: var(--muted); border: 1px dashed rgba(29, 24, 21, 0.18); border-radius: 14px; background: rgba(255,255,255,0.45); }
+    .mode-section-hidden { display: none !important; }
+    .plot-compact { height: 420px; min-height: 420px; }
+    @media (max-width: 1320px) { .filters-grid { grid-template-columns: 1fr 1fr 1fr; } .summary-grid, .ridge-grid, .spectrum-grid, .wavelength-grid, .hero, .stats { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 860px) { .shell { width: calc(100% - 18px); } .hero, .stats, .summary-grid, .ridge-grid, .filters-grid { grid-template-columns: 1fr; } .brand-logo { width: 112px; } .plot { min-height: 420px; height: 420px; } }
   </style>
 </head>
 <body>
@@ -604,27 +112,27 @@
             <div class="brand-subtitle">Measurement review, threshold analysis, and comparison</div>
           </div>
         </div>
-        <div class="eyebrow">HTML Dashboard</div>
-        <h1>Laser Data Analysis</h1>
-        <p class="hero-copy">
-          Review LI, IV, derivatives, spectrum, summary metrics, chip/ridge wavelength trends, and kink locations directly in the browser.
-        </p>
-      </article>
+      <div class="eyebrow">HTML Dashboard</div>
+      <h1>Laser Data Analysis</h1>
+      <div style="margin: 12px 0 14px; display: flex; gap: 0; background: rgba(34,87,122,0.06); border-radius: 14px; padding: 4px; border: 1px solid rgba(34,87,122,0.1); width: fit-content;">
+        <button id="modeLivBtn" type="button" style="padding: 10px 28px; border: none; border-radius: 11px 0 0 11px; background: #22577a; color: #fff; font-weight: 600; cursor: pointer; min-width: auto;">LIV Analysis</button>
+        <button id="modeSpectrumBtn" type="button" style="padding: 10px 28px; border: none; border-radius: 0 11px 11px 0; background: transparent; color: var(--ink); font-weight: 600; cursor: pointer; min-width: auto;">Spectral Analysis</button>
+      </div>
+      <p class="hero-copy" id="heroSubtitle">Review LI, IV, derivatives, summary metrics, chip/ridge wavelength trends, and kink locations.</p>
+    </article>
       <aside class="hero-side">
         <section class="panel">
           <div class="panel-title">Workbook Folder</div>
           <div id="selectFolderButton" class="folder-picker" role="button" tabindex="0">
             <input id="folderPicker" type="file" multiple webkitdirectory directory accept=".xlsx">
-            <div>
-              <strong>Select Folder</strong>
-              <span>Each .xlsx is parsed for LIV and spectrum sheets (LIV_25C/50C/75C and Spectrum_25C/50C/75C) in the same file.</span>
-            </div>
+            <div><strong>Select Folder</strong><span>Each .xlsx is parsed for LIV and spectrum sheets.</span></div>
           </div>
           <div class="button-row">
-            <button id="reloadButton" type="button">Reload Selected Folder</button>
-            <button id="clearButton" type="button" class="button-secondary">Clear Data</button>
+            <button id="reloadButton" type="button">Reload</button>
+            <button id="clearButton" type="button" class="button-secondary">Clear</button>
+            <button id="runLivPlotterBtn" type="button" class="button-secondary" style="background: linear-gradient(135deg,#4f9d69,#3d7a52); min-width: auto; display: none;">Generate Excel Files</button>
           </div>
-          <div id="statusText" class="status">Choose a folder with exported .xlsx files to begin.</div>
+          <div id="statusText" class="status">Choose a folder with .xlsx files to begin.</div>
         </section>
       </aside>
     </section>
@@ -637,2457 +145,458 @@
       <article class="stat"><div class="stat-label">Kink Events</div><div class="stat-value" id="kinkCount">0</div></article>
     </section>
 
-    <section class="section">
-      <div class="section-header">
-        <div>
-          <h2 class="section-title">Curve Analysis</h2>
-          <p class="section-note">LI and IV curves first, then derivatives. Spectrum plots use separate filters in the Spectrum section (toggle off by default).</p>
-        </div>
-      </div>
-      <div class="panel filters-panel">
-        <div class="filters-grid">
-          <div class="checkbox-list-container" style="grid-column: 1 / -1;">
-            <label>Workbooks</label>
-            <div id="workbookFilter" class="checkbox-list" style="max-height: 240px; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));"></div>
-          </div>
-          <div class="checkbox-list-container">
-            <label>Source</label>
-            <div id="sourceFilter" class="checkbox-list"></div>
-          </div>
-          <div class="checkbox-list-container">
-            <label>Temperatures</label>
-            <div id="temperatureFilter" class="checkbox-list"></div>
-          </div>
-          <div class="checkbox-list-container">
-            <label>Chips</label>
-            <div id="chipFilter" class="checkbox-list"></div>
-          </div>
-          <div class="kink-controls-stack">
-            <div class="control">
-              <label for="kinkCriterion">Kink Slope Deviation</label>
-              <select id="kinkCriterion">
-                <option value="0.10" selected>10%</option>
-                <option value="0.08">8%</option>
-                <option value="0.12">12%</option>
-                <option value="0.15">15%</option>
-                <option value="0.20">20%</option>
-                <option value="0.25">25%</option>
-                <option value="0.30">30%</option>
-                <option value="0.40">40%</option>
-                <option value="0.50">50%</option>
-              </select>
+    <!-- LIV MODE -->
+    <div id="livModeContainer">
+      <section class="section">
+        <div class="section-header"><div><h2 class="section-title">LIV Curve Analysis</h2><p class="section-note">LI, IV, derivatives, summary metrics, and kink detection.</p></div></div>
+        <div class="panel filters-panel">
+          <div class="filters-grid">
+            <div class="checkbox-list-container" style="grid-column:1/-1;">
+              <label>Workbooks</label>
+              <div id="workbookFilter" class="checkbox-list" style="max-height:240px; display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr));"></div>
             </div>
-            <div class="control">
-              <label for="kinkLimit">Max Kinks per Curve</label>
-              <input id="kinkLimit" type="number" min="1" max="100" value="10" style="width: 100%; padding: 11px 12px; border: 1px solid rgba(29, 24, 21, 0.14); border-radius: 14px; font: inherit;">
+            <div class="checkbox-list-container"><label>Source</label><div id="sourceFilter" class="checkbox-list"></div></div>
+            <div class="checkbox-list-container"><label>Temperatures</label><div id="temperatureFilter" class="checkbox-list"></div></div>
+            <div class="checkbox-list-container"><label>Chips</label><div id="chipFilter" class="checkbox-list"></div></div>
+            <div class="kink-controls-stack">
+              <div class="control"><label for="kinkCriterion">Kink Slope Deviation</label><select id="kinkCriterion"><option value="0.10" selected>10%</option><option value="0.08">8%</option><option value="0.12">12%</option><option value="0.15">15%</option><option value="0.20">20%</option><option value="0.25">25%</option><option value="0.30">30%</option><option value="0.40">40%</option><option value="0.50">50%</option></select></div>
+              <div class="control"><label for="kinkLimit">Max Kinks per Curve</label><input id="kinkLimit" type="number" min="1" max="100" value="1" style="width:100%; padding:11px 12px; border:1px solid rgba(29,24,21,0.14); border-radius:14px; font:inherit;"></div>
+            </div>
+            <div class="checkbox-stack">
+              <label class="checkbox-label">Options</label>
+              <label class="checkbox-item"><input id="showKinksToggle" type="checkbox" checked> Show kinks</label>
+              <label class="checkbox-item"><input id="showDpDiToggle" type="checkbox" checked> Show dP/dI</label>
+              <label class="checkbox-item"><input id="showD2pDi2Toggle" type="checkbox"> Show d²P/dI²</label>
+              <label class="checkbox-item"><input id="showSupplierSummaryToggle" type="checkbox" checked> Show supplier</label>
             </div>
           </div>
-          <div class="checkbox-stack">
-            <label class="checkbox-label">Options</label>
-            <label class="checkbox-item"><input id="showKinksToggle" type="checkbox"> Show kinks on LI and dP/dI plots</label>
-            <label class="checkbox-item"><input id="showDpDiToggle" type="checkbox" checked> Show dP/dI in derivative plot</label>
-            <label class="checkbox-item"><input id="showD2pDi2Toggle" type="checkbox"> Show d²P/dI² in derivative plot</label>
-            <label class="checkbox-item"><input id="showSupplierSummaryToggle" type="checkbox" checked> Show supplier series in summary plots</label>
-          </div>
         </div>
-      </div>
+        <div class="plots-column">
+          <article class="plot-card"><h3 class="card-title">LI Curves</h3><div id="liPlot" class="plot"></div></article>
+          <article class="plot-card"><h3 class="card-title">IV Curves</h3><div id="ivPlot" class="plot"></div></article>
+          <article class="plot-card"><h3 class="card-title">LI Derivatives</h3><div id="liDerivativePlot" class="plot"></div></article>
+        </div>
+      </section>
 
-      <div class="plots-column">
-        <article class="plot-card">
-          <h3 class="card-title">LI Curves</h3>
-          <div id="liPlot" class="plot"></div>
-        </article>
-        <article class="plot-card">
-          <h3 class="card-title">IV Curves</h3>
-          <div id="ivPlot" class="plot"></div>
-        </article>
-        <article class="plot-card">
-          <h3 class="card-title">LI Derivatives (dP/dI and d²P/dI²)</h3>
-          <p class="plot-subtitle">Use the options panel to toggle the first and second derivative traces independently.</p>
-          <div id="liDerivativePlot" class="plot"></div>
-        </article>
-      </div>
-    </section>
-
-    <section class="section" id="spectrumSection">
-      <div class="section-header">
-        <div>
-          <h2 class="section-title">Spectrum Plots</h2>
-          <p class="section-note">One spectrum plot: wavelength vs power. Select chips, temperatures, and drive currents (50 mA, 100 mA, …).</p>
-        </div>
-      </div>
-      <div id="spectrumFiltersPanel" class="panel filters-panel" style="display: none;">
-        <div class="filters-grid" style="grid-template-columns: repeat(4, 1fr) auto;">
-          <div class="checkbox-list-container">
-            <label>Spectrum Chips</label>
-            <div id="spectrumChipFilter" class="checkbox-list"></div>
-          </div>
-          <div class="checkbox-list-container">
-            <label>Spectrum Temperatures</label>
-            <div id="spectrumTemperatureFilter" class="checkbox-list"></div>
-          </div>
-          <div class="checkbox-list-container">
-            <label>Spectrum Currents (mA)</label>
-            <div id="spectrumCurrentFilter" class="checkbox-list"></div>
-          </div>
-          <div class="checkbox-list-container">
-            <label>Spectrum Workbook</label>
-            <div id="spectrumWorkbookFilter" class="checkbox-list"></div>
-          </div>
-          <div class="checkbox-stack">
-            <label class="checkbox-label">Spectrum</label>
-            <label class="checkbox-item"><input id="showSpectrumPlotsToggle" type="checkbox"> Show spectrum plots</label>
-          </div>
-        </div>
-      </div>
-      <div id="spectrumGrid" class="spectrum-grid" style="display: none;"></div>
-    </section>
-
-    <section class="section">
-      <div class="section-header">
-        <div>
-          <h2 class="section-title">Summary by Chip</h2>
-          <p class="section-note">Standard summary metrics and chip vs wavelength from the Summary sheet.</p>
-        </div>
-      </div>
-      <div id="summaryGrid" class="summary-grid"></div>
-      <h3 class="subsection-title">Chip vs Wavelength (Wl@50mA, Wl@100mA, Wl_theory)</h3>
-      <div id="summaryWavelengthGrid" class="wavelength-grid"></div>
-    </section>
-
-    <section class="section">
-      <div class="section-header">
-        <div>
-          <h2 class="section-title">Summary by Ridge Width</h2>
-          <p class="section-note">Ridge-width summary metrics and ridge width vs wavelength when ridge data exists.</p>
-        </div>
-      </div>
-      <div id="ridgeGrid" class="ridge-grid"></div>
-      <h3 class="subsection-title">Ridge Width vs Wavelength</h3>
-      <div id="ridgeWavelengthGrid" class="wavelength-grid"></div>
-    </section>
-
-    <section class="section">
-      <div class="section-header">
-        <div>
-          <h2 class="section-title">Kink Detection</h2>
-          <p class="section-note">Detects slope rolloffs only (negative dP/dI change). All matches are ranked by threshold-current distance, then kink size, then cutoff %, then limited by Max Kinks per Curve.</p>
-        </div>
-      </div>
-      <article class="kink-card">
-        <div class="button-row">
-          <button id="downloadKinkTxtButton" type="button">Save Kink Data TXT</button>
-        </div>
-        <div class="table-wrap"><table id="kinkTable"></table></div>
-      </article>
-    </section>
-
-    <section class="section">
-      <div class="section-header">
-        <div>
-          <h2 class="section-title">First Kink Current vs Chip Number</h2>
-          <p class="section-note">For each chip, this shows the first detected kink current in the filtered dataset.</p>
-        </div>
-      </div>
+      <!-- Distribution plot just above summary -->
       <article class="plot-card">
-        <div id="firstKinkPlot" class="plot"></div>
+        <h3 class="card-title">Parameter Distributions</h3>
+        <p class="plot-subtitle">Kernel density estimates: Threshold Current (mA), Resistance (Ohm), Slope Efficiency (mW/mA), Peak Power (mW), Power at 350mA (mW). Colored by temperature: <span style="color:#22577a">25°C</span> · <span style="color:#4f9d69">50°C</span> · <span style="color:#c33434">75°C</span></p>
+        <div id="livDistributionPlot" class="plot" style="height:700px; min-height:700px;"></div>
       </article>
-    </section>
+
+      <section class="section" id="summarySection">
+        <div class="section-header"><div><h2 class="section-title">Summary by Chip</h2><p class="section-note">Standard summary metrics vs chip number from the Summary sheet.</p></div></div>
+        <div id="summaryGrid" class="summary-grid"></div>
+      </section>
+
+      <section class="section" id="ridgeSection">
+        <div class="section-header"><div><h2 class="section-title">Summary by Ridge Width</h2><p class="section-note">Ridge-width summary metrics when ridge data exists.</p></div></div>
+        <div id="ridgeGrid" class="ridge-grid"></div>
+      </section>
+
+      <section class="section" id="kinkSection">
+        <div class="section-header"><div><h2 class="section-title">Kink Detection</h2></div></div>
+        <article class="kink-card">
+          <div class="button-row"><button id="downloadKinkTxtButton" type="button">Save Kink Data TXT</button></div>
+          <div class="table-wrap"><table id="kinkTable"></table></div>
+        </article>
+      </section>
+
+      <section class="section" id="firstKinkSection">
+        <div class="section-header"><div><h2 class="section-title">First Kink Current vs Chip Number</h2></div></div>
+        <article class="plot-card"><div id="firstKinkPlot" class="plot"></div></article>
+      </section>
+
+      <section class="section" id="kinkVsRidgeSection">
+        <div class="section-header"><div><h2 class="section-title">First Kink Current vs Ridge Width</h2></div></div>
+        <article class="plot-card"><div id="kinkVsRidgeWidthPlot" class="plot"></div></article>
+      </section>
+    </div>
+
+    <!-- SPECTRAL MODE -->
+    <div id="spectrumModeContainer" class="mode-section-hidden">
+      <section class="section">
+        <div class="section-header"><div><h2 class="section-title">Spectral Analysis</h2><p class="section-note">Spectrum plots, wavelength distributions, and Chip vs Wavelength.</p></div></div>
+      </section>
+
+      <section class="section">
+        <div class="panel filters-panel">
+          <div class="filters-grid" style="grid-template-columns: repeat(4, 1fr) auto;">
+            <div class="checkbox-list-container"><label>Spectrum Chips</label><div id="spectrumChipFilter" class="checkbox-list"></div></div>
+            <div class="checkbox-list-container"><label>Spectrum Temperatures</label><div id="spectrumTemperatureFilter" class="checkbox-list"></div></div>
+            <div class="checkbox-list-container"><label>Spectrum Currents (mA)</label><div id="spectrumCurrentFilter" class="checkbox-list"></div></div>
+            <div class="checkbox-list-container"><label>Spectrum Workbooks (select one)</label><div id="spectrumWorkbookFilter" class="checkbox-list" style="max-height:120px;"></div></div>
+            <div class="checkbox-stack">
+              <label class="checkbox-label">Options</label>
+              <label class="checkbox-item"><input id="showSpectrumPlotsToggle" type="checkbox" checked> Show spectrum plots</label>
+            </div>
+          </div>
+        </div>
+        <div id="spectrumGrid" class="spectrum-grid"></div>
+      </section>
+
+      <article class="plot-card">
+        <h3 class="card-title">Wavelength Distributions</h3>
+        <p class="plot-subtitle">Kernel density estimates for Wl@50mA, Wl@100mA, Wl_theory. Colored by temperature.</p>
+        <div id="wavelengthDistributionPlot" class="plot" style="height:600px; min-height:600px;"></div>
+      </article>
+
+      <section class="section" id="spectralWavelengthSection">
+        <div class="section-header"><div><h2 class="section-title">Chip vs Wavelength</h2><p class="section-note">Wavelength values across chips from Summary sheet: Wl@50mA, Wl@100mA, Wl_theory.</p></div></div>
+        <div id="spectralSummaryWavelengthGrid" class="wavelength-grid"></div>
+        <h3 class="subsection-title">Ridge Width vs Wavelength</h3>
+        <div id="spectralRidgeWavelengthGrid" class="wavelength-grid"></div>
+      </section>
+    </div>
   </div>
 
   <script>
-    const LIV_TEMPERATURES = ["25", "50", "75"];
-    const SPECTRUM_TEMPERATURES = ["25", "50", "75"];
-    const DEV_WORKBOOK_FILE = "ALMAE_T7J_PulseWidth200_delay1800_LIV.xlsx";
-    const SUMMARY_METRICS = [
-      "Threshold Current (mA)",
-      "Resistance (Ohm)",
-      "Slope Efficiency (mW/mA)",
-      "Peak Power (mW)",
-      "Power @ 350 mA (mW)",
-    ];
-    const WAVELENGTH_METRICS = [
-      "Wl@50mA (nm)",
-      "Wl@100mA (nm)",
-      "Wl_theory (nm)",
-    ];
+    const LIV_TEMPS = ["25","50","75"], SPEC_TEMPS = ["25","50","75"];
+    const DEV_FILE = "ALMAE_T7J_PulseWidth200_delay1800_LIV.xlsx";
+    const SUMMARY_METRICS = ["Threshold Current (mA)","Resistance (Ohm)","Slope Efficiency (mW/mA)","Peak Power (mW)","Power @ 350 mA (mW)"];
+    const WL_METRICS = ["Wl@50mA (nm)","Wl@100mA (nm)","Wl_theory (nm)"];
+    const DB_NAME = "liv-dashboard-storage", STORE = "settings", KEY = "lastDirectoryHandle";
+    const MODE = {LIV:"liv",SPEC:"spectrum"};
+    let curMode = MODE.LIV;
+    const st = {livP:[],sumP:[],specP:[],specSrc:"",kinks:[],wbs:[],files:[],dh:null,lastDir:"",rf:null};
+    const PC = {responsive:true,displaylogo:false};
+    const TC = {"25":"#22577a","50":"#4f9d69","75":"#c33434",Supplier75:"#ff7f0e"};
+    const TCRGB = {"25":"34,87,122","50":"79,157,105","75":"195,52,52",Supplier75:"255,127,14"};
 
-    const DIRECTORY_DB_NAME = "liv-dashboard-storage";
-    const DIRECTORY_STORE_NAME = "settings";
-    const LAST_DIRECTORY_KEY = "lastDirectoryHandle";
-
-    const state = {
-      livPoints: [],
-      summaryPoints: [],
-      spectrumPoints: [],
-      spectrumSourceWorkbook: "",
-      kinkEvents: [],
-      workbookNames: [],
-      selectedFiles: [],
-      directoryHandle: null,
-      lastDirectoryName: "",
-      renderFrame: null,
+    const el = {
+      fp:g("folderPicker"),sfb:g("selectFolderButton"),rb:g("reloadButton"),cb:g("clearButton"),rpb:g("runLivPlotterBtn"),
+      stxt:g("statusText"),wc:g("workbookCount"),lc:g("livCount"),sc:g("summaryCount"),spc:g("spectrumCount"),kc:g("kinkCount"),
+      mlb:g("modeLivBtn"),msb:g("modeSpectrumBtn"),hs:g("heroSubtitle"),lmc:g("livModeContainer"),smc:g("spectrumModeContainer"),
+      ldp:g("livDistributionPlot"),wdp:g("wavelengthDistributionPlot"),
+      wf:g("workbookFilter"),sf:g("sourceFilter"),tf:g("temperatureFilter"),cf:g("chipFilter"),
+      kcr:g("kinkCriterion"),kli:g("kinkLimit"),skt:g("showKinksToggle"),sdp:g("showDpDiToggle"),sd2:g("showD2pDi2Toggle"),sss:g("showSupplierSummaryToggle"),
+      sspt:g("showSpectrumPlotsToggle"),
+      scf:g("spectrumChipFilter"),stf:g("spectrumTemperatureFilter"),scuf:g("spectrumCurrentFilter"),swf:g("spectrumWorkbookFilter"),
+      dkb:g("downloadKinkTxtButton"),kt:g("kinkTable"),fkp:g("firstKinkPlot"),kvrp:g("kinkVsRidgeWidthPlot"),
+      sg:g("summaryGrid"),swg:g("summaryWavelengthGrid"),rg:g("ridgeGrid"),rwg:g("ridgeWavelengthGrid"),
+      spg:g("spectrumGrid"),sswg:g("spectralSummaryWavelengthGrid"),srwg:g("spectralRidgeWavelengthGrid"),
     };
-
-    const PLOT_CONFIG = {
-      responsive: true,
-      displaylogo: false,
-    };
-
-    const elements = {
-      folderPicker: document.getElementById("folderPicker"),
-      selectFolderButton: document.getElementById("selectFolderButton"),
-      reloadButton: document.getElementById("reloadButton"),
-      clearButton: document.getElementById("clearButton"),
-      statusText: document.getElementById("statusText"),
-      workbookCount: document.getElementById("workbookCount"),
-      livCount: document.getElementById("livCount"),
-      summaryCount: document.getElementById("summaryCount"),
-      spectrumCount: document.getElementById("spectrumCount"),
-      kinkCount: document.getElementById("kinkCount"),
-      workbookFilter: document.getElementById("workbookFilter"),
-      sourceFilter: document.getElementById("sourceFilter"),
-      temperatureFilter: document.getElementById("temperatureFilter"),
-      chipFilter: document.getElementById("chipFilter"),
-      kinkCriterion: document.getElementById("kinkCriterion"),
-      kinkLimit: document.getElementById("kinkLimit"),
-      showKinksToggle: document.getElementById("showKinksToggle"),
-      showDpDiToggle: document.getElementById("showDpDiToggle"),
-      showD2pDi2Toggle: document.getElementById("showD2pDi2Toggle"),
-      showSupplierSummaryToggle: document.getElementById("showSupplierSummaryToggle"),
-      showSpectrumPlotsToggle: document.getElementById("showSpectrumPlotsToggle"),
-      spectrumFiltersPanel: document.getElementById("spectrumFiltersPanel"),
-      spectrumChipFilter: document.getElementById("spectrumChipFilter"),
-      spectrumTemperatureFilter: document.getElementById("spectrumTemperatureFilter"),
-      spectrumCurrentFilter: document.getElementById("spectrumCurrentFilter"),
-      spectrumWorkbookFilter: document.getElementById("spectrumWorkbookFilter"),
-      downloadKinkTxtButton: document.getElementById("downloadKinkTxtButton"),
-      kinkTable: document.getElementById("kinkTable"),
-      firstKinkPlot: document.getElementById("firstKinkPlot"),
-      summaryGrid: document.getElementById("summaryGrid"),
-      summaryWavelengthGrid: document.getElementById("summaryWavelengthGrid"),
-      ridgeGrid: document.getElementById("ridgeGrid"),
-      ridgeWavelengthGrid: document.getElementById("ridgeWavelengthGrid"),
-      spectrumGrid: document.getElementById("spectrumGrid"),
-    };
-
-    function coerceNumber(value) {
-      if (value === null || value === undefined || value === "") {
-        return null;
-      }
-      const number = Number(value);
-      return Number.isFinite(number) ? number : null;
-    }
-
-    function uniqueSorted(values, sorter = null) {
-      const unique = [...new Set(values.filter((value) => value !== null && value !== undefined && value !== ""))];
-      unique.sort(sorter || ((left, right) => String(left).localeCompare(String(right), undefined, { numeric: true })));
-      return unique;
-    }
-
-    function numericOrStringSort(left, right) {
-      const leftNumber = Number(left);
-      const rightNumber = Number(right);
-      const leftNumeric = Number.isFinite(leftNumber);
-      const rightNumeric = Number.isFinite(rightNumber);
-      if (leftNumeric && rightNumeric) {
-        return leftNumber - rightNumber;
-      }
-      if (leftNumeric) {
-        return -1;
-      }
-      if (rightNumeric) {
-        return 1;
-      }
-      return String(left).localeCompare(String(right));
-    }
-
-    function normalizeChipId(value) {
-      if (value === null || value === undefined || value === "") {
-        return "";
-      }
-      const numeric = Number(value);
-      if (Number.isFinite(numeric)) {
-        return String(Number.isInteger(numeric) ? Math.trunc(numeric) : numeric);
-      }
-      return String(value).trim().replace(/^0+(\d)/, "$1");
-    }
-
-    function propagateHeaders(row) {
-      const propagated = [];
-      let current = null;
-      for (const cell of row) {
-        if (cell !== null && cell !== undefined && cell !== "") {
-          current = String(cell).trim();
-        }
-        propagated.push(current);
-      }
-      return propagated;
-    }
-
-    function sheetToRows(sheet) {
-      return XLSX.utils.sheet_to_json(sheet, { header: 1, raw: true, defval: null, blankrows: false });
-    }
-
-    function normalizeSheetKey(name) {
-      return String(name ?? "").trim().toLowerCase().replace(/\s+/g, "");
-    }
-
-    function findWorkbookSheet(workbook, targetName) {
-      if (!workbook?.Sheets) {
-        return null;
-      }
-      if (workbook.Sheets[targetName]) {
-        return workbook.Sheets[targetName];
-      }
-      const targetKey = normalizeSheetKey(targetName);
-      const matchedName = (workbook.SheetNames || []).find((name) => normalizeSheetKey(name) === targetKey);
-      return matchedName ? workbook.Sheets[matchedName] : null;
-    }
-
-    function parseLivSheet(workbookName, rows, temperatureC) {
-      const points = [];
-      const maxCols = Math.max(...rows.map((row) => row.length), 0);
-      const headerRow = rows[0] || [];
-      for (let startCol = 0; startCol < maxCols; startCol += 4) {
-        const header = headerRow[startCol];
-        if (typeof header !== "string" || !header.includes("_")) {
-          continue;
-        }
-        const chip = normalizeChipId(String(header).split("_").pop());
-        for (let rowIndex = 2; rowIndex < rows.length; rowIndex += 1) {
-          const row = rows[rowIndex] || [];
-          const current = coerceNumber(row[startCol]);
-          if (current === null) {
-            continue;
-          }
-          points.push({
-            workbookName,
-            source: "Measured",
-            temperatureC: String(temperatureC),
-            chip,
-            currentMa: current,
-            voltageV: coerceNumber(row[startCol + 1]),
-            powerMw: coerceNumber(row[startCol + 2]),
-          });
-        }
-      }
-      return points;
-    }
-
-    function parseSupplierSheet(workbookName, rows) {
-      const points = [];
-      const maxCols = Math.max(...rows.map((row) => row.length), 0);
-      const headerRow = rows[0] || [];
-      for (let startCol = 0; startCol < maxCols; startCol += 7) {
-        const header = headerRow[startCol];
-        if (typeof header !== "string" || !header.startsWith("Chip ")) {
-          continue;
-        }
-        const chip = header.replace("Chip ", "").trim();
-        for (let rowIndex = 2; rowIndex < rows.length; rowIndex += 1) {
-          const row = rows[rowIndex] || [];
-          const current = coerceNumber(row[startCol + 3]);
-          if (current === null) {
-            continue;
-          }
-          points.push({
-            workbookName,
-            source: "Supplier",
-            temperatureC: "75",
-            chip,
-            currentMa: current,
-            voltageV: coerceNumber(row[startCol + 4]),
-            powerMw: coerceNumber(row[startCol + 5]),
-          });
-        }
-      }
-      return points;
-    }
-
-    function findSpectrumHeaderRow(rows) {
-      const scanLimit = Math.min(rows.length, 6);
-      for (let rowIndex = 0; rowIndex < scanLimit; rowIndex += 1) {
-        const row = rows[rowIndex] || [];
-        if (row.some((cell) => /^Chip_\d+_\d+\s*mA$/i.test(String(cell ?? "").trim()))) {
-          return rowIndex;
-        }
-      }
-      return 0;
-    }
-
-    function parseSpectrumSheet(workbookName, rows, temperatureC) {
-      const points = [];
-      if (!rows.length) {
-        return points;
-      }
-
-      const maxCols = Math.max(...rows.map((row) => row.length), 0);
-      const headerRowIndex = findSpectrumHeaderRow(rows);
-      const headerRow = rows[headerRowIndex] || [];
-      const dataStartRow = headerRowIndex + 2;
-
-      for (let startCol = 0; startCol < maxCols; startCol += 3) {
-        const headerText = String(headerRow[startCol] ?? "").trim();
-        if (!/^Chip_/i.test(headerText)) {
-          continue;
-        }
-
-        const match = headerText.match(/^Chip_(\d+)_(\d+)\s*mA$/i);
-        if (!match) {
-          continue;
-        }
-
-        const chip = normalizeChipId(match[1]);
-        const driveCurrentMa = Number(match[2]);
-        for (let rowIndex = dataStartRow; rowIndex < rows.length; rowIndex += 1) {
-          const row = rows[rowIndex] || [];
-          const wavelengthNm = coerceNumber(row[startCol]);
-          const powerDbm = coerceNumber(row[startCol + 1]);
-          if (wavelengthNm === null || powerDbm === null || powerDbm <= -200) {
-            continue;
-          }
-
-          points.push({
-            workbookName,
-            temperatureC: String(temperatureC),
-            chip,
-            driveCurrentMa,
-            wavelengthNm,
-            powerDbm,
-          });
-        }
-      }
-
-      return points;
-    }
-
-    function parseSummarySheet(workbookName, rows) {
-      const points = [];
-      const row1 = propagateHeaders(rows[0] || []);
-      const row2 = rows[1] || [];
-      const metricMap = new Map();
-      const ridgeHeader = `${row1[1] ?? ""} ${row2[1] ?? ""}`.toLowerCase();
-      const hasRidgeColumn = ridgeHeader.includes("ridge") && ridgeHeader.includes("width");
-
-      for (let col = 0; col < Math.max(row1.length, row2.length); col += 1) {
-        const top = row1[col];
-        const sub = row2[col];
-        const metricName = sub === null || sub === undefined ? "" : String(sub).trim();
-        if (!top || !metricName) {
-          continue;
-        }
-        const topNorm = String(top).toLowerCase().replace(/\s+/g, "");
-        const tempMatch = topNorm.match(/^(\d+)c$/);
-        if (tempMatch) {
-          metricMap.set(`${tempMatch[1]}|${metricName}`, col);
-        } else if (topNorm.includes("supplier") && topNorm.includes("75")) {
-          metricMap.set(`Supplier75|${metricName}`, col);
-        }
-      }
-
-      const metricNames = [...new Set([...metricMap.keys()].map((key) => key.split("|")[1]))];
-
-      for (let rowIndex = 2; rowIndex < rows.length; rowIndex += 1) {
-        const row = rows[rowIndex] || [];
-        const chipCell = row[0];
-        if (chipCell === null || chipCell === undefined || chipCell === "") {
-          continue;
-        }
-        const chipNumeric = coerceNumber(chipCell);
-        const chip = chipNumeric === null
-          ? String(chipCell).trim()
-          : String(Number.isInteger(chipNumeric) ? Math.trunc(chipNumeric) : chipNumeric);
-        const ridgeWidth = hasRidgeColumn ? coerceNumber(row[1]) : null;
-
-        for (const temperature of LIV_TEMPERATURES) {
-          for (const metric of metricNames) {
-            const col = metricMap.get(`${temperature}|${metric}`);
-            if (col === undefined) {
-              continue;
-            }
-            points.push({
-              workbookName,
-              chip,
-              chipNumeric,
-              ridgeWidthUm: ridgeWidth,
-              temperatureC: temperature,
-              metricName: metric,
-              metricValue: coerceNumber(row[col]),
-            });
-          }
-        }
-
-        for (const metric of metricNames) {
-          const col = metricMap.get(`Supplier75|${metric}`);
-          if (col === undefined) {
-            continue;
-          }
-          points.push({
-            workbookName,
-            chip,
-            chipNumeric,
-            ridgeWidthUm: ridgeWidth,
-            temperatureC: "Supplier75",
-            metricName: metric,
-            metricValue: coerceNumber(row[col]),
-          });
-        }
-      }
-
-      return points;
-    }
-
-    async function parseWorkbookFile(file, options = {}) {
-      const { includeSpectrum = true } = options;
-      if (!file) return { livPoints: [], summaryPoints: [], spectrumPoints: [], hasSpectrumSheets: false };
-      const workbookName = file.name;
-      try {
-        const buffer = await file.arrayBuffer();
-        const workbook = XLSX.read(buffer, { type: "array" });
-        const livPoints = [];
-        const summaryPoints = [];
-        const spectrumPoints = [];
-        let hasSpectrumSheets = false;
-
-        for (const temperature of LIV_TEMPERATURES) {
-          const sheet = findWorkbookSheet(workbook, `LIV_${temperature}C`);
-          if (sheet) {
-            const rows = sheetToRows(sheet);
-            if (rows && rows.length) {
-              livPoints.push(...parseLivSheet(workbookName, rows, temperature));
-            }
-          }
-        }
-
-        const supplierSheet = findWorkbookSheet(workbook, "Supplier_LIV_75C");
-        if (supplierSheet) {
-          const rows = sheetToRows(supplierSheet);
-          if (rows && rows.length) {
-            livPoints.push(...parseSupplierSheet(workbookName, rows));
-          }
-        }
-
-        if (includeSpectrum) {
-          for (const temperature of SPECTRUM_TEMPERATURES) {
-            const sheet = findWorkbookSheet(workbook, `Spectrum_${temperature}C`);
-            if (sheet) {
-              hasSpectrumSheets = true;
-              const rows = sheetToRows(sheet);
-              if (rows && rows.length) {
-                spectrumPoints.push(...parseSpectrumSheet(workbookName, rows, temperature));
-              }
-            }
-          }
-        }
-
-        const summarySheet = findWorkbookSheet(workbook, "Summary");
-        if (summarySheet) {
-          const rows = sheetToRows(summarySheet);
-          if (rows && rows.length) {
-            summaryPoints.push(...parseSummarySheet(workbookName, rows));
-          }
-        }
-
-        return { livPoints, summaryPoints, spectrumPoints, hasSpectrumSheets };
-      } catch (e) {
-        console.error("Parse error for " + workbookName, e);
-        return { livPoints: [], summaryPoints: [], spectrumPoints: [], hasSpectrumSheets: false };
-      }
-    }
-
-    async function loadDevWorkbookIfAvailable() {
-      try {
-        const response = await fetch(DEV_WORKBOOK_FILE);
-        if (!response.ok) {
-          return false;
-        }
-        const buffer = await response.arrayBuffer();
-        const file = new File(
-          [buffer],
-          DEV_WORKBOOK_FILE,
-          { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }
-        );
-        await loadSelectedFiles([file], { preserveFilters: false });
-        return true;
-      } catch (error) {
-        console.warn("Dev workbook auto-load skipped.", error);
-        return false;
-      }
-    }
-
-    function resolveFilterSelection(values, savedSet) {
-      if (!savedSet) return values;
-      const selected = values.filter((value) => savedSet.has(String(value)));
-      return selected.length ? selected : values;
-    }
-
-    function rememberFolderLabelFromFiles(files) {
-      const firstFile = files[0];
-      const relativePath = firstFile?.webkitRelativePath || "";
-      if (!relativePath) return;
-      const [folderName] = relativePath.split(/[\\/]/);
-      if (folderName) {
-        state.lastDirectoryName = folderName;
-        localStorage.setItem("livDashboardLastFolderName", folderName);
-      }
-    }
-
-    function openDirectoryDatabase() {
-      return new Promise((resolve, reject) => {
-        const request = indexedDB.open(DIRECTORY_DB_NAME, 1);
-        request.onupgradeneeded = () => {
-          request.result.createObjectStore(DIRECTORY_STORE_NAME);
-        };
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error);
-      });
-    }
-
-    async function saveDirectoryHandle(handle) {
-      const db = await openDirectoryDatabase();
-      await new Promise((resolve, reject) => {
-        const transaction = db.transaction(DIRECTORY_STORE_NAME, "readwrite");
-        transaction.objectStore(DIRECTORY_STORE_NAME).put(handle, LAST_DIRECTORY_KEY);
-        transaction.oncomplete = () => resolve();
-        transaction.onerror = () => reject(transaction.error);
-      });
-      db.close();
-    }
-
-    async function loadStoredDirectoryHandle() {
-      const db = await openDirectoryDatabase();
-      const handle = await new Promise((resolve, reject) => {
-        const transaction = db.transaction(DIRECTORY_STORE_NAME, "readonly");
-        const request = transaction.objectStore(DIRECTORY_STORE_NAME).get(LAST_DIRECTORY_KEY);
-        request.onsuccess = () => resolve(request.result || null);
-        request.onerror = () => reject(request.error);
-      });
-      db.close();
-      return handle;
-    }
-
-    async function clearStoredDirectoryHandle() {
-      const db = await openDirectoryDatabase();
-      await new Promise((resolve, reject) => {
-        const transaction = db.transaction(DIRECTORY_STORE_NAME, "readwrite");
-        transaction.objectStore(DIRECTORY_STORE_NAME).delete(LAST_DIRECTORY_KEY);
-        transaction.oncomplete = () => resolve();
-        transaction.onerror = () => reject(transaction.error);
-      });
-      db.close();
-      localStorage.removeItem("livDashboardLastFolderName");
-    }
-
-    async function ensureDirectoryPermission(directoryHandle) {
-      const options = { mode: "read" };
-      if ((await directoryHandle.queryPermission(options)) === "granted") {
-        return true;
-      }
-      return (await directoryHandle.requestPermission(options)) === "granted";
-    }
-
-    function updateFolderStatus(message) {
-      const folderHint = state.lastDirectoryName ? ` Last folder: ${state.lastDirectoryName}.` : "";
-      setStatus(`${message}${folderHint}`);
-    }
-
-    async function collectExcelFilesFromDirectory(directoryHandle) {
-      const excelFiles = [];
-
-      async function walkDirectory(handle) {
-        for await (const entry of handle.values()) {
-          if (entry.kind === "file" && entry.name.toLowerCase().endsWith(".xlsx")) {
-            excelFiles.push(await entry.getFile());
-          } else if (entry.kind === "directory") {
-            await walkDirectory(entry);
-          }
-        }
-      }
-
-      await walkDirectory(directoryHandle);
-      return excelFiles.sort((left, right) => left.name.localeCompare(right.name, undefined, { numeric: true }));
-    }
-
-    async function pickFolder() {
-      if (window.showDirectoryPicker) {
-        try {
-          const pickerOptions = { mode: "read" };
-          const lastHandle = state.directoryHandle || await loadStoredDirectoryHandle();
-          if (lastHandle) {
-            pickerOptions.startIn = lastHandle;
-          }
-
-          const directoryHandle = await window.showDirectoryPicker(pickerOptions);
-          const excelFiles = await collectExcelFilesFromDirectory(directoryHandle);
-          if (!excelFiles.length) {
-            updateFolderStatus("No .xlsx files found in the selected folder.");
-            return;
-          }
-
-          state.directoryHandle = directoryHandle;
-          state.lastDirectoryName = directoryHandle.name;
-          await saveDirectoryHandle(directoryHandle);
-          await loadSelectedFiles(excelFiles, { preserveFilters: false });
-          return;
-        } catch (error) {
-          if (error && error.name === "AbortError") {
-            return;
-          }
-          console.warn("Directory picker unavailable, using file input fallback.", error);
-        }
-      }
-
-      elements.folderPicker.click();
-    }
-
-    async function restoreLastFolderOnStartup() {
-      state.lastDirectoryName = localStorage.getItem("livDashboardLastFolderName") || "";
-
-      const loadedDev = await loadDevWorkbookIfAvailable();
-      if (loadedDev) {
-        return;
-      }
-
-      if (!window.showDirectoryPicker) {
-        updateFolderStatus("Choose a folder with exported .xlsx files to begin.");
-        return;
-      }
-
-      try {
-        const storedHandle = await loadStoredDirectoryHandle();
-        if (!storedHandle) {
-          updateFolderStatus("Choose a folder with exported .xlsx files to begin.");
-          return;
-        }
-
-        state.directoryHandle = storedHandle;
-        state.lastDirectoryName = storedHandle.name || state.lastDirectoryName;
-
-        const allowed = await ensureDirectoryPermission(storedHandle);
-        if (!allowed) {
-          updateFolderStatus("Choose a folder or click Reload to use the last folder again.");
-          return;
-        }
-
-        updateFolderStatus("Restoring last folder...");
-        await refreshFolderData();
-      } catch (error) {
-        console.warn("Could not restore last folder.", error);
-        updateFolderStatus("Choose a folder with exported .xlsx files to begin.");
-      }
-    }
-
-    async function refreshFolderData() {
-      if (state.directoryHandle) {
-        const excelFiles = await collectExcelFilesFromDirectory(state.directoryHandle);
-        if (!excelFiles.length) {
-          setStatus("No .xlsx files found in the selected folder.");
-          return;
-        }
-        await loadSelectedFiles(excelFiles, { preserveFilters: true });
-        return;
-      }
-
-      const files = state.selectedFiles.length ? state.selectedFiles : [...elements.folderPicker.files];
-      if (!files.length) {
-        setStatus("Select a folder first.");
-        return;
-      }
-
-      await loadSelectedFiles(files, { preserveFilters: true });
-    }
-
-    async function loadSelectedFiles(files, options = {}) {
-      const { preserveFilters = false } = options;
-      if (!files || !files.length) return;
-
-      const savedFilters = preserveFilters && state.livPoints.length
-        ? { liv: currentFilterState(), spectrum: currentSpectrumFilterState() }
-        : null;
-      const excelFiles = [...files].filter((file) => file.name.toLowerCase().endsWith(".xlsx"));
-      state.selectedFiles = excelFiles;
-      rememberFolderLabelFromFiles(excelFiles);
-      if (!excelFiles.length) {
-        updateFolderStatus("No .xlsx files found in the selected folder.");
-        return;
-      }
-
-      const livPoints = [];
-      const summaryPoints = [];
-      let spectrumPoints = [];
-      let spectrumSourceWorkbook = "";
-      let spectrumCandidate = null;
-
-      let count = 0;
-      for (const file of excelFiles) {
-        count += 1;
-        setStatus(`${preserveFilters ? "Refreshing" : "Loading"} workbook ${count} of ${excelFiles.length}: ${file.name}...`);
-        await new Promise((resolve) => requestAnimationFrame(resolve));
-
-        try {
-          const parsed = await parseWorkbookFile(file, { includeSpectrum: true });
-          if (parsed.livPoints?.length) livPoints.push(...parsed.livPoints);
-          if (parsed.summaryPoints?.length) summaryPoints.push(...parsed.summaryPoints);
-
-          if (parsed.spectrumPoints?.length) {
-            const entry = {
-              points: parsed.spectrumPoints,
-              name: file.name,
-              hasLiv: Boolean(parsed.livPoints?.length),
-            };
-            if (!spectrumCandidate) {
-              spectrumCandidate = entry;
-            } else if (entry.hasLiv && !spectrumCandidate.hasLiv) {
-              spectrumCandidate = entry;
-            }
-          } else if (parsed.hasSpectrumSheets) {
-            console.warn(`Spectrum tabs found in ${file.name} but no spectrum points were parsed.`);
-          }
-        } catch (err) {
-          console.error(`Error parsing ${file.name}:`, err);
-        }
-      }
-
-      if (spectrumCandidate) {
-        spectrumPoints = spectrumCandidate.points;
-        spectrumSourceWorkbook = spectrumCandidate.name;
-      }
-
-      state.livPoints = livPoints;
-      state.summaryPoints = summaryPoints;
-      state.spectrumPoints = spectrumPoints;
-      state.spectrumSourceWorkbook = spectrumSourceWorkbook;
-      state.workbookNames = uniqueSorted(excelFiles.map((file) => file.name));
-
-      setStatus("Synchronizing filters...");
-      await new Promise((resolve) => requestAnimationFrame(resolve));
-      syncFilters(savedFilters?.liv);
-      syncSpectrumFilters(savedFilters?.spectrum);
-      updateSpectrumSectionVisibility();
-
-      setStatus("Calculating kinks...");
-      await new Promise((resolve) => requestAnimationFrame(resolve));
-      recomputeKinks();
-
-      updateStats();
-
-      if (spectrumPoints.length) {
-        elements.showSpectrumPlotsToggle.checked = true;
-        updateSpectrumSectionVisibility();
-      }
-
-      setStatus("Rendering dashboard...");
-      await new Promise((resolve) => requestAnimationFrame(resolve));
-      renderAll();
-
-      const spectrumNote = spectrumPoints.length
-        ? ` Spectrum loaded from ${spectrumSourceWorkbook} (${spectrumPoints.length.toLocaleString()} points).`
-        : (livPoints.length ? " No spectrum sheets parsed (expected Spectrum_25C/50C/75C)." : "");
-      updateFolderStatus((preserveFilters
-        ? `Refreshed ${excelFiles.length} workbook(s).`
-        : `Loaded ${excelFiles.length} workbook(s).`) + spectrumNote);
-    }
-
-    function setStatus(message) {
-      elements.statusText.textContent = message;
-    }
-
-    function clearSelect(selectElement) {
-      selectElement.innerHTML = "";
-    }
-
-    function fillMultiSelect(selectElement, values, selected = values) {
-      clearSelect(selectElement);
-      values.forEach((value) => {
-        const option = document.createElement("option");
-        option.value = String(value);
-        option.textContent = String(value);
-        option.selected = selected.includes(value);
-        selectElement.appendChild(option);
-      });
-    }
-
-    function fillWorkbookFilter(values, selected = values) {
-      // Replaced by fillCheckboxList
-    }
-
-    let isDragging = false;
-    let dragTargetValue = false;
-
-    function selectedValues(elementOrId) {
-      const element = typeof elementOrId === "string" ? document.getElementById(elementOrId) : elementOrId;
-      if (!element) return [];
-
-      if (element.classList.contains("checkbox-list")) {
-        return [...element.querySelectorAll("input:not(.select-all-checkbox):checked")].map(i => i.value);
-      }
-      return [...element.selectedOptions].map((option) => option.value);
-    }
-
-    function initCheckboxDragging() {
-      window.addEventListener("mouseup", () => { isDragging = false; });
-    }
-
-    function fillCheckboxList(id, values, selected = values) {
-      const container = document.getElementById(id);
-      if (!container) return;
-      if (!container.dataset.changeBound) {
-        container.addEventListener("change", scheduleRender);
-        container.dataset.changeBound = "1";
-      }
-      container.innerHTML = "";
-      
-      const isChipList = id === "chipFilter" || id === "spectrumChipFilter";
-      
-      // Add "Select All" checkbox for chip filter
-      if (isChipList) {
-        const selectAllItem = document.createElement("div");
-        selectAllItem.className = "checkbox-list-item";
-        selectAllItem.style.fontWeight = "600";
-        selectAllItem.style.borderBottom = "1px solid rgba(29, 24, 21, 0.1)";
-        selectAllItem.style.marginBottom = "6px";
-        selectAllItem.style.paddingBottom = "8px";
-        
-        const selectAllInput = document.createElement("input");
-        selectAllInput.type = "checkbox";
-        selectAllInput.className = "select-all-checkbox";
-        selectAllInput.checked = selected.length === values.length && values.length > 0;
-        
-        const selectAllSpan = document.createElement("span");
-        selectAllSpan.textContent = "Select All";
-        
-        selectAllItem.appendChild(selectAllInput);
-        selectAllItem.appendChild(selectAllSpan);
-
-        function syncChipCheckboxesToSelectAll() {
-          const chipCheckboxes = [...container.querySelectorAll("input:not(.select-all-checkbox)")];
-          chipCheckboxes.forEach((checkbox) => {
-            checkbox.checked = selectAllInput.checked;
-          });
-          updateSelectAllCheckbox();
-          scheduleRender();
-        }
-
-        selectAllInput.addEventListener("change", syncChipCheckboxesToSelectAll);
-
-        selectAllItem.addEventListener("click", (event) => {
-          if (event.target === selectAllInput) return;
-          event.preventDefault();
-          selectAllInput.checked = !selectAllInput.checked;
-          syncChipCheckboxesToSelectAll();
-        });
-
-        container.appendChild(selectAllItem);
-      }
-      
-      // Add all chips (no lazy loading - just set fixed height with scrolling)
-      values.forEach(value => {
-        const item = document.createElement("div");
-        item.className = "checkbox-list-item";
-        
-        const input = document.createElement("input");
-        input.type = "checkbox";
-        input.value = value;
-        input.checked = selected.includes(String(value));
-        
-        const span = document.createElement("span");
-        span.textContent = value;
-        span.title = value;
-        
-        item.appendChild(input);
-        item.appendChild(span);
-        
-        item.addEventListener("mousedown", (e) => {
-          if (e.button !== 0) return;
-          isDragging = true;
-          dragTargetValue = !input.checked;
-          input.checked = dragTargetValue;
-          updateSelectAllCheckbox();
-          scheduleRender();
-        });
-        
-        item.addEventListener("mouseenter", () => {
-          if (isDragging && input.checked !== dragTargetValue) {
-            input.checked = dragTargetValue;
-            updateSelectAllCheckbox();
-            scheduleRender();
-          }
-        });
-
-        container.appendChild(item);
-      });
-      
-      function updateSelectAllCheckbox() {
-        if (!isChipList) return;
-        const selectAllCheckbox = container.querySelector(".select-all-checkbox");
-        if (!selectAllCheckbox) return;
-        const totalCheckboxes = container.querySelectorAll("input:not(.select-all-checkbox)").length;
-        const checkedCheckboxes = container.querySelectorAll("input:not(.select-all-checkbox):checked").length;
-        selectAllCheckbox.checked = totalCheckboxes > 0 && checkedCheckboxes === totalCheckboxes;
-        selectAllCheckbox.indeterminate = checkedCheckboxes > 0 && checkedCheckboxes < totalCheckboxes;
-      }
-    }
-
-    function currentFilterState() {
-      const workbooks = new Set(selectedValues("workbookFilter"));
-      const sources = new Set(selectedValues("sourceFilter"));
-      const temperatures = new Set(selectedValues("temperatureFilter"));
-      const chips = selectedValues("chipFilter");
-      return {
-        workbooks,
-        sources,
-        temperatures,
-        chips: new Set(chips),
-        normalizedChips: new Set(chips.map(normalizeChipId)),
-      };
-    }
-
-    function renderPlot(targetId, traces, layout) {
-      Plotly.react(targetId, traces, layout, PLOT_CONFIG);
-    }
-
-    function scheduleRender() {
-      if (state.renderFrame !== null) {
-        return;
-      }
-      state.renderFrame = requestAnimationFrame(() => {
-        state.renderFrame = null;
-        renderAll();
-      });
-    }
-
-    function syncFilters(savedFilters = null) {
-      const workbooks = uniqueSorted(state.livPoints.map((point) => point.workbookName));
-      const summaryHasSupplier = state.summaryPoints.some((point) => point.temperatureC === "Supplier75" && point.metricValue !== null);
-      const sources = uniqueSorted([
-        ...state.livPoints.map((point) => point.source),
-        ...(summaryHasSupplier ? ["Supplier"] : []),
-      ]);
-      const temperatures = uniqueSorted(state.livPoints.map((point) => point.temperatureC), numericOrStringSort);
-      const chips = uniqueSorted(state.livPoints.map((point) => point.chip), numericOrStringSort);
-
-      fillCheckboxList("workbookFilter", workbooks, resolveFilterSelection(workbooks, savedFilters?.workbooks));
-      fillCheckboxList("sourceFilter", sources, resolveFilterSelection(sources, savedFilters?.sources));
-      fillCheckboxList("temperatureFilter", temperatures, resolveFilterSelection(temperatures, savedFilters?.temperatures));
-      fillCheckboxList("chipFilter", chips, resolveFilterSelection(chips, savedFilters?.chips));
-    }
-
-    function syncSpectrumFilters(savedFilters = null) {
-      const chips = uniqueSorted(state.spectrumPoints.map((point) => point.chip), numericOrStringSort);
-      const temperatures = uniqueSorted(state.spectrumPoints.map((point) => point.temperatureC), numericOrStringSort);
-      const currents = uniqueSorted(state.spectrumPoints.map((point) => point.driveCurrentMa), numericOrStringSort)
-        .map((value) => String(value));
-      const workbooks = uniqueSorted(
-        state.spectrumSourceWorkbook ? [state.spectrumSourceWorkbook] : state.spectrumPoints.map((point) => point.workbookName)
-      );
-      const defaultChips = savedFilters?.chips
-        ? resolveFilterSelection(chips, savedFilters.chips)
-        : (chips.includes("1") ? ["1"] : chips.slice(0, 1));
-
-      fillCheckboxList("spectrumChipFilter", chips, defaultChips);
-      fillCheckboxList("spectrumTemperatureFilter", temperatures, resolveFilterSelection(temperatures, savedFilters?.temperatures));
-      fillCheckboxList("spectrumCurrentFilter", currents, resolveFilterSelection(currents, savedFilters?.currents));
-      fillCheckboxList("spectrumWorkbookFilter", workbooks, resolveFilterSelection(workbooks, savedFilters?.workbooks));
-    }
-
-    function currentSpectrumFilterState() {
-      return {
-        workbooks: new Set(selectedValues("spectrumWorkbookFilter")),
-        temperatures: new Set(selectedValues("spectrumTemperatureFilter")),
-        currents: new Set(selectedValues("spectrumCurrentFilter")),
-        chips: new Set(selectedValues("spectrumChipFilter")),
-      };
-    }
-
-    function resizeSpectrumPlots() {
-      if (!elements.showSpectrumPlotsToggle.checked || typeof Plotly === "undefined") {
-        return;
-      }
-      elements.spectrumGrid.querySelectorAll(".plot").forEach((plotElement) => {
-        if (plotElement.id && plotElement.offsetParent !== null) {
-          Plotly.Plots.resize(plotElement);
-        }
-      });
-    }
-
-    function updateSpectrumSectionVisibility() {
-      const show = elements.showSpectrumPlotsToggle.checked;
-      elements.spectrumFiltersPanel.style.display = show ? "" : "none";
-      elements.spectrumGrid.style.display = show ? "" : "none";
-      if (show) {
-        requestAnimationFrame(() => {
-          resizeSpectrumPlots();
-        });
-      }
-    }
-
-    function discoverWavelengthMetrics(summaryPoints) {
-      const found = uniqueSorted(
-        summaryPoints
-          .map((point) => point.metricName)
-          .filter((name) => /wl|wavelength|theory/i.test(String(name))),
-        (left, right) => left.localeCompare(right, undefined, { numeric: true })
-      );
-      const preferred = WAVELENGTH_METRICS.filter((metric) => found.includes(metric));
-      const extra = found.filter((metric) => !preferred.includes(metric));
-      return preferred.length || extra.length ? [...preferred, ...extra] : [...WAVELENGTH_METRICS];
-    }
-
-    function updateStats() {
-      elements.workbookCount.textContent = String(state.workbookNames.length);
-      elements.livCount.textContent = state.livPoints.length.toLocaleString();
-      elements.summaryCount.textContent = state.summaryPoints.length.toLocaleString();
-      elements.spectrumCount.textContent = state.spectrumPoints.length.toLocaleString();
-      elements.kinkCount.textContent = state.kinkEvents.length.toLocaleString();
-    }
-
-    async function clearData(message = "Cleared dashboard data.") {
-      state.livPoints = [];
-      state.summaryPoints = [];
-      state.spectrumPoints = [];
-      state.spectrumSourceWorkbook = "";
-      state.kinkEvents = [];
-      state.workbookNames = [];
-      state.selectedFiles = [];
-      state.directoryHandle = null;
-      state.lastDirectoryName = "";
-      try {
-        await clearStoredDirectoryHandle();
-      } catch (error) {
-        console.warn("Could not clear stored folder handle.", error);
-      }
-      updateStats();
-      [elements.workbookFilter, elements.sourceFilter, elements.temperatureFilter, elements.chipFilter].forEach(clearSelect);
-      renderEmptyPlot("liPlot", "LI Curves");
-      renderEmptyPlot("liDerivativePlot", "LI Derivatives (dP/dI and d²P/dI²)");
-      renderEmptyPlot("ivPlot", "IV Curves");
-      renderEmptyPlot("firstKinkPlot", "First Kink Current vs Chip Number");
-      elements.summaryGrid.innerHTML = "<div class='empty-box'>Load workbooks to view summary plots.</div>";
-      elements.summaryWavelengthGrid.innerHTML = "<div class='empty-box'>Load workbooks to view chip vs wavelength plots.</div>";
-      elements.ridgeGrid.innerHTML = "<div class='empty-box'>Load workbooks to view ridge-width plots.</div>";
-      elements.ridgeWavelengthGrid.innerHTML = "<div class='empty-box'>Load workbooks to view ridge width vs wavelength plots.</div>";
-      elements.spectrumGrid.innerHTML = "<div class='empty-box'>Load workbooks to view spectrum plots.</div>";
-      clearTable(elements.kinkTable, [], []);
-      setStatus(message);
-    }
-
-    function renderEmptyPlot(targetId, title, message = "No matching data") {
-      renderPlot(targetId, [], {
-        title,
-        template: "plotly_white",
-        paper_bgcolor: "rgba(0,0,0,0)",
-        plot_bgcolor: "rgba(0,0,0,0)",
-        xaxis: { visible: false },
-        yaxis: { visible: false },
-        annotations: [{
-          text: message,
-          x: 0.5,
-          y: 0.5,
-          xref: "paper",
-          yref: "paper",
-          showarrow: false,
-          font: { size: 18, color: "#645a53" },
-        }],
-        margin: { l: 28, r: 18, t: 60, b: 30 },
-      });
-    }
-
-    function groupBy(values, keyBuilder) {
-      const map = new Map();
-      values.forEach((value) => {
-        const key = keyBuilder(value);
-        if (!map.has(key)) {
-          map.set(key, []);
-        }
-        map.get(key).push(value);
-      });
-      return map;
-    }
-
-    function movingAverage(values, radius = 2) {
-      const result = [];
-      for (let index = 0; index < values.length; index += 1) {
-        const start = Math.max(0, index - radius);
-        const end = Math.min(values.length, index + radius + 1);
-        const window = values.slice(start, end).filter((value) => value !== null);
-        result.push(window.length ? window.reduce((sum, value) => sum + value, 0) / window.length : null);
-      }
-      return result;
-    }
-
-    function median(values) {
-      if (!values.length) {
-        return null;
-      }
-      const sorted = [...values].sort((left, right) => left - right);
-      const mid = Math.floor(sorted.length / 2);
-      return sorted.length % 2 === 1 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
-    }
-
-    function linearRegression(points) {
-      if (points.length < 2) {
-        return null;
-      }
-      const xMean = points.reduce((sum, point) => sum + point.x, 0) / points.length;
-      const yMean = points.reduce((sum, point) => sum + point.y, 0) / points.length;
-      const denominator = points.reduce((sum, point) => sum + ((point.x - xMean) ** 2), 0);
-      if (!Number.isFinite(denominator) || denominator === 0) {
-        return null;
-      }
-      const slope = points.reduce((sum, point) => sum + ((point.x - xMean) * (point.y - yMean)), 0) / denominator;
-      const intercept = yMean - (slope * xMean);
-      if (!Number.isFinite(slope) || !Number.isFinite(intercept)) {
-        return null;
-      }
-      return { slope, intercept };
-    }
-
-    function formatEquation(slope, intercept) {
-      return `y = ${slope.toFixed(4)}x ${intercept >= 0 ? "+" : "-"} ${Math.abs(intercept).toFixed(3)}`;
-    }
-
-    function aggregateSummaryMetricPoints(points, xField) {
-      const grouped = new Map();
-      points.forEach((point) => {
-        if (point.metricValue === null || point[xField] === null) {
-          return;
-        }
-        const key = [
-          point.temperatureC,
-          point.metricName,
-          normalizeChipId(point.chip),
-          point[xField],
-        ].join("|");
-        if (!grouped.has(key)) {
-          grouped.set(key, {
-            ...point,
-            workbookNames: new Set([point.workbookName]),
-            values: [point.metricValue],
-          });
-          return;
-        }
-        const existing = grouped.get(key);
-        existing.workbookNames.add(point.workbookName);
-        existing.values.push(point.metricValue);
-      });
-
-      return [...grouped.values()].map((entry) => ({
-        ...entry,
-        workbookName: [...entry.workbookNames].sort((left, right) => left.localeCompare(right, undefined, { numeric: true })).join(", "),
-        metricValue: median(entry.values),
-      }));
-    }
-
-    function invertSmallMatrix(matrix) {
-      const size = matrix.length;
-      const augmented = matrix.map((row, rowIndex) => [
-        ...row,
-        ...Array(size).fill(0).map((_, columnIndex) => (rowIndex === columnIndex ? 1 : 0)),
-      ]);
-
-      for (let pivotIndex = 0; pivotIndex < size; pivotIndex += 1) {
-        let swapRow = pivotIndex;
-        for (let rowIndex = pivotIndex + 1; rowIndex < size; rowIndex += 1) {
-          if (Math.abs(augmented[rowIndex][pivotIndex]) > Math.abs(augmented[swapRow][pivotIndex])) {
-            swapRow = rowIndex;
-          }
-        }
-        if (Math.abs(augmented[swapRow][pivotIndex]) < 1e-12) {
-          return null;
-        }
-        [augmented[pivotIndex], augmented[swapRow]] = [augmented[swapRow], augmented[pivotIndex]];
-
-        const pivotValue = augmented[pivotIndex][pivotIndex];
-        for (let columnIndex = pivotIndex; columnIndex < size * 2; columnIndex += 1) {
-          augmented[pivotIndex][columnIndex] /= pivotValue;
-        }
-
-        for (let rowIndex = 0; rowIndex < size; rowIndex += 1) {
-          if (rowIndex === pivotIndex) continue;
-          const factor = augmented[rowIndex][pivotIndex];
-          if (factor === 0) continue;
-          for (let columnIndex = pivotIndex; columnIndex < size * 2; columnIndex += 1) {
-            augmented[rowIndex][columnIndex] -= factor * augmented[pivotIndex][columnIndex];
-          }
-        }
-      }
-
-      return augmented.map((row) => row.slice(size));
-    }
-
-    function multiplyMatrices(left, right) {
-      const result = Array.from({ length: left.length }, () => Array(right[0].length).fill(0));
-      for (let rowIndex = 0; rowIndex < left.length; rowIndex += 1) {
-        for (let columnIndex = 0; columnIndex < right[0].length; columnIndex += 1) {
-          for (let innerIndex = 0; innerIndex < right.length; innerIndex += 1) {
-            result[rowIndex][columnIndex] += left[rowIndex][innerIndex] * right[innerIndex][columnIndex];
-          }
-        }
-      }
-      return result;
-    }
-
-    function transposeMatrix(matrix) {
-      return matrix[0].map((_, columnIndex) => matrix.map((row) => row[columnIndex]));
-    }
-
-    function savitzkyGolayOffsets(windowLength) {
-      const start = -Math.floor((windowLength - 1) / 2);
-      return Array.from({ length: windowLength }, (_, index) => start + index);
-    }
-
-    function savitzkyGolayKernel(windowLength, polyOrder) {
-      const offsets = savitzkyGolayOffsets(windowLength);
-      const design = offsets.map((offset) => {
-        const row = [];
-        for (let power = 0; power <= polyOrder; power += 1) {
-          row.push(offset ** power);
-        }
-        return row;
-      });
-      const designTranspose = transposeMatrix(design);
-      const normalMatrix = multiplyMatrices(designTranspose, design);
-      const inverseNormal = invertSmallMatrix(normalMatrix);
-      if (!inverseNormal) return null;
-      const targetRow = [1, ...Array(polyOrder).fill(0)];
-      return multiplyMatrices([targetRow], multiplyMatrices(inverseNormal, designTranspose))[0];
-    }
-
-    function savitzkyGolaySmooth(values, windowLength = 50, polyOrder = 2) {
-      if (!values.length) return [];
-      const effectiveWindow = Math.min(windowLength, values.length);
-      const effectiveOrder = Math.min(polyOrder, effectiveWindow - 1);
-      if (effectiveWindow < 3 || effectiveOrder < 1) {
-        return values.slice();
-      }
-
-      const kernel = savitzkyGolayKernel(effectiveWindow, effectiveOrder);
-      if (!kernel) return values.slice();
-
-      const offsets = savitzkyGolayOffsets(effectiveWindow);
-      return values.map((_, index) => {
-        let sum = 0;
-        for (let kernelIndex = 0; kernelIndex < effectiveWindow; kernelIndex += 1) {
-          const sampleIndex = Math.min(values.length - 1, Math.max(0, index + offsets[kernelIndex]));
-          sum += values[sampleIndex] * kernel[kernelIndex];
-        }
-        return sum;
-      });
-    }
-
-    function compareKinkEvents(left, right) {
-      const leftChip = coerceNumber(left.chip);
-      const rightChip = coerceNumber(right.chip);
-      if (leftChip !== null && rightChip !== null && leftChip !== rightChip) {
-        return leftChip - rightChip;
-      }
-      const chipCompare = String(left.chip).localeCompare(String(right.chip), undefined, { numeric: true });
-      if (chipCompare !== 0) return chipCompare;
-
-      const workbookCompare = left.workbookName.localeCompare(right.workbookName, undefined, { numeric: true });
-      if (workbookCompare !== 0) return workbookCompare;
-
-      const sourceCompare = left.source.localeCompare(right.source, undefined, { numeric: true });
-      if (sourceCompare !== 0) return sourceCompare;
-
-      const temperatureCompare = String(left.temperatureC).localeCompare(String(right.temperatureC), undefined, { numeric: true });
-      if (temperatureCompare !== 0) return temperatureCompare;
-
-      return left.currentMa - right.currentMa;
-    }
-
-    function buildKinkEventFromDetection(valid, dP_dI, detectionIndex, thresholdCurrentMa, avgBaselineDpDi, anomalyDpDi, percentChange, absPercentChange) {
-      const segment = dP_dI[detectionIndex];
-      const endPoint = valid[segment.segmentEndIndex];
-
-      return {
-        detectionCurrentMa: endPoint.currentMa,
-        currentMa: endPoint.currentMa,
-        dpDiCurrentMa: segment.currentMa,
-        powerMw: endPoint.powerMw,
-        thresholdCurrentMa,
-        slope: anomalyDpDi,
-        avgDpDi: avgBaselineDpDi,
-        anomalyDpDi,
-        percentChange,
-        absPercentChange,
-        deviationRatio: absPercentChange / 100,
-        segmentStartIndex: segment.segmentStartIndex,
-        segmentEndIndex: segment.segmentEndIndex,
-        dpDiIndex: detectionIndex,
-      };
-    }
-
-    function appendKinkMarkerTrace(traces, curvePoints, yValueResolver, hoverTemplate) {
-      if (!elements.showKinksToggle.checked) {
-        return;
-      }
-      const visibleCurveKeys = new Set(curvePoints.map((point) =>
-        `${point.workbookName}|${point.source}|${point.temperatureC}|${point.chip}`
-      ));
-      const visibleKinks = state.kinkEvents.filter((event) =>
-        visibleCurveKeys.has(`${event.workbookName}|${event.source}|${event.temperatureC}|${event.chip}`)
-      );
-      if (!visibleKinks.length) {
-        return;
-      }
-      traces.push({
-        x: visibleKinks.map((event) => event.dpDiCurrentMa ?? event.currentMa),
-        y: visibleKinks.map(yValueResolver),
-        type: "scatter",
-        mode: "markers",
-        name: "Kinks",
-        marker: {
-          size: 14,
-          symbol: "circle-open",
-          color: "#c33434",
-          line: { color: "#c33434", width: 2 },
-        },
-        hovertemplate: hoverTemplate,
-      });
-    }
-
-    function interpolatePowerAtCurrent(curvePoints, currentMa) {
-      const sorted = curvePoints
-        .filter((point) => point.powerMw !== null && Number.isFinite(point.currentMa))
-        .sort((left, right) => left.currentMa - right.currentMa);
-      if (!sorted.length) return null;
-      if (currentMa <= sorted[0].currentMa) return sorted[0].powerMw;
-      if (currentMa >= sorted[sorted.length - 1].currentMa) return sorted[sorted.length - 1].powerMw;
-
-      for (let index = 1; index < sorted.length; index += 1) {
-        const rightPoint = sorted[index];
-        const leftPoint = sorted[index - 1];
-        if (currentMa > rightPoint.currentMa) continue;
-        const span = rightPoint.currentMa - leftPoint.currentMa;
-        if (span <= 0) return rightPoint.powerMw;
-        const weight = (currentMa - leftPoint.currentMa) / span;
-        return leftPoint.powerMw + weight * (rightPoint.powerMw - leftPoint.powerMw);
-      }
-
-      return sorted[sorted.length - 1].powerMw;
-    }
-
-    function compareKinkSelectionPriority(left, right, deviationLimit, thresholdCurrentMa) {
-      const leftThresholdDistance = left.detectionCurrentMa - thresholdCurrentMa;
-      const rightThresholdDistance = right.detectionCurrentMa - thresholdCurrentMa;
-      if (leftThresholdDistance !== rightThresholdDistance) {
-        return leftThresholdDistance - rightThresholdDistance;
-      }
-
-      if (left.absPercentChange !== right.absPercentChange) {
-        return right.absPercentChange - left.absPercentChange;
-      }
-
-      const leftCutoffDistance = Math.abs(left.deviationRatio - deviationLimit);
-      const rightCutoffDistance = Math.abs(right.deviationRatio - deviationLimit);
-      return leftCutoffDistance - rightCutoffDistance;
-    }
-
-    function selectPrioritizedKinks(rawEvents, deviationLimit, thresholdCurrentMa, maxKinks) {
-      const sortedByPriority = [...rawEvents].sort((left, right) =>
-        compareKinkSelectionPriority(left, right, deviationLimit, thresholdCurrentMa)
-      );
-
-      const selected = [];
-      for (const event of sortedByPriority) {
-        const nearbyIndex = selected.findIndex((existing) =>
-          Math.abs(existing.detectionCurrentMa - event.detectionCurrentMa) <= 5
-        );
-        if (nearbyIndex === -1) {
-          selected.push(event);
-          if (selected.length >= maxKinks) break;
-          continue;
-        }
-
-        if (compareKinkSelectionPriority(event, selected[nearbyIndex], deviationLimit, thresholdCurrentMa) < 0) {
-          selected[nearbyIndex] = event;
-        }
-      }
-
-      if (selected.length) {
-        selected[0].isPrimary = true;
-      }
-
-      return selected.sort((left, right) => left.currentMa - right.currentMa);
-    }
-
-    function detectCurveKinks(curvePoints, deviationLimit, maxKinks = 10) {
-      const valid = curvePoints
-        .filter((point) => point.powerMw !== null)
-        .sort((left, right) => left.currentMa - right.currentMa);
-      if (valid.length < 15) return [];
-
-      // Calculate localized dP/dI (slope efficiency)
-      const dP_dI = [];
-      for (let i = 1; i < valid.length; i++) {
-        const dI = valid[i].currentMa - valid[i-1].currentMa;
-        if (dI > 0) {
-          dP_dI.push({
-            segmentStartIndex: i - 1,
-            segmentEndIndex: i,
-            currentMa: (valid[i].currentMa + valid[i - 1].currentMa) / 2,
-            slope: (valid[i].powerMw - valid[i - 1].powerMw) / dI,
-            power: (valid[i].powerMw + valid[i - 1].powerMw) / 2,
-          });
-        }
-      }
-
-      const maxPower = Math.max(...valid.map(p => p.powerMw));
-      // First pass to find threshold: find index where power exceeds 10% of max
-      const thresholdIndex = dP_dI.findIndex(s => s.power >= maxPower * 0.10);
-      if (thresholdIndex === -1 || thresholdIndex < 10) return [];
-
-      const thresholdCurrentMa = dP_dI[thresholdIndex].currentMa;
-      const postThresholdSlopes = dP_dI.slice(thresholdIndex).map((point) => point.slope);
-      const smoothedPostThresholdSlopes = savitzkyGolaySmooth(postThresholdSlopes, 50, 2);
-      const smoothedSlopes = dP_dI.map((_, index) => (
-        index < thresholdIndex ? null : smoothedPostThresholdSlopes[index - thresholdIndex]
-      ));
-
-      const rawEvents = [];
-      const baselineWindow = 10;
-      const cutoffPercent = deviationLimit * 100;
-
-      // Baseline: mean of 10 Savitzky-Golay dP/dI points before index i.
-      // Anomaly: raw dP/dI at index i. Kink = negative rolloff only (ignore positive spikes).
-      for (let i = thresholdIndex + baselineWindow; i < dP_dI.length; i += 1) {
-        const savgolBaselineWindow = smoothedSlopes.slice(i - baselineWindow, i);
-        if (savgolBaselineWindow.some((slope) => slope === null)) continue;
-
-        const avgBaselineDpDi = savgolBaselineWindow.reduce((sum, slope) => sum + slope, 0) / baselineWindow;
-        const anomalyDpDi = dP_dI[i].slope;
-        if (!Number.isFinite(avgBaselineDpDi) || avgBaselineDpDi <= 0) continue;
-
-        const percentChange = ((anomalyDpDi - avgBaselineDpDi) / avgBaselineDpDi) * 100;
-        const absPercentChange = Math.abs(percentChange);
-        if (percentChange > -cutoffPercent) continue;
-
-        const kinkPoint = valid[dP_dI[i].segmentEndIndex];
-        if (!kinkPoint || kinkPoint.currentMa < thresholdCurrentMa) continue;
-
-        rawEvents.push(buildKinkEventFromDetection(
-          valid,
-          dP_dI,
-          i,
-          thresholdCurrentMa,
-          avgBaselineDpDi,
-          anomalyDpDi,
-          percentChange,
-          absPercentChange
-        ));
-      }
-
-      if (!rawEvents.length) return [];
-
-      // Find all kinks first, rank by priority, then keep the top N from the UI limit.
-      return selectPrioritizedKinks(rawEvents, deviationLimit, thresholdCurrentMa, maxKinks);
-    }
-
-    function recomputeKinks() {
-      const deviationLimit = Number(elements.kinkCriterion.value || 0.10);
-      const maxKinks = Math.max(1, Math.min(100, Number(elements.kinkLimit.value || 10)));
-      const grouped = groupBy(
-        state.livPoints.filter((point) => point.powerMw !== null),
-        (point) => `${point.workbookName}|${point.source}|${point.temperatureC}|${point.chip}`
-      );
-      const events = [];
-      for (const [key, points] of grouped.entries()) {
-        const [workbookName, source, temperatureC, chip] = key.split("|");
-        const curveEvents = detectCurveKinks(points, deviationLimit, maxKinks);
-        curveEvents.forEach((event) => {
-          events.push({
-            workbookName,
-            source,
-            temperatureC,
-            chip,
-            currentMa: event.currentMa,
-            detectionCurrentMa: event.detectionCurrentMa,
-            dpDiCurrentMa: event.dpDiCurrentMa,
-            powerMw: event.powerMw,
-            thresholdCurrentMa: event.thresholdCurrentMa,
-            slope: event.slope,
-            avgDpDi: event.avgDpDi,
-            anomalyDpDi: event.anomalyDpDi,
-            deviationPercent: event.percentChange ?? event.deviationRatio * 100,
-            absDeviationPercent: event.deviationRatio * 100,
-            isPrimary: Boolean(event.isPrimary),
-          });
-        });
-      }
-      state.kinkEvents = events.sort(compareKinkEvents);
-    }
-
-    function filteredLivPoints(filterState) {
-      return state.livPoints.filter((point) =>
-        filterState.workbooks.has(point.workbookName)
-        && filterState.sources.has(point.source)
-        && filterState.temperatures.has(point.temperatureC)
-        && filterState.chips.has(point.chip)
-      );
-    }
-
-    function filteredSpectrumPoints(filterState) {
-      if (!state.spectrumPoints.length) {
-        return [];
-      }
-      const selectedTemps = filterState.temperatures;
-      const selectedChips = filterState.chips;
-      const selectedCurrents = filterState.currents;
-      return state.spectrumPoints.filter((point) =>
-        (!filterState.workbooks.size || filterState.workbooks.has(point.workbookName))
-        && (!selectedTemps.size || selectedTemps.has(point.temperatureC))
-        && (!selectedChips.size || selectedChips.has(point.chip))
-        && (!selectedCurrents.size || selectedCurrents.has(String(point.driveCurrentMa)))
-      );
-    }
-
-    function downsampleSpectrumTrace(xValues, yValues, maxPoints = 300) {
-      if (xValues.length <= maxPoints) {
-        return { x: xValues, y: yValues };
-      }
-      const step = Math.ceil(xValues.length / maxPoints);
-      const x = [];
-      const y = [];
-      for (let index = 0; index < xValues.length; index += step) {
-        x.push(xValues[index]);
-        y.push(yValues[index]);
-      }
-      return { x, y };
-    }
-
-    function filteredSummaryPoints(filterState, includeSupplier = true) {
-      const allowSupplier = includeSupplier && elements.showSupplierSummaryToggle.checked;
-      return state.summaryPoints.filter((point) => {
-        const sourceBucket = point.temperatureC === "Supplier75" ? "Supplier" : "Measured";
-        const temperatureBucket = point.temperatureC === "Supplier75" ? "75" : point.temperatureC;
-        return filterState.workbooks.has(point.workbookName)
-          && filterState.sources.has(sourceBucket)
-          && filterState.temperatures.has(temperatureBucket)
-          && filterState.normalizedChips.has(normalizeChipId(point.chip))
-          && point.metricValue !== null
-          && (allowSupplier || point.temperatureC !== "Supplier75");
-      });
-    }
-
-    function renderCurves(filterState) {
-      const livPoints = filteredLivPoints(filterState);
-      renderCurvePlot("liPlot", livPoints, "powerMw", "LI Curves", "Optical Power (mW)");
-      renderDerivativePlot(livPoints);
-      renderCurvePlot("ivPlot", livPoints, "voltageV", "IV Curves", "Voltage (V)");
-    }
-
-    function computePowerDerivatives(points) {
-      const valid = points
-        .filter((point) => point.powerMw !== null)
-        .sort((left, right) => left.currentMa - right.currentMa);
-      if (valid.length < 3) {
-        return { first: [], second: [] };
-      }
-
-      const first = [];
-      for (let index = 1; index < valid.length; index += 1) {
-        const left = valid[index - 1];
-        const right = valid[index];
-        const deltaI = right.currentMa - left.currentMa;
-        if (deltaI <= 0) {
-          continue;
-        }
-        first.push({
-          currentMa: (left.currentMa + right.currentMa) / 2,
-          value: (right.powerMw - left.powerMw) / deltaI,
-        });
-      }
-
-      if (first.length < 2) {
-        return { first, second: [] };
-      }
-
-      const second = [];
-      for (let index = 1; index < first.length; index += 1) {
-        const left = first[index - 1];
-        const right = first[index];
-        const deltaI = right.currentMa - left.currentMa;
-        if (deltaI <= 0) {
-          continue;
-        }
-        second.push({
-          currentMa: (left.currentMa + right.currentMa) / 2,
-          value: (right.value - left.value) / deltaI,
-        });
-      }
-
-      return { first, second };
-    }
-
-    function renderDerivativePlot(points) {
-      const showFirstDerivative = elements.showDpDiToggle.checked;
-      const showSecondDerivative = elements.showD2pDi2Toggle.checked;
-      if (!showFirstDerivative && !showSecondDerivative) {
-        renderEmptyPlot(
-          "liDerivativePlot",
-          "LI Derivatives (dP/dI and d²P/dI²)",
-          "Enable dP/dI or d²P/dI² to display derivative curves."
-        );
-        return;
-      }
-
-      const grouped = groupBy(
-        points.filter((point) => point.powerMw !== null),
-        (point) => `${point.workbookName}|${point.source}|${point.temperatureC}|${point.chip}`
-      );
-      if (!grouped.size) {
-        renderEmptyPlot("liDerivativePlot", "LI Derivatives (dP/dI and d²P/dI²)");
-        return;
-      }
-
-      function shortWorkbookLabel(name) {
-        const stem = String(name || "").replace(/\.xlsx$/i, "");
-        return stem.length > 16 ? `${stem.slice(0, 16)}...` : stem;
-      }
-
-      const traces = [];
-      for (const [key, group] of [...grouped.entries()].sort((a, b) => a[0].localeCompare(b[0], undefined, { numeric: true }))) {
-        const sorted = [...group].sort((left, right) => left.currentMa - right.currentMa);
-        const sample = sorted[0];
-        const baseName = `${shortWorkbookLabel(sample.workbookName)} ${sample.source[0]} ${sample.temperatureC}C C${sample.chip}`;
-        const fullName = `${sample.workbookName} | ${sample.source} | ${sample.temperatureC}C | C${sample.chip}`;
-        const derivatives = computePowerDerivatives(sorted);
-
-        if (showFirstDerivative && derivatives.first.length) {
-          traces.push({
-            x: derivatives.first.map((point) => point.currentMa),
-            y: derivatives.first.map((point) => point.value),
-            type: "scatter",
-            mode: "lines",
-            name: `${baseName} dP/dI`,
-            yaxis: "y",
-            line: { width: 2.1, dash: sample.source === "Supplier" ? "dash" : "solid" },
-            hovertemplate: "Current=%{x:.2f} mA<br>dP/dI=%{y:.5f} mW/mA<extra>" + fullName + "</extra>",
-          });
-        }
-
-        if (showSecondDerivative && derivatives.second.length) {
-          traces.push({
-            x: derivatives.second.map((point) => point.currentMa),
-            y: derivatives.second.map((point) => point.value),
-            type: "scatter",
-            mode: "lines",
-            name: `${baseName} d²P/dI²`,
-            yaxis: "y2",
-            line: { width: 1.8, dash: "dot" },
-            hovertemplate: "Current=%{x:.2f} mA<br>d²P/dI²=%{y:.6f} mW/mA²<extra>" + fullName + "</extra>",
-          });
-        }
-      }
-
-      if (!traces.length) {
-        renderEmptyPlot("liDerivativePlot", "LI Derivatives (dP/dI and d²P/dI²)");
-        return;
-      }
-
-      if (showFirstDerivative) {
-        appendKinkMarkerTrace(
-          traces,
-          points,
-          (event) => (Number.isFinite(event.anomalyDpDi) ? event.anomalyDpDi : event.slope),
-          "Kink Current=%{x:.2f} mA<br>dP/dI=%{y:.4f} mW/mA<extra>Kink</extra>"
-        );
-      }
-
-      renderPlot("liDerivativePlot", traces, {
-        title: "LI Derivatives (dP/dI and d²P/dI²)",
-        template: "plotly_white",
-        height: 560,
-        hovermode: "x unified",
-        paper_bgcolor: "rgba(0,0,0,0)",
-        plot_bgcolor: "rgba(255,255,255,0.55)",
-        margin: { l: 72, r: 94, t: 64, b: 60 },
-        xaxis: { title: "Current (mA)" },
-        yaxis: { title: "dP/dI (mW/mA)", zeroline: true },
-        yaxis2: {
-          title: "d²P/dI² (mW/mA²)",
-          overlaying: "y",
-          side: "right",
-          zeroline: true,
-        },
-        legend: {
-          orientation: "v",
-          x: 1.02,
-          xanchor: "left",
-          y: 1,
-          yanchor: "top",
-          font: { size: 11 },
-        },
-      });
-    }
-
-    function renderCurvePlot(targetId, points, valueField, title, yAxisTitle) {
-      const valid = points.filter((point) => point[valueField] !== null);
-      if (!valid.length) {
-        renderEmptyPlot(targetId, title);
-        return;
-      }
-
-      const grouped = groupBy(valid, (point) => `${point.workbookName}|${point.source}|${point.temperatureC}|${point.chip}`);
-      const traces = [];
-
-      function shortWorkbookLabel(name) {
-        const stem = String(name || "").replace(/\.xlsx$/i, "");
-        return stem.length > 16 ? `${stem.slice(0, 16)}...` : stem;
-      }
-
-      for (const [key, group] of [...grouped.entries()].sort((a, b) => a[0].localeCompare(b[0], undefined, { numeric: true }))) {
-        const sorted = [...group].sort((left, right) => left.currentMa - right.currentMa);
-        const sample = sorted[0];
-        const fullName = `${sample.workbookName} | ${sample.source} | ${sample.temperatureC}C | C${sample.chip}`;
-        const name = `${shortWorkbookLabel(sample.workbookName)} ${sample.source[0]} ${sample.temperatureC}C C${sample.chip}`;
-        traces.push({
-          x: sorted.map((point) => point.currentMa),
-          y: sorted.map((point) => point[valueField]),
-          type: "scatter",
-          mode: "lines",
-          name,
-          line: { dash: sample.source === "Supplier" ? "dash" : "solid", width: 2.3 },
-          hovertemplate: `Current=%{x:.2f} mA<br>${yAxisTitle}=%{y:.4f}<extra>${fullName}</extra>`,
-        });
-      }
-
-      if (targetId === "liPlot") {
-        appendKinkMarkerTrace(
-          traces,
-          valid,
-          (event) => {
-            if (Number.isFinite(event.powerMw)) return event.powerMw;
-            const curvePoints = valid.filter((point) =>
-              point.workbookName === event.workbookName
-              && point.source === event.source
-              && point.temperatureC === event.temperatureC
-              && point.chip === event.chip
-            );
-            return interpolatePowerAtCurrent(curvePoints, event.currentMa);
-          },
-          "Kink Current=%{x:.2f} mA<br>Power=%{y:.3f} mW<extra>Kink</extra>"
-        );
-      }
-
-      renderPlot(targetId, traces, {
-        title,
-        template: "plotly_white",
-        height: 560,
-        hovermode: "x unified",
-        paper_bgcolor: "rgba(0,0,0,0)",
-        plot_bgcolor: "rgba(255,255,255,0.55)",
-        margin: { l: 64, r: 220, t: 64, b: 60 },
-        xaxis: { title: "Current (mA)" },
-        yaxis: { title: yAxisTitle },
-        legend: {
-          orientation: "v",
-          x: 1.02,
-          xanchor: "left",
-          y: 1,
-          yanchor: "top",
-          font: { size: 11 },
-          itemwidth: 40,
-        },
-      });
-    }
-
-    function renderKinkTable(filterState) {
-      const rows = state.kinkEvents
-        .filter((event) => filterState.workbooks.has(event.workbookName) && filterState.sources.has(event.source) && filterState.temperatures.has(event.temperatureC) && filterState.chips.has(event.chip))
-        .sort(compareKinkEvents)
-        .map((event) => ({
-          Workbook: event.workbookName,
-          Source: event.source,
-          Temperature: `${event.temperatureC}C`,
-          Chip: event.chip,
-          KinkCurrent: event.currentMa.toFixed(2),
-          "Avg dP/dI (SavGol)": Number.isFinite(event.avgDpDi) ? event.avgDpDi.toFixed(4) : "",
-          "Anomaly dP/dI (Raw)": Number.isFinite(event.anomalyDpDi) ? event.anomalyDpDi.toFixed(4) : "",
-          "Change %": Number.isFinite(event.deviationPercent)
-            ? `${event.deviationPercent.toFixed(2)}%`
-            : (Number.isFinite(event.absDeviationPercent) ? `${(-event.absDeviationPercent).toFixed(2)}%` : ""),
-        }));
-      clearTable(elements.kinkTable, ["Workbook", "Source", "Temperature", "Chip", "KinkCurrent", "Avg dP/dI (SavGol)", "Anomaly dP/dI (Raw)", "Change %"], rows);
-    }
-
-    function renderSummaryPlots(filterState) {
-      const summaryPoints = filteredSummaryPoints(filterState, true);
-      const chipPoints = aggregateSummaryMetricPoints(
-        summaryPoints.filter((point) => point.chipNumeric !== null),
-        "chipNumeric"
-      );
-      renderMetricGrid(elements.summaryGrid, chipPoints, {
-        xField: "chipNumeric",
-        xTitle: "Chip Number",
-        prefix: "summary",
-        scatterOnly: false,
-        showFitLines: false,
-        metrics: SUMMARY_METRICS,
-        emptyLabel: "summary",
-      });
-      renderChipWavelengthCombinedPlot(chipPoints, filterState);
-
-      const ridgePoints = aggregateSummaryMetricPoints(
-        summaryPoints.filter((point) => point.temperatureC !== "Supplier75" && point.ridgeWidthUm !== null),
-        "ridgeWidthUm"
-      );
-
-      const uniqueRidgeWidths = uniqueSorted(ridgePoints.map((point) => point.ridgeWidthUm), numericOrStringSort);
-      if (uniqueRidgeWidths.length <= 1) {
-        elements.ridgeGrid.innerHTML = '<div class="empty-box">No data available: ridge width variation not found in selected files.</div>';
-      } else {
-        renderMetricGrid(elements.ridgeGrid, ridgePoints, {
-          xField: "ridgeWidthUm",
-          xTitle: "Ridge Width (um)",
-          prefix: "ridge",
-          scatterOnly: true,
-          showFitLines: true,
-          metrics: SUMMARY_METRICS,
-          emptyLabel: "ridge-width",
-        });
-      }
-
-      renderRidgeWidthVsWavelengthPlots(filterState);
-    }
-
-    function renderRidgeWidthVsWavelengthPlots(filterState) {
-      const wavelengthMetrics = discoverWavelengthMetrics(state.summaryPoints);
-      const summaryPoints = filteredSummaryPoints(filterState, false).filter((point) =>
-        point.ridgeWidthUm !== null
-        && wavelengthMetrics.includes(point.metricName)
-        && point.metricValue !== null
-      );
-      elements.ridgeWavelengthGrid.innerHTML = "";
-
-      if (!summaryPoints.length) {
-        elements.ridgeWavelengthGrid.innerHTML = '<div class="empty-box">No ridge width vs wavelength data matches the current filters.</div>';
-        return;
-      }
-
-      wavelengthMetrics.forEach((metric, index) => {
-        const card = document.createElement("article");
-        card.className = "plot-card";
-        const title = document.createElement("h3");
-        title.className = "card-title";
-        title.textContent = `Ridge Width vs ${metric}`;
-        const plot = document.createElement("div");
-        plot.className = "plot compact";
-        plot.id = `ridgeWlPlot${index}`;
-        card.appendChild(title);
-        card.appendChild(plot);
-        elements.ridgeWavelengthGrid.appendChild(card);
-
-        const metricPoints = summaryPoints.filter((point) => point.metricName === metric);
-        if (!metricPoints.length) {
-          renderEmptyPlot(plot.id, title);
-          return;
-        }
-
-        const grouped = groupBy(metricPoints, (point) => point.temperatureC);
-        const traces = [];
-        for (const [key, group] of [...grouped.entries()].sort((a, b) => a[0].localeCompare(b[0], undefined, { numeric: true }))) {
-          const sorted = [...group].sort((left, right) => left.ridgeWidthUm - right.ridgeWidthUm);
-          const sample = sorted[0];
-          traces.push({
-            x: sorted.map((point) => point.ridgeWidthUm),
-            y: sorted.map((point) => point.metricValue),
-            text: sorted.map((point) => `Chip ${point.chip}<br>Ridge ${point.ridgeWidthUm} um`),
-            type: "scatter",
-            mode: "markers",
-            name: `${sample.temperatureC}C`,
-            marker: { size: 8 },
-            hovertemplate: "Ridge Width=%{x:.3f} um<br>Wavelength=%{y:.2f} nm<br>%{text}<extra>%{fullData.name}</extra>",
-          });
-        }
-
-        renderPlot(plot.id, traces, {
-          title,
-          template: "plotly_white",
-          height: 420,
-          paper_bgcolor: "rgba(0,0,0,0)",
-          plot_bgcolor: "rgba(255,255,255,0.55)",
-          margin: { l: 64, r: 28, t: 56, b: 56 },
-          xaxis: { title: "Ridge Width (um)" },
-          yaxis: { title: "Wavelength (nm)" },
-          legend: { orientation: "h", y: -0.24 },
+    function g(i){return document.getElementById(i)}
+
+    function setMode(m){
+      curMode = m;
+      if(m===MODE.LIV){ el.lmc.classList.remove("mode-section-hidden"); el.smc.classList.add("mode-section-hidden"); el.mlb.style.background="#22577a"; el.mlb.style.color="#fff"; el.msb.style.background="transparent"; el.msb.style.color="var(--ink)"; el.hs.textContent="Review LI, IV, derivatives, summary metrics, and kink locations."; }
+      else { el.lmc.classList.add("mode-section-hidden"); el.smc.classList.remove("mode-section-hidden"); el.msb.style.background="#22577a"; el.msb.style.color="#fff"; el.mlb.style.background="transparent"; el.mlb.style.color="var(--ink)"; el.hs.textContent="Review spectrum plots, wavelength distributions, and chip vs wavelength analysis."; }
+      sched();
+    }
+    el.mlb.onclick=()=>setMode(MODE.LIV); el.msb.onclick=()=>setMode(MODE.SPEC);
+
+    function cv(v){if(v===null||v===undefined||v==="")return null;const n=Number(v);return Number.isFinite(n)?n:null}
+    function us(v,s){const u=[...new Set(v.filter(x=>x!==null&&x!==undefined&&x!==""))];u.sort(s||((a,b)=>String(a).localeCompare(String(b),undefined,{numeric:true})));return u}
+    function nos(a,b){const an=Number(a),bn=Number(b),ai=Number.isFinite(an),bi=Number.isFinite(bn);if(ai&&bi)return an-bn;if(ai)return-1;if(bi)return1;return String(a).localeCompare(String(b))}
+    function nci(v){if(v===null||v===undefined||v==="")return"";const n=Number(v);if(Number.isFinite(n))return String(Number.isInteger(n)?Math.trunc(n):n);return String(v).trim().replace(/^0+(\d)/,"$1")}
+    function ph(r){const p=[];let c=null;for(const x of r){if(x!==null&&x!==undefined&&x!=="")c=String(x).trim();p.push(c)}return p}
+    function s2r(s){return XLSX.utils.sheet_to_json(s,{header:1,raw:true,defval:null,blankrows:false})}
+    function nsk(n){return String(n??"").trim().toLowerCase().replace(/\s+/g,"")}
+    function fws(wb,t){if(!wb?.Sheets)return null;if(wb.Sheets[t])return wb.Sheets[t];const tk=nsk(t),mn=(wb.SheetNames||[]).find(n=>nsk(n)===tk);return mn?wb.Sheets[mn]:null}
+
+    function pLS(wbn,rows,temp){
+      const pts=[];const mc=Math.max(...rows.map(r=>r.length),0);const hr=rows[0]||[];
+      for(let sc=0;sc<mc;sc+=4){const h=hr[sc];if(typeof h!=="string"||!h.includes("_"))continue;const chip=nci(String(h).split("_").pop());for(let ri=2;ri<rows.length;ri++){const row=rows[ri]||[],c=cv(row[sc]);if(c===null)continue;pts.push({workbookName:wbn,source:"Measured",temperatureC:String(temp),chip,currentMa:c,voltageV:cv(row[sc+1]),powerMw:cv(row[sc+2])})}}
+      return pts;
+    }
+    function pSS(wbn,rows){
+      const pts=[];const mc=Math.max(...rows.map(r=>r.length),0);const hr=rows[0]||[];
+      for(let sc=0;sc<mc;sc+=7){const h=hr[sc];if(typeof h!=="string"||!h.startsWith("Chip "))continue;const chip=h.replace("Chip ","").trim();for(let ri=2;ri<rows.length;ri++){const row=rows[ri]||[],c=cv(row[sc+3]);if(c===null)continue;pts.push({workbookName:wbn,source:"Supplier",temperatureC:"75",chip,currentMa:c,voltageV:cv(row[sc+4]),powerMw:cv(row[sc+5])})}}
+      return pts;
+    }
+    function fSHR(rows){const sl=Math.min(rows.length,6);for(let ri=0;ri<sl;ri++){if((rows[ri]||[]).some(c=>/^Chip_\d+_\d+\s*mA$/i.test(String(c??"").trim())))return ri}return 0}
+    function pSpS(wbn,rows,temp){
+      const pts=[];if(!rows.length)return pts;const mc=Math.max(...rows.map(r=>r.length),0),hri=fSHR(rows),hr=rows[hri]||[],dsr=hri+2;
+      for(let sc=0;sc<mc;sc+=3){const ht=String(hr[sc]??"").trim();if(!/^Chip_/i.test(ht))continue;const m=ht.match(/^Chip_(\d+)_(\d+)\s*mA$/i);if(!m)continue;const chip=nci(m[1]),dm=Number(m[2]);for(let ri=dsr;ri<rows.length;ri++){const row=rows[ri]||[],wl=cv(row[sc]),pw=cv(row[sc+1]);if(wl===null||pw===null||pw<=-200)continue;pts.push({workbookName:wbn,temperatureC:String(temp),chip,driveCurrentMa:dm,wavelengthNm:wl,powerDbm:pw})}}
+      return pts;
+    }
+    function pSuS(wbn,rows){
+      const pts=[];const r1=ph(rows[0]||[]),r2=rows[1]||[],mm=new Map(),rh=`${r1[1]??""} ${r2[1]??""}`.toLowerCase(),hr=rh.includes("ridge")&&rh.includes("width");
+      for(let col=0;col<Math.max(r1.length,r2.length);col++){const top=r1[col],sub=r2[col],mn=sub===null||sub===undefined?"":String(sub).trim();if(!top||!mn)continue;const tn=String(top).toLowerCase().replace(/\s+/g,""),tm=tn.match(/^(\d+)c$/);if(tm)mm.set(`${tm[1]}|${mn}`,col);else if(tn.includes("supplier")&&tn.includes("75"))mm.set(`Supplier75|${mn}`,col)}
+      const mns=[...new Set([...mm.keys()].map(k=>k.split("|")[1]))];
+      for(let ri=2;ri<rows.length;ri++){const row=rows[ri]||[],cc=row[0];if(cc===null||cc===undefined||cc==="")continue;const cn=cv(cc),chip=cn===null?String(cc).trim():String(Number.isInteger(cn)?Math.trunc(cn):cn),rw=hr?cv(row[1]):null;for(const t of LIV_TEMPS)for(const metric of mns){const col=mm.get(`${t}|${metric}`);if(col===undefined)continue;pts.push({workbookName:wbn,chip,chipNumeric:cn,ridgeWidthUm:rw,temperatureC:t,metricName:metric,metricValue:cv(row[col])})}for(const metric of mns){const col=mm.get(`Supplier75|${metric}`);if(col===undefined)continue;pts.push({workbookName:wbn,chip,chipNumeric:cn,ridgeWidthUm:rw,temperatureC:"Supplier75",metricName:metric,metricValue:cv(row[col])})}}
+      return pts;
+    }
+
+    async function pWF(file,opts={}){
+      const {includeSpectrum=true}=opts;if(!file)return{livPoints:[],summaryPoints:[],spectrumPoints:[],hasSpectrumSheets:false};const wbn=file.name;
+      try{const buf=await file.arrayBuffer(),wb=XLSX.read(buf,{type:"array"}),livP=[],sumP=[],specP=[];let hs=false;
+        for(const t of LIV_TEMPS){const sh=fws(wb,`LIV_${t}C`);if(sh){const r=s2r(sh);if(r?.length)livP.push(...pLS(wbn,r,t))}}
+        const sup=fws(wb,"Supplier_LIV_75C");if(sup){const r=s2r(sup);if(r?.length)livP.push(...pSS(wbn,r))}
+        if(includeSpectrum)for(const t of SPEC_TEMPS){const sh=fws(wb,`Spectrum_${t}C`);if(sh){hs=true;const r=s2r(sh);if(r?.length)specP.push(...pSpS(wbn,r,t))}}
+        const sumSh=fws(wb,"Summary");if(sumSh){const r=s2r(sumSh);if(r?.length)sumP.push(...pSuS(wbn,r))}
+        return{livPoints:livP,summaryPoints:sumP,spectrumPoints:specP,hasSpectrumSheets:hs};
+      }catch(e){console.error("Parse error",wbn,e);return{livPoints:[],summaryPoints:[],spectrumPoints:[],hasSpectrumSheets:false}}
+    }
+
+    async function lDWB(){try{const r=await fetch(DEV_FILE);if(!r.ok)return false;const b=await r.arrayBuffer(),f=new File([b],DEV_FILE,{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});await lSF([f],{preserveFilters:false});return true}catch(e){return false}}
+    function rFS(vals,saved){if(!saved)return vals;const s=vals.filter(v=>saved.has(String(v)));return s.length?s:vals}
+    function rFL(files){const f=files[0],rp=f?.webkitRelativePath||"";if(!rp)return;const[fn]=rp.split(/[\\/]/);if(fn){st.lastDir=fn;localStorage.setItem("livDashboardLastFolderName",fn)}}
+    function oDB(){return new Promise((res,rej)=>{const r=indexedDB.open(DB_NAME,1);r.onupgradeneeded=()=>r.result.createObjectStore(STORE);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+    async function sDH(h){const db=await oDB();await new Promise((res,rej)=>{const t=db.transaction(STORE,"readwrite");t.objectStore(STORE).put(h,KEY);t.oncomplete=()=>res();t.onerror=()=>rej(t.error)});db.close()}
+    async function lSDH(){const db=await oDB();const h=await new Promise((res,rej)=>{const t=db.transaction(STORE,"readonly");const r=t.objectStore(STORE).get(KEY);r.onsuccess=()=>res(r.result||null);r.onerror=()=>rej(r.error)});db.close();return h}
+    async function cSDH(){const db=await oDB();await new Promise((res,rej)=>{const t=db.transaction(STORE,"readwrite");t.objectStore(STORE).delete(KEY);t.oncomplete=()=>res();t.onerror=()=>rej(t.error)});db.close();localStorage.removeItem("livDashboardLastFolderName")}
+    async function eDP(dh){const o={mode:"read"};if((await dh.queryPermission(o))==="granted")return true;return(await dh.requestPermission(o))==="granted"}
+    function uFS(m){const h=st.lastDir?` Last folder: ${st.lastDir}.`:"";sS(`${m}${h}`)}
+
+    async function cEF(dh){const f=[];async function w(h){for await(const e of h.values()){if(e.kind==="file"&&e.name.toLowerCase().endsWith(".xlsx"))f.push(await e.getFile());else if(e.kind==="directory")await w(e)}}await w(dh);return f.sort((a,b)=>a.name.localeCompare(b.name,undefined,{numeric:true}))}
+
+    async function pF(){
+      if(window.showDirectoryPicker){
+        try{const opts={mode:"read"};const last=st.dh||await lSDH();if(last)opts.startIn=last;const dh=await window.showDirectoryPicker(opts);const files=await cEF(dh);st.selectedFolderPath=dh.name;
+          if(!files.length){el.rpb.style.display="";uFS(`No .xlsx files in "${dh.name}". Click "Generate Excel Files".`);return}
+          el.rpb.style.display="none";st.dh=dh;st.lastDir=dh.name;await sDH(dh);await lSF(files,{preserveFilters:false});return;
+        }catch(e){if(e?.name==="AbortError")return}
+      }
+      el.fp.click();
+    }
+
+    async function rLFS(){
+      st.lastDir=localStorage.getItem("livDashboardLastFolderName")||"";
+      if(await lDWB())return;
+      if(!window.showDirectoryPicker){uFS("Choose a folder with .xlsx files to begin.");return}
+      try{const s=await lSDH();if(!s){uFS("Choose a folder with .xlsx files to begin.");return}st.dh=s;st.lastDir=s.name||st.lastDir;if(!(await eDP(s))){uFS("Click Reload to use the last folder.");return}uFS("Restoring...");await rFD()}catch(e){uFS("Choose a folder to begin.")}
+    }
+
+    async function rFD(){
+      if(st.dh){const f=await cEF(st.dh);if(!f.length){sS("No .xlsx files found.");return}el.rpb.style.display="none";await lSF(f,{preserveFilters:true});return}
+      const f=st.files.length?st.files:[...el.fp.files];if(!f.length){sS("Select a folder first.");return}await lSF(f,{preserveFilters:true})
+    }
+
+    async function lSF(files,opts={}){
+      const {preserveFilters=false}=opts;if(!files?.length)return;
+      const saved=preserveFilters&&st.livP.length?{liv:cFS(),spectrum:cSFS()}:null;
+      const excel=[...files].filter(f=>f.name.toLowerCase().endsWith(".xlsx"));st.files=excel;rFL(excel);if(!excel.length){uFS("No .xlsx files.");return}
+      const livP=[],sumP=[];let specP=[],specSrc="",specCand=null,count=0;
+      for(const file of excel){count++;sS(`${preserveFilters?"Refreshing":"Loading"} ${count}/${excel.length}: ${file.name}...`);await new Promise(r=>requestAnimationFrame(r));
+        try{const p=await pWF(file,{includeSpectrum:true});if(p.livPoints?.length)livP.push(...p.livPoints);if(p.summaryPoints?.length)sumP.push(...p.summaryPoints);if(p.spectrumPoints?.length){const e={points:p.spectrumPoints,name:file.name,hasLiv:Boolean(p.livPoints?.length)};if(!specCand)specCand=e;else if(e.hasLiv&&!specCand.hasLiv)specCand=e}}catch(err){console.error(`Error ${file.name}:`,err)}}
+      if(specCand){specP=specCand.points;specSrc=specCand.name}
+      st.livP=livP;st.sumP=sumP;st.specP=specP;st.specSrc=specSrc;st.wbs=us(excel.map(f=>f.name));
+      sS("Syncing...");await new Promise(r=>requestAnimationFrame(r));sF(saved?.liv);sSF(saved?.spectrum);
+      sS("Kinks...");await new Promise(r=>requestAnimationFrame(r));rK();uS();
+      sS("Rendering...");await new Promise(r=>requestAnimationFrame(r));rA();
+      const sn=specP.length?` Spectrum from ${specSrc} (${specP.length.toLocaleString()} pts).`:(livP.length?" No spectrum sheets.":"");
+      uFS((preserveFilters?`Refreshed `:`Loaded `)+`${excel.length} workbook(s).`+sn);
+    }
+
+    function sS(m){el.stxt.textContent=m}
+    let isDrag=false,dragV=false;
+    function sV(id){const e=typeof id==="string"?g(id):id;if(!e)return[];if(e.classList.contains("checkbox-list"))return[...e.querySelectorAll("input:not(.select-all-checkbox):checked")].map(i=>i.value);return[...e.selectedOptions].map(o=>o.value)}
+    function iCD(){window.addEventListener("mouseup",()=>{isDrag=false})}
+
+    function fCL(id,values,selected=values){
+      const c=g(id);if(!c)return;if(!c.dataset.changeBound){c.addEventListener("change",sched);c.dataset.changeBound="1"}c.innerHTML="";const isC=id==="chipFilter"||id==="spectrumChipFilter";
+      if(isC){const sa=document.createElement("div");sa.className="checkbox-list-item";sa.style.fontWeight="600";sa.style.borderBottom="1px solid rgba(29,24,21,0.1)";sa.style.marginBottom="6px";sa.style.paddingBottom="8px";const sai=document.createElement("input");sai.type="checkbox";sai.className="select-all-checkbox";sai.checked=selected.length===values.length&&values.length>0;const sas=document.createElement("span");sas.textContent="Select All";sa.appendChild(sai);sa.appendChild(sas);function sync(){c.querySelectorAll("input:not(.select-all-checkbox)").forEach(cb=>{cb.checked=sai.checked});uSA();sched()}sai.addEventListener("change",sync);sa.addEventListener("click",e=>{if(e.target===sai)return;e.preventDefault();sai.checked=!sai.checked;sync()});c.appendChild(sa)}
+      values.forEach(v=>{const it=document.createElement("div");it.className="checkbox-list-item";const inp=document.createElement("input");inp.type="checkbox";inp.value=v;inp.checked=selected.includes(String(v));const sp=document.createElement("span");sp.textContent=v;sp.title=v;it.appendChild(inp);it.appendChild(sp);it.addEventListener("mousedown",e=>{if(e.button!==0)return;isDrag=true;dragV=!inp.checked;inp.checked=dragV;uSA();sched()});it.addEventListener("mouseenter",()=>{if(isDrag&&inp.checked!==dragV){inp.checked=dragV;uSA();sched()}});c.appendChild(it)});
+      function uSA(){if(!isC)return;const sa=c.querySelector(".select-all-checkbox");if(!sa)return;const t=c.querySelectorAll("input:not(.select-all-checkbox)").length,ch=c.querySelectorAll("input:not(.select-all-checkbox):checked").length;sa.checked=t>0&&ch===t;sa.indeterminate=ch>0&&ch<t}
+    }
+
+    function cFS(){return{workbooks:new Set(sV("workbookFilter")),sources:new Set(sV("sourceFilter")),temperatures:new Set(sV("temperatureFilter")),chips:new Set(sV("chipFilter")),normalizedChips:new Set(sV("chipFilter").map(nci))}}
+    function rP(tid,traces,layout){Plotly.react(tid,traces,layout,PC)}
+    function sched(){if(st.rf!==null)return;st.rf=requestAnimationFrame(()=>{st.rf=null;rA()})}
+
+    function sF(saved=null){
+      const wb=us(st.livP.map(p=>p.workbookName));const hs=st.sumP.some(p=>p.temperatureC==="Supplier75"&&p.metricValue!==null);
+      const src=us([...st.livP.map(p=>p.source),...(hs?["Supplier"]:[])]);const temp=us(st.livP.map(p=>p.temperatureC),nos);
+      const chips=us(st.livP.map(p=>p.chip),nos);const def=saved?.chips?rFS(chips,saved.chips):(chips.length?[chips[0]]:chips);
+      fCL("workbookFilter",wb,rFS(wb,saved?.workbooks));fCL("sourceFilter",src,rFS(src,saved?.sources));
+      fCL("temperatureFilter",temp,rFS(temp,saved?.temperatures));fCL("chipFilter",chips,def);
+    }
+
+    function sSF(saved=null){
+      const chips=us(st.specP.map(p=>p.chip),nos),temps=us(st.specP.map(p=>p.temperatureC),nos);
+      const currents=us(st.specP.map(p=>p.driveCurrentMa),nos).map(v=>String(v));
+      const wbs=us(st.specSrc?[st.specSrc]:st.specP.map(p=>p.workbookName));
+      const defChips=saved?.chips?rFS(chips,saved.chips):(chips.includes("1")?["1"]:chips.slice(0,1));
+      const defWbs=saved?.workbooks?rFS(wbs,saved.workbooks):(wbs.length?[wbs[0]]:wbs);
+      fCL("spectrumChipFilter",chips,defChips);fCL("spectrumTemperatureFilter",temps,rFS(temps,saved?.temperatures));
+      fCL("spectrumCurrentFilter",currents,rFS(currents,saved?.currents));fCL("spectrumWorkbookFilter",wbs,defWbs);
+    }
+
+    function cSFS(){return{workbooks:new Set(sV("spectrumWorkbookFilter")),temperatures:new Set(sV("spectrumTemperatureFilter")),currents:new Set(sV("spectrumCurrentFilter")),chips:new Set(sV("spectrumChipFilter"))}}
+
+    function uS(){
+      el.wc.textContent=String(st.wbs.length);el.lc.textContent=st.livP.length.toLocaleString();
+      el.sc.textContent=st.sumP.length.toLocaleString();el.spc.textContent=st.specP.length.toLocaleString();el.kc.textContent=st.kinks.length.toLocaleString();
+    }
+
+    async function cD(m="Cleared."){
+      st.livP=[];st.sumP=[];st.specP=[];st.specSrc="";st.kinks=[];st.wbs=[];st.files=[];st.dh=null;st.lastDir="";
+      try{await cSDH()}catch(e){}el.rpb.style.display="none";uS();
+      ["workbookFilter","sourceFilter","temperatureFilter","chipFilter"].forEach(id=>{const e=g(id);if(e)e.innerHTML=""});
+      rEP("liPlot","LI Curves");rEP("liDerivativePlot","LI Derivatives");rEP("ivPlot","IV Curves");
+      rEP("firstKinkPlot","First Kink");rEP("kinkVsRidgeWidthPlot","Kink vs Ridge");rEP("livDistributionPlot","Distributions");rEP("wavelengthDistributionPlot","Wavelength Distributions");
+      el.sg.innerHTML=el.swg.innerHTML=el.rg.innerHTML=el.rwg.innerHTML=el.spg.innerHTML=el.sswg.innerHTML=el.srwg.innerHTML="<div class='empty-box'>Load workbooks.</div>";
+      cT(el.kt,[],[]);sS(m);
+    }
+
+    function rEP(tid,title,msg="No data"){rP(tid,[],{title,template:"plotly_white",paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(0,0,0,0)",xaxis:{visible:false},yaxis:{visible:false},annotations:[{text:msg,x:.5,y:.5,xref:"paper",yref:"paper",showarrow:false,font:{size:18,color:"#645a53"}}],margin:{l:28,r:18,t:60,b:30}})}
+    function gB(v,fn){const m=new Map();v.forEach(x=>{const k=fn(x);if(!m.has(k))m.set(k,[]);m.get(k).push(x)});return m}
+    function med(v){if(!v.length)return null;const s=[...v].sort((a,b)=>a-b),m=Math.floor(s.length/2);return s.length%2===1?s[m]:(s[m-1]+s[m])/2}
+
+    function aSMP(points,xField){
+      const g=new Map();
+      points.forEach(p=>{if(p.metricValue===null||p[xField]===null)return;const k=[p.temperatureC,p.metricName,nci(p.chip),p[xField]].join("|");if(!g.has(k)){g.set(k,{...p,workbookNames:new Set([p.workbookName]),values:[p.metricValue]});return}const e=g.get(k);e.workbookNames.add(p.workbookName);e.values.push(p.metricValue)});
+      return[...g.values()].map(e=>({...e,workbookName:[...e.workbookNames].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true})).join(", "),metricValue:med(e.values)}))
+    }
+
+    function kde(vals,bw=null){
+      if(!vals.length)return{x:[],y:[]};const n=vals.length;
+      if(bw===null){const s=[...vals].sort((a,b)=>a-b),q1=s[Math.floor(n*.25)],q3=s[Math.floor(n*.75)],iqr=q3-q1;const sd=Math.sqrt(vals.reduce((s,v)=>s+(v-vals.reduce((a,b)=>a+b,0)/n)**2,0)/(n-1));bw=.9*Math.min(sd,iqr/1.34)*Math.pow(n,-.2);if(!bw||bw<=0)bw=1}
+      const min=Math.min(...vals)-3*bw,max=Math.max(...vals)+3*bw,gs=Math.min(512,Math.max(100,n*4)),step=(max-min)/gs;
+      const x=Array.from({length:gs},(_,i)=>min+i*step);
+      const y=x.map(xi=>vals.reduce((s,vi)=>s+Math.exp(-.5*((xi-vi)/bw)**2)/(bw*Math.sqrt(2*Math.PI)),0)/n);
+      return{x,y};
+    }
+
+    function rLDP(){
+      const pts=st.sumP.filter(p=>p.temperatureC!=="Supplier75"&&p.metricValue!==null);
+      if(!pts.length){rEP("livDistributionPlot","Parameter Distributions");return}
+      const metrics=SUMMARY_METRICS.filter(m=>pts.some(p=>p.metricName===m)),temps=us(pts.map(p=>p.temperatureC),nos);
+      if(!metrics.length){rEP("livDistributionPlot","Parameter Distributions");return}
+      const nm=metrics.length,nc=Math.min(3,nm),nr=Math.ceil(nm/nc),figData=[],xaxes={},yaxes={},anns=[];
+      metrics.forEach((metric,idx)=>{
+        const row=Math.floor(idx/nc),col=idx%nc,xa=`x${idx+1}`,ya=`y${idx+1}`;
+        xaxes[xa]={domain:{x:[col/nc,(col+1)/nc],y:[1-(row+1)/nr,1-row/nr]},anchor:ya,title:{text:metric,font:{size:10}},tickfont:{size:8},showgrid:false,zeroline:false};
+        yaxes[ya]={domain:{x:[col/nc,(col+1)/nc],y:[1-(row+1)/nr,1-row/nr]},anchor:xa,title:{text:"Density",font:{size:9}},tickfont:{size:8},showgrid:true,zeroline:false};
+        // Subplot title annotation
+        anns.push({text:`<b>${metric}</b>`,x:(col+0.5)/nc,y:1-row/nr,xref:"paper",yref:"paper",showarrow:false,font:{size:11},xanchor:"center",yanchor:"bottom"});
+        const mp=pts.filter(p=>p.metricName===metric);if(!mp.length)return;
+        temps.forEach(temp=>{
+          const vals=mp.filter(p=>p.temperatureC===temp&&p.metricValue!==null).map(p=>p.metricValue);if(vals.length<3)return;
+          const d=kde(vals),step=Math.max(1,Math.floor(d.x.length/200)),xs=d.x.filter((_,i)=>i%step===0),ys=d.y.filter((_,i)=>i%step===0);
+          const col=TC[temp]||"#22577a",rgb=TCRGB[temp]||"34,87,122";
+          figData.push({x:xs,y:ys,type:"scatter",mode:"lines",name:`${temp}°C`,legendgroup:`${temp}°C`,xaxis:xa,yaxis:ya,line:{color:col,width:2.5},fill:"tozeroy",fillcolor:`rgba(${rgb},0.08)`,showlegend:idx===0,hovertemplate:`${metric}<br>${temp}°C<br>Value: %{x:.2f}<br>Density: %{y:.4f}<extra></extra>`});
         });
       });
+      rP("livDistributionPlot",figData,{title:{text:"Parameter Distributions Across All Chips",font:{size:14}},template:"plotly_white",height:700,hovermode:"x unified",paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(255,255,255,0.55)",margin:{l:48,r:24,t:56,b:80},grid:{rows:nr,columns:nc,pattern:"independent"},...xaxes,...yaxes,annotations:anns,legend:{orientation:"h",y:-0.06,x:.5,xanchor:"center",font:{size:12}}});
     }
 
-    function renderChipWavelengthCombinedPlot(chipPoints, filterState) {
-      const wavelengthMetrics = discoverWavelengthMetrics(state.summaryPoints);
-      elements.summaryWavelengthGrid.innerHTML = "";
-      const wavelengthPoints = chipPoints.filter((point) =>
-        wavelengthMetrics.includes(point.metricName)
-        && point.chipNumeric !== null
-        && point.metricValue !== null
-      );
-
-      if (!wavelengthPoints.length) {
-        elements.summaryWavelengthGrid.innerHTML = '<div class="empty-box">No chip vs wavelength data matches the current filters.</div>';
-        return;
-      }
-
-      const card = document.createElement("article");
-      card.className = "plot-card";
-      const title = document.createElement("h3");
-      title.className = "card-title";
-      title.textContent = "Chip vs Wavelength (all currents + Wl_theory)";
-      const plot = document.createElement("div");
-      plot.className = "plot";
-      plot.id = "chipWavelengthCombinedPlot";
-      card.appendChild(title);
-      card.appendChild(plot);
-      elements.summaryWavelengthGrid.appendChild(card);
-
-      const grouped = groupBy(wavelengthPoints, (point) => `${point.temperatureC}|${point.metricName}`);
-      const traces = [];
-      for (const [key, group] of [...grouped.entries()].sort((a, b) => a[0].localeCompare(b[0], undefined, { numeric: true }))) {
-        const sorted = [...group].sort((left, right) => left.chipNumeric - right.chipNumeric);
-        const sample = sorted[0];
-        const isSupplier = sample.temperatureC === "Supplier75";
-        const seriesName = isSupplier
-          ? `Supplier ${sample.metricName}`
-          : `${sample.temperatureC}C ${sample.metricName}`;
-        traces.push({
-          x: sorted.map((point) => point.chipNumeric),
-          y: sorted.map((point) => point.metricValue),
-          text: sorted.map((point) => `Chip ${point.chip}`),
-          type: "scatter",
-          mode: "markers+lines",
-          name: seriesName,
-          marker: { size: 7 },
-          line: { width: 1.6, dash: isSupplier ? "dash" : "solid" },
-          hovertemplate: "Chip=%{x}<br>Wavelength=%{y:.2f} nm<br>%{text}<extra>%{fullData.name}</extra>",
-        });
-      }
-
-      renderPlot(plot.id, traces, {
-        title,
-        template: "plotly_white",
-        height: 520,
-        paper_bgcolor: "rgba(0,0,0,0)",
-        plot_bgcolor: "rgba(255,255,255,0.55)",
-        margin: { l: 64, r: 28, t: 56, b: 56 },
-        xaxis: { title: "Chip Number" },
-        yaxis: { title: "Wavelength (nm)" },
-        legend: {
-          orientation: "v",
-          x: 1.02,
-          xanchor: "left",
-          y: 1,
-          font: { size: 10 },
-        },
-      });
-    }
-
-    function renderSpectrumPlots(filterState) {
-      elements.spectrumGrid.innerHTML = "";
-
-      if (!elements.showSpectrumPlotsToggle.checked) {
-        return;
-      }
-
-      if (!state.spectrumPoints.length) {
-        elements.spectrumGrid.innerHTML = '<div class="empty-box">No spectrum sheets found. Load a workbook with Spectrum_25C/50C/75C tabs.</div>';
-        return;
-      }
-
-      const spectrumPoints = filteredSpectrumPoints(filterState);
-      if (!spectrumPoints.length) {
-        elements.spectrumGrid.innerHTML = '<div class="empty-box">No spectrum data matches the spectrum filters.</div>';
-        return;
-      }
-
-      const selectedChips = [...filterState.chips];
-      const selectedTemps = [...filterState.temperatures];
-      const selectedCurrents = [...filterState.currents];
-      const chipLabel = !selectedChips.length || selectedChips.length === state.spectrumPoints.length
-        ? "all chips"
-        : (selectedChips.length === 1 ? `Chip ${selectedChips[0]}` : `${selectedChips.length} chips`);
-      const currentLabel = !selectedCurrents.length
-        ? "all currents"
-        : selectedCurrents.map((value) => `${value} mA`).join(", ");
-
-      const card = document.createElement("article");
-      card.className = "plot-card";
-      const title = document.createElement("h3");
-      title.className = "card-title";
-      title.textContent = `Spectrum (${currentLabel}, ${chipLabel})`;
-      const plot = document.createElement("div");
-      plot.className = "plot";
-      plot.id = "spectrumCombinedPlot";
-      card.appendChild(title);
-      card.appendChild(plot);
-      elements.spectrumGrid.appendChild(card);
-
-      const grouped = groupBy(spectrumPoints, (point) => `${point.temperatureC}|${point.chip}|${point.driveCurrentMa}`);
-      const traces = [];
-      for (const [key, group] of [...grouped.entries()].sort((a, b) => a[0].localeCompare(b[0], undefined, { numeric: true }))) {
-        const sorted = [...group].sort((left, right) => left.wavelengthNm - right.wavelengthNm);
-        const sample = sorted[0];
-        const rawX = sorted.map((point) => point.wavelengthNm);
-        const rawY = sorted.map((point) => point.powerDbm);
-        const { x, y } = downsampleSpectrumTrace(rawX, rawY);
-        traces.push({
-          x,
-          y,
-          type: "scatter",
-          mode: "lines",
-          name: `${sample.temperatureC}C @ ${sample.driveCurrentMa} mA · Chip ${sample.chip}`,
-          line: { width: 2 },
-          hovertemplate: "Wavelength=%{x:.2f} nm<br>Power=%{y:.2f} dBm<extra>%{fullData.name}</extra>",
-        });
-      }
-
-      if (!traces.length) {
-        renderEmptyPlot(plot.id, title);
-        return;
-      }
-
-      renderPlot(plot.id, traces, {
-        title,
-        template: "plotly_white",
-        height: 560,
-        hovermode: "x unified",
-        paper_bgcolor: "rgba(0,0,0,0)",
-        plot_bgcolor: "rgba(255,255,255,0.55)",
-        margin: { l: 64, r: 28, t: 56, b: 56 },
-        xaxis: { title: "Wavelength (nm)" },
-        yaxis: { title: "Optical Power (dBm)" },
-        legend: {
-          orientation: "v",
-          x: 1.02,
-          xanchor: "left",
-          y: 1,
-          font: { size: 10 },
-        },
-      });
-
-      requestAnimationFrame(resizeSpectrumPlots);
-    }
-
-    function renderMetricGrid(container, points, options) {
-      const {
-        xField,
-        xTitle,
-        prefix,
-        scatterOnly,
-        showFitLines,
-        metrics = SUMMARY_METRICS,
-        emptyLabel = "summary",
-      } = options;
-      container.innerHTML = "";
-      if (!points.length) {
-        container.innerHTML = `<div class="empty-box">No ${emptyLabel} data matches the current filters.</div>`;
-        return;
-      }
-
-      metrics.forEach((metric, index) => {
-        const card = document.createElement("article");
-        card.className = "plot-card";
-        const title = document.createElement("h3");
-        title.className = "card-title";
-        title.textContent = metric;
-        const plot = document.createElement("div");
-        plot.className = "plot compact";
-        plot.id = `${prefix}Plot${index}`;
-        card.appendChild(title);
-        card.appendChild(plot);
-        container.appendChild(card);
-
-        const metricPoints = points.filter((point) => point.metricName === metric && point[xField] !== null && point.metricValue !== null);
-        if (!metricPoints.length) {
-          renderEmptyPlot(plot.id, metric);
-          return;
-        }
-
-        const grouped = groupBy(metricPoints, (point) => point.temperatureC);
-        const traces = [];
-        const annotations = [];
-        for (const [key, group] of [...grouped.entries()].sort((a, b) => a[0].localeCompare(b[0], undefined, { numeric: true }))) {
-          const sorted = [...group].sort((left, right) => left[xField] - right[xField]);
-          const sample = sorted[0];
-          const isSupplier = sample.temperatureC === "Supplier75";
-          const seriesName = isSupplier ? "Supplier 75C" : `${sample.temperatureC}C`;
-          traces.push({
-            x: sorted.map((point) => point[xField]),
-            y: sorted.map((point) => point.metricValue),
-            text: sorted.map((point) => `Chip ${point.chip}${point.workbookName ? `<br>Workbooks: ${point.workbookName}` : ""}`),
-            type: "scatter",
-            mode: scatterOnly ? "markers" : "markers+lines",
-            name: seriesName,
-            marker: { size: 8, symbol: isSupplier ? "triangle-up" : "circle" },
-            line: scatterOnly ? undefined : { width: 2, dash: isSupplier ? "dash" : "solid" },
-            hovertemplate: `${xTitle}=%{x}<br>${metric}=%{y:.4f}<br>%{text}<extra>%{fullData.name}</extra>`,
-          });
-
-          if (showFitLines) {
-            const fit = linearRegression(sorted.map((point) => ({ x: point[xField], y: point.metricValue })));
-            if (fit) {
-              const xValues = sorted.map((point) => point[xField]);
-              const xMin = Math.min(...xValues);
-              const xMax = Math.max(...xValues);
-              traces.push({
-                x: [xMin, xMax],
-                y: [(fit.slope * xMin) + fit.intercept, (fit.slope * xMax) + fit.intercept],
-                type: "scatter",
-                mode: "lines",
-                name: `${seriesName} fit`,
-                line: { width: 2, dash: "dash" },
-                hovertemplate: `${seriesName}<br>${formatEquation(fit.slope, fit.intercept)}<extra>Fit</extra>`,
-              });
-              annotations.push({
-                x: 0.02,
-                y: 0.98 - (annotations.length * 0.09),
-                xref: "paper",
-                yref: "paper",
-                xanchor: "left",
-                yanchor: "top",
-                text: `${seriesName}: ${formatEquation(fit.slope, fit.intercept)}`,
-                showarrow: false,
-                align: "left",
-                font: { size: 11, color: "#3f3833" },
-                bgcolor: "rgba(255,250,243,0.9)",
-                bordercolor: "rgba(29,24,21,0.14)",
-                borderwidth: 1,
-                borderpad: 4,
-              });
-            }
-          }
-        }
-
-        renderPlot(plot.id, traces, {
-          title: metric,
-          template: "plotly_white",
-          height: 500,
-          hovermode: "closest",
-          paper_bgcolor: "rgba(0,0,0,0)",
-          plot_bgcolor: "rgba(255,255,255,0.55)",
-          margin: { l: 60, r: showFitLines ? 36 : 16, t: 58, b: 58 },
-          xaxis: { title: xTitle },
-          yaxis: { title: metric },
-          annotations,
-          legend: { orientation: "h", y: -0.24 },
+    function rWDP(){
+      const wm=dWM(st.sumP);const pts=st.sumP.filter(p=>p.temperatureC!=="Supplier75"&&wm.includes(p.metricName)&&p.metricValue!==null);
+      if(!pts.length){rEP("wavelengthDistributionPlot","Wavelength Distributions");return}
+      const metrics=wm.filter(m=>pts.some(p=>p.metricName===m));
+      const temps=us(pts.map(p=>p.temperatureC),nos);
+      const metricColors=["#22577a","#c33434","#4f9d69","#ff7f0e","#7b4397"];
+      const metricShort={"Wl@50mA (nm)":"50mA","Wl@100mA (nm)":"100mA","Wl_theory (nm)":"theory"};
+      const traces=[];
+      metrics.forEach((metric,mi)=>{
+        const mcolor=metricColors[mi%metricColors.length];
+        temps.forEach(temp=>{
+          const vals=pts.filter(p=>p.metricName===metric&&p.temperatureC===temp&&p.metricValue!==null).map(p=>p.metricValue);
+          if(vals.length<3)return;
+          const d=kde(vals),step=Math.max(1,Math.floor(d.x.length/200)),xs=d.x.filter((_,i)=>i%step===0),ys=d.y.filter((_,i)=>i%step===0);
+          const dash=temp==="50"?"dot":temp==="25"?"dash":"solid";
+          traces.push({x:xs,y:ys,type:"scatter",mode:"lines",name:`${metricShort[metric]||metric} ${temp}°C`,legendgroup:`${metric} ${temp}°C`,line:{color:mcolor,width:2,dash},fill:"tozeroy",fillcolor:`rgba(${TCRGB[temp]||"34,87,122"},0.06)`,hovertemplate:`${metric}<br>${temp}°C<br>λ: %{x:.2f} nm<br>Density: %{y:.4f}<extra></extra>`});
         });
       });
+      rP("wavelengthDistributionPlot",traces,{title:{text:"Wavelength Distributions Across Chips",font:{size:14}},template:"plotly_white",height:550,hovermode:"x unified",paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(255,255,255,0.55)",margin:{l:56,r:200,t:56,b:60},xaxis:{title:"Wavelength (nm)"},yaxis:{title:"Density"},legend:{orientation:"v",x:1.02,xanchor:"left",y:1,yanchor:"top",font:{size:11}}});
     }
 
-    function clearTable(tableElement, columns, rows) {
-      if (!rows.length || !columns.length) {
-        tableElement.innerHTML = `<tbody><tr><td class="empty-box">No matching data.</td></tr></tbody>`;
-        return;
-      }
-      const header = `<thead><tr>${columns.map((column) => `<th>${column}</th>`).join("")}</tr></thead>`;
-      const body = rows.map((row) => `<tr>${columns.map((column) => `<td>${row[column] ?? ""}</td>`).join("")}</tr>`).join("");
-      tableElement.innerHTML = `${header}<tbody>${body}</tbody>`;
+    function iSM(m){const n=m.length,a=m.map((r,i)=>[...r,...Array(n).fill(0).map((_,j)=>i===j?1:0)]);for(let p=0;p<n;p++){let sw=p;for(let r=p+1;r<n;r++)if(Math.abs(a[r][p])>Math.abs(a[sw][p]))sw=r;if(Math.abs(a[sw][p])<1e-12)return null;[a[p],a[sw]]=[a[sw],a[p]];const pv=a[p][p];for(let c=p;c<n*2;c++)a[p][c]/=pv;for(let r=0;r<n;r++){if(r===p)continue;const f=a[r][p];if(f===0)continue;for(let c=p;c<n*2;c++)a[r][c]-=f*a[p][c]}}return a.map(r=>r.slice(n))}
+    function mM(a,b){const r=Array.from({length:a.length},()=>Array(b[0].length).fill(0));for(let i=0;i<a.length;i++)for(let j=0;j<b[0].length;j++)for(let k=0;k<b.length;k++)r[i][j]+=a[i][k]*b[k][j];return r}
+    function tM(m){return m[0].map((_,i)=>m.map(r=>r[i]))}
+    function sgO(w){const s=-Math.floor((w-1)/2);return Array.from({length:w},(_,i)=>s+i)}
+    function sgK(w,o){const off=sgO(w),d=off.map(x=>{const r=[];for(let p=0;p<=o;p++)r.push(x**p);return r}),dt=tM(d),nm=mM(dt,d),inv=iSM(nm);if(!inv)return null;const tr=[1,...Array(o).fill(0)];return mM([tr],mM(inv,dt))[0]}
+    function sGS(vals,w=50,o=2){if(!vals.length)return[];const ew=Math.min(w,vals.length),eo=Math.min(o,ew-1);if(ew<3||eo<1)return vals.slice();const k=sgK(ew,eo);if(!k)return vals.slice();const off=sgO(ew);return vals.map((_,i)=>{let s=0;for(let j=0;j<ew;j++)s+=vals[Math.min(vals.length-1,Math.max(0,i+off[j]))]*k[j];return s})}
+
+    function cKE(a,b){const ac=cv(a.chip),bc=cv(b.chip);if(ac!==null&&bc!==null&&ac!==bc)return ac-bc;const cc=String(a.chip).localeCompare(String(b.chip),undefined,{numeric:true});if(cc!==0)return cc;const wc=a.workbookName.localeCompare(b.workbookName,undefined,{numeric:true});if(wc!==0)return wc;const sc=a.source.localeCompare(b.source,undefined,{numeric:true});if(sc!==0)return sc;const tc=String(a.temperatureC).localeCompare(String(b.temperatureC),undefined,{numeric:true});if(tc!==0)return tc;return a.currentMa-b.currentMa}
+    function bKE(v,d,i,th,avg,an,pct,ap){const s=d[i],ep=v[s.segmentEndIndex];return{detectionCurrentMa:ep.currentMa,currentMa:ep.currentMa,dpDiCurrentMa:s.currentMa,powerMw:ep.powerMw,thresholdCurrentMa:th,slope:an,avgDpDi:avg,anomalyDpDi:an,percentChange:pct,absPercentChange:ap,deviationRatio:ap/100,segmentStartIndex:s.segmentStartIndex,segmentEndIndex:s.segmentEndIndex,dpDiIndex:i}}
+
+    function aKMT(traces,curvePts,yRes,hT){
+      if(!el.skt.checked)return;const vk=new Set(curvePts.map(p=>`${p.workbookName}|${p.source}|${p.temperatureC}|${p.chip}`));
+      const kinks=st.kinks.filter(e=>vk.has(`${e.workbookName}|${e.source}|${e.temperatureC}|${e.chip}`));if(!kinks.length)return;
+      const bC=new Map();kinks.forEach(e=>{const k=`${e.workbookName}|${e.source}|${e.temperatureC}|${e.chip}`;if(!bC.has(k))bC.set(k,[]);bC.get(k).push(e)});
+      const tlg=new Map();traces.forEach(t=>tlg.set(t.name,t.legendgroup));
+      bC.forEach(ck=>{const s=ck[0],sn=String(s.workbookName||"").replace(/\.xlsx$/i,""),dn=sn.length>16?`${sn.slice(0,16)}...`:sn,cn=`${dn} ${s.source[0]} ${s.temperatureC}C C${s.chip}`;const vk2=[];ck.forEach(e=>{const y=yRes(e);if(y!==null&&Number.isFinite(y))vk2.push({x:e.dpDiCurrentMa??e.currentMa,y})});if(!vk2.length)return;let mg=tlg.get(cn);if(!mg){for(const[tn,lg]of tlg.entries()){if(tn.startsWith(cn)){mg=lg;break}}}traces.push({x:vk2.map(p=>p.x),y:vk2.map(p=>p.y),type:"scatter",mode:"markers",name:cn,legendgroup:mg||cn,showlegend:false,marker:{size:14,symbol:"circle-open",color:"#c33434",line:{color:"#c33434",width:2}},hovertemplate:hT})});
     }
 
-    function renderAll() {
-      const filterState = currentFilterState();
-      const spectrumFilterState = currentSpectrumFilterState();
-      renderCurves(filterState);
-      renderSpectrumPlots(spectrumFilterState);
-      renderSummaryPlots(filterState);
-      renderKinkTable(filterState);
-      renderFirstKinkPlot(filterState);
+    function iPAC(curvePts,ma){const s=curvePts.filter(p=>p.powerMw!==null&&Number.isFinite(p.currentMa)).sort((a,b)=>a.currentMa-b.currentMa);if(!s.length)return null;if(ma<=s[0].currentMa)return s[0].powerMw;if(ma>=s[s.length-1].currentMa)return s[s.length-1].powerMw;for(let i=1;i<s.length;i++){if(ma>s[i].currentMa)continue;const span=s[i].currentMa-s[i-1].currentMa;if(span<=0)return s[i].powerMw;const w=(ma-s[i-1].currentMa)/span;return s[i-1].powerMw+w*(s[i].powerMw-s[i-1].powerMw)}return s[s.length-1].powerMw}
+    function cKP(a,b,lim,th){const ad=a.detectionCurrentMa-th,bd=b.detectionCurrentMa-th;if(ad!==bd)return ad-bd;if(a.absPercentChange!==b.absPercentChange)return b.absPercentChange-a.absPercentChange;return Math.abs(a.deviationRatio-lim)-Math.abs(b.deviationRatio-lim)}
+    function sPK(raw,lim,th,max){const sorted=[...raw].sort((a,b)=>cKP(a,b,lim,th)),sel=[];for(const e of sorted){const ni=sel.findIndex(x=>Math.abs(x.detectionCurrentMa-e.detectionCurrentMa)<=5);if(ni===-1){sel.push(e);if(sel.length>=max)break;continue}if(cKP(e,sel[ni],lim,th)<0)sel[ni]=e}if(sel.length)sel[0].isPrimary=true;return sel.sort((a,b)=>a.currentMa-b.currentMa)}
+
+    function dCK(curvePts,lim,max=10){
+      const v=curvePts.filter(p=>p.powerMw!==null).sort((a,b)=>a.currentMa-b.currentMa);if(v.length<15)return[];
+      const dPdI=[];for(let i=1;i<v.length;i++){const dI=v[i].currentMa-v[i-1].currentMa;if(dI>0)dPdI.push({segmentStartIndex:i-1,segmentEndIndex:i,currentMa:(v[i].currentMa+v[i-1].currentMa)/2,slope:(v[i].powerMw-v[i-1].powerMw)/dI,power:(v[i].powerMw+v[i-1].powerMw)/2})}
+      const maxP=Math.max(...v.map(p=>p.powerMw)),ti=dPdI.findIndex(s=>s.power>=maxP*.1);if(ti===-1||ti<10)return[];
+      const th=dPdI[ti].currentMa,post=dPdI.slice(ti).map(p=>p.slope),smooth=sGS(post,50,2),slopes=dPdI.map((_,i)=>i<ti?null:smooth[i-ti]);
+      const raw=[],bw=10,cp=lim*100;
+      for(let i=ti+bw;i<dPdI.length;i++){const sw=slopes.slice(i-bw,i);if(sw.some(s=>s===null))continue;const avg=sw.reduce((s,v)=>s+v,0)/bw,anom=dPdI[i].slope;if(!Number.isFinite(avg)||avg<=0)continue;const pct=((anom-avg)/avg)*100,ap=Math.abs(pct);if(pct>-cp)continue;const kp=v[dPdI[i].segmentEndIndex];if(!kp||kp.currentMa<th)continue;raw.push(bKE(v,dPdI,i,th,avg,anom,pct,ap))}
+      if(!raw.length)return[];return sPK(raw,lim,th,max);
     }
 
-    function renderFirstKinkPlot(filterState) {
-      const filtered = state.kinkEvents.filter((event) =>
-        filterState.workbooks.has(event.workbookName)
-        && filterState.sources.has(event.source)
-        && filterState.temperatures.has(event.temperatureC)
-        && filterState.chips.has(event.chip)
-      );
+    function rK(){const lim=Number(el.kcr.value||.1),mx=Math.max(1,Math.min(100,Number(el.kli.value||10)));const grp=gB(st.livP.filter(p=>p.powerMw!==null),p=>`${p.workbookName}|${p.source}|${p.temperatureC}|${p.chip}`),ev=[];for(const[key,points]of grp.entries()){const[wb,src,temp,chip]=key.split("|");dCK(points,lim,mx).forEach(e=>{ev.push({workbookName:wb,source:src,temperatureC:temp,chip,currentMa:e.currentMa,detectionCurrentMa:e.detectionCurrentMa,dpDiCurrentMa:e.dpDiCurrentMa,powerMw:e.powerMw,thresholdCurrentMa:e.thresholdCurrentMa,slope:e.slope,avgDpDi:e.avgDpDi,anomalyDpDi:e.anomalyDpDi,deviationPercent:e.percentChange??e.deviationRatio*100,absDeviationPercent:e.deviationRatio*100,isPrimary:Boolean(e.isPrimary)})})}st.kinks=ev.sort(cKE)}
 
-      if (!filtered.length) {
-        renderEmptyPlot("firstKinkPlot", "First Kink Current vs Chip Number");
-        return;
-      }
+    function fLP(fs){return st.livP.filter(p=>fs.workbooks.has(p.workbookName)&&fs.sources.has(p.source)&&fs.temperatures.has(p.temperatureC)&&fs.chips.has(p.chip))}
+    function fSpP(fs){if(!st.specP.length)return[];return st.specP.filter(p=>(!fs.workbooks.size||fs.workbooks.has(p.workbookName))&&(!fs.temperatures.size||fs.temperatures.has(p.temperatureC))&&(!fs.chips.size||fs.chips.has(p.chip))&&(!fs.currents.size||fs.currents.has(String(p.driveCurrentMa))))}
+    function dT(x,y,max=300){if(x.length<=max)return{x,y};const step=Math.ceil(x.length/max);return{x:x.filter((_,i)=>i%step===0),y:y.filter((_,i)=>i%step===0)}}
 
-      const byChipKey = new Map();
-      filtered.forEach((event) => {
-        const key = `${event.workbookName}|${event.source}|${event.temperatureC}|${event.chip}`;
-        const existing = byChipKey.get(key);
-        if (!existing) {
-          byChipKey.set(key, event);
-          return;
-        }
-        if (event.isPrimary && !existing.isPrimary) {
-          byChipKey.set(key, event);
-          return;
-        }
-        if (!event.isPrimary && !existing.isPrimary && event.currentMa < existing.currentMa) {
-          byChipKey.set(key, event);
-        }
-      });
+    function fSP(fs,inc=true){const allow=inc&&el.sss.checked;return st.sumP.filter(p=>{const sb=p.temperatureC==="Supplier75"?"Supplier":"Measured",tb=p.temperatureC==="Supplier75"?"75":p.temperatureC;return fs.workbooks.has(p.workbookName)&&fs.sources.has(sb)&&fs.temperatures.has(tb)&&fs.normalizedChips.has(nci(p.chip))&&p.metricValue!==null&&(allow||p.temperatureC!=="Supplier75")})}
 
-      const firstKinks = [...byChipKey.values()]
-        .map((event) => ({
-          ...event,
-          chipNumeric: coerceNumber(event.chip),
-        }))
-        .filter((event) => event.chipNumeric !== null);
+    function rC(fs){const pts=fLP(fs);rCP("liPlot",pts,"powerMw","LI Curves","Optical Power (mW)");rDP(pts);rCP("ivPlot",pts,"voltageV","IV Curves","Voltage (V)")}
 
-      if (!firstKinks.length) {
-        renderEmptyPlot("firstKinkPlot", "First Kink Current vs Chip Number");
-        return;
-      }
+    function cDv(points){const v=points.filter(p=>p.powerMw!==null).sort((a,b)=>a.currentMa-b.currentMa);if(v.length<3)return{first:[],second:[]};const f=[];for(let i=1;i<v.length;i++){const d=v[i].currentMa-v[i-1].currentMa;if(d<=0)continue;f.push({currentMa:(v[i].currentMa+v[i-1].currentMa)/2,value:(v[i].powerMw-v[i-1].powerMw)/d})}if(f.length<2)return{first:f,second:[]};const s=[];for(let i=1;i<f.length;i++){const d=f[i].currentMa-f[i-1].currentMa;if(d<=0)continue;s.push({currentMa:(f[i].currentMa+f[i-1].currentMa)/2,value:(f[i].value-f[i-1].value)/d})}return{first:f,second:s}}
+    function sL(name){const s=String(name||"").replace(/\.xlsx$/i,"");return s.length>16?`${s.slice(0,16)}...`:s}
 
-      const grouped = groupBy(firstKinks, (event) => `${event.workbookName}|${event.source}|${event.temperatureC}`);
-      const traces = [];
-      for (const [key, group] of [...grouped.entries()].sort((a, b) => a[0].localeCompare(b[0], undefined, { numeric: true }))) {
-        const sorted = [...group].sort((left, right) => left.chipNumeric - right.chipNumeric);
-        const sample = sorted[0];
-        const traceName = `${sample.workbookName} | ${sample.source} | ${sample.temperatureC}C`;
-        traces.push({
-          x: sorted.map((event) => event.chipNumeric),
-          y: sorted.map((event) => event.currentMa),
-          text: sorted.map((event) => `Chip ${event.chip}`),
-          type: "scatter",
-          mode: "markers+lines",
-          name: traceName,
-          marker: { size: 8 },
-          line: { width: 2 },
-          hovertemplate: "Chip=%{x}<br>First Kink Current=%{y:.3f} mA<br>%{text}<extra>%{fullData.name}</extra>",
-        });
-      }
-
-      renderPlot("firstKinkPlot", traces, {
-        title: "First Kink Current vs Chip Number",
-        template: "plotly_white",
-        height: 560,
-        hovermode: "closest",
-        paper_bgcolor: "rgba(0,0,0,0)",
-        plot_bgcolor: "rgba(255,255,255,0.55)",
-        margin: { l: 64, r: 220, t: 64, b: 60 },
-        xaxis: { title: "Chip Number" },
-        yaxis: { title: "First Kink Current (mA)" },
-        legend: {
-          orientation: "v",
-          x: 1.02,
-          xanchor: "left",
-          y: 1,
-          yanchor: "top",
-          font: { size: 11 },
-        },
-      });
+    function rDP(points){
+      const s1=el.sdp.checked,s2=el.sd2.checked;if(!s1&&!s2){rEP("liDerivativePlot","LI Derivatives","Enable dP/dI or d²P/dI²");return}
+      const grp=gB(points.filter(p=>p.powerMw!==null),p=>`${p.workbookName}|${p.source}|${p.temperatureC}|${p.chip}`);if(!grp.size){rEP("liDerivativePlot","LI Derivatives");return}
+      const traces=[];
+      for(const[key,group]of[...grp.entries()].sort((a,b)=>a[0].localeCompare(b[0]))){const sorted=[...group].sort((a,b)=>a.currentMa-b.currentMa),s=sorted[0],bn=`${sL(s.workbookName)} ${s.source[0]} ${s.temperatureC}C C${s.chip}`,fn=`${s.workbookName} | ${s.source} | ${s.temperatureC}C | C${s.chip}`,d=cDv(sorted);if(s1&&d.first.length)traces.push({x:d.first.map(p=>p.currentMa),y:d.first.map(p=>p.value),type:"scatter",mode:"lines",name:`${bn} dP/dI`,legendgroup:bn,yaxis:"y",line:{width:2.1,dash:s.source==="Supplier"?"dash":"solid"},hovertemplate:`Current=%{x:.2f} mA<br>dP/dI=%{y:.5f}<extra>${fn}</extra>`});if(s2&&d.second.length)traces.push({x:d.second.map(p=>p.currentMa),y:d.second.map(p=>p.value),type:"scatter",mode:"lines",name:`${bn} d²P/dI²`,legendgroup:bn,yaxis:"y2",line:{width:1.8,dash:"dot"},hovertemplate:`Current=%{x:.2f} mA<br>d²P/dI²=%{y:.6f}<extra>${fn}</extra>`})}
+      if(!traces.length){rEP("liDerivativePlot","LI Derivatives");return}
+      if(s1)aKMT(traces,points,e=>Number.isFinite(e.anomalyDpDi)?e.anomalyDpDi:e.slope,"Kink Current=%{x:.2f} mA<br>dP/dI=%{y:.4f}<extra>Kink</extra>");
+      rP("liDerivativePlot",traces,{title:"LI Derivatives",template:"plotly_white",height:560,hovermode:"x unified",paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(255,255,255,0.55)",margin:{l:72,r:94,t:64,b:60},xaxis:{title:"Current (mA)"},yaxis:{title:"dP/dI (mW/mA)",zeroline:true},yaxis2:{title:"d²P/dI² (mW/mA²)",overlaying:"y",side:"right",zeroline:true},legend:{orientation:"v",x:1.02,xanchor:"left",y:1,yanchor:"top",font:{size:11}}});
     }
 
-    function buildKinkTxtContent(filterState = currentFilterState()) {
-      const rows = state.kinkEvents.filter((event) =>
-        filterState.workbooks.has(event.workbookName)
-        && filterState.sources.has(event.source)
-        && filterState.temperatures.has(event.temperatureC)
-        && filterState.chips.has(event.chip)
-      ).sort(compareKinkEvents);
+    function rCP(tid,points,vf,title,yTitle){const valid=points.filter(p=>p[vf]!==null);if(!valid.length){rEP(tid,title);return}const grp=gB(valid,p=>`${p.workbookName}|${p.source}|${p.temperatureC}|${p.chip}`),traces=[];for(const[key,group]of[...grp.entries()].sort((a,b)=>a[0].localeCompare(b[0]))){const sorted=[...group].sort((a,b)=>a.currentMa-b.currentMa),s=sorted[0],fn=`${s.workbookName} | ${s.source} | ${s.temperatureC}C | C${s.chip}`,n=`${sL(s.workbookName)} ${s.source[0]} ${s.temperatureC}C C${s.chip}`;traces.push({x:sorted.map(p=>p.currentMa),y:sorted.map(p=>p[vf]),type:"scatter",mode:"lines",name:n,legendgroup:n,line:{dash:s.source==="Supplier"?"dash":"solid",width:2.3},hovertemplate:`Current=%{x:.2f} mA<br>${yTitle}=%{y:.4f}<extra>${fn}</extra>`})}if(tid==="liPlot")aKMT(traces,valid,e=>Number.isFinite(e.powerMw)?e.powerMw:iPAC(valid.filter(p=>p.workbookName===e.workbookName&&p.source===e.source&&p.temperatureC===e.temperatureC&&p.chip===e.chip),e.currentMa),"Kink Current=%{x:.2f} mA<br>Power=%{y:.3f} mW<extra>Kink</extra>");rP(tid,traces,{title,template:"plotly_white",height:560,hovermode:"x unified",paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(255,255,255,0.55)",margin:{l:64,r:220,t:64,b:60},xaxis:{title:"Current (mA)"},yaxis:{title:yTitle},legend:{orientation:"v",x:1.02,xanchor:"left",y:1,yanchor:"top",font:{size:11},itemwidth:40}})}
 
-      const lines = [
-        "Laser Data Analysis - Kink Detection",
-        `Generated: ${new Date().toISOString()}`,
-        "",
-        "Workbook\tSource\tTemperature_C\tChip\tKinkCurrent_mA\tAvg_dP_dI_SavGol\tAnomaly_dP_dI_Raw\tChange_percent",
-      ];
+    function rKT(fs){const rows=st.kinks.filter(e=>fs.workbooks.has(e.workbookName)&&fs.sources.has(e.source)&&fs.temperatures.has(e.temperatureC)&&fs.chips.has(e.chip)).sort(cKE).map(e=>({Workbook:e.workbookName,Source:e.source,Temperature:`${e.temperatureC}C`,Chip:e.chip,KinkCurrent:e.currentMa.toFixed(2),"Avg dP/dI":Number.isFinite(e.avgDpDi)?e.avgDpDi.toFixed(4):"","Anomaly dP/dI":Number.isFinite(e.anomalyDpDi)?e.anomalyDpDi.toFixed(4):"","Change %":Number.isFinite(e.deviationPercent)?`${e.deviationPercent.toFixed(2)}%`:(Number.isFinite(e.absDeviationPercent)?`${(-e.absDeviationPercent).toFixed(2)}%`:"")}));cT(el.kt,["Workbook","Source","Temperature","Chip","KinkCurrent","Avg dP/dI","Anomaly dP/dI","Change %"],rows)}
 
-      rows.forEach((event) => {
-        lines.push([
-          event.workbookName,
-          event.source,
-          event.temperatureC,
-          event.chip,
-          event.currentMa.toFixed(4),
-          event.avgDpDi.toFixed(4),
-          event.anomalyDpDi.toFixed(4),
-          (event.deviationPercent ?? -event.absDeviationPercent).toFixed(4),
-        ].join("\t"));
-      });
+    function rSuP(fs){const sp=fSP(fs,true);const cp=aSMP(sp.filter(p=>p.chipNumeric!==null),"chipNumeric");rMG(el.sg,cp,{xField:"chipNumeric",xTitle:"Chip Number",prefix:"summary",scatterOnly:false,showFitLines:false,metrics:SUMMARY_METRICS,emptyLabel:"summary"});const rp=aSMP(sp.filter(p=>p.temperatureC!=="Supplier75"&&p.ridgeWidthUm!==null),"ridgeWidthUm");const ur=us(rp.map(p=>p.ridgeWidthUm),nos);if(ur.length<=1)el.rg.innerHTML='<div class="empty-box">No ridge width variation.</div>';else rMG(el.rg,rp,{xField:"ridgeWidthUm",xTitle:"Ridge Width (um)",prefix:"ridge",scatterOnly:true,showFitLines:true,metrics:SUMMARY_METRICS,emptyLabel:"ridge-width"})}
 
-      if (!rows.length) {
-        lines.push("No matching kinks for current filters.");
-      }
+    function dWM(sPts){const f=us(sPts.map(p=>p.metricName).filter(n=>/wl|wavelength|theory/i.test(String(n))),(a,b)=>a.localeCompare(b,undefined,{numeric:true}));const p=WL_METRICS.filter(m=>f.includes(m)),e=f.filter(m=>!p.includes(m));return p.length||e.length?[...p,...e]:[...WL_METRICS]}
 
-      return lines.join("\n");
+    function rSpP(fs){el.spg.innerHTML="";if(!el.sspt.checked)return;if(!st.specP.length){el.spg.innerHTML='<div class="empty-box">No spectrum sheets.</div>';return}const sp=fSpP(fs);if(!sp.length){el.spg.innerHTML='<div class="empty-box">No spectrum data.</div>';return}const chips=[...fs.chips],currents=[...fs.currents];const cl=!chips.length||chips.length===st.specP.length?"all chips":(chips.length===1?`Chip ${chips[0]}`:`${chips.length} chips`);const cl2=!currents.length?"all currents":currents.map(v=>`${v} mA`).join(", ");const card=document.createElement("article");card.className="plot-card";const t=document.createElement("h3");t.className="card-title";t.textContent=`Spectrum (${cl2}, ${cl})`;const plot=document.createElement("div");plot.className="plot";plot.id="spectrumCombinedPlot";card.appendChild(t);card.appendChild(plot);el.spg.appendChild(card);const grp=gB(sp,p=>`${p.temperatureC}|${p.chip}|${p.driveCurrentMa}`),traces=[];for(const[key,group]of[...grp.entries()].sort((a,b)=>a[0].localeCompare(b[0]))){const sorted=[...group].sort((a,b)=>a.wavelengthNm-b.wavelengthNm),s=sorted[0],rawX=sorted.map(p=>p.wavelengthNm),rawY=sorted.map(p=>p.powerDbm),{x,y}=dT(rawX,rawY);traces.push({x,y,type:"scatter",mode:"lines",name:`${s.temperatureC}C @ ${s.driveCurrentMa} mA · Chip ${s.chip}`,line:{width:2},hovertemplate:"λ=%{x:.2f} nm<br>Power=%{y:.2f} dBm<extra>%{fullData.name}</extra>"})}if(!traces.length){rEP(plot.id,t.textContent);return}rP(plot.id,traces,{title:t.textContent,template:"plotly_white",height:560,hovermode:"x unified",paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(255,255,255,0.55)",margin:{l:64,r:28,t:56,b:56},xaxis:{title:"Wavelength (nm)"},yaxis:{title:"Optical Power (dBm)"},legend:{orientation:"v",x:1.02,xanchor:"left",y:1,font:{size:10}}})}
+
+    function linearRegression(points){if(points.length<2)return null;const xm=points.reduce((s,p)=>s+p.x,0)/points.length,ym=points.reduce((s,p)=>s+p.y,0)/points.length;const den=points.reduce((s,p)=>s+((p.x-xm)**2),0);if(!Number.isFinite(den)||den===0)return null;const slope=points.reduce((s,p)=>s+((p.x-xm)*(p.y-ym)),0)/den;const intercept=ym-(slope*xm);if(!Number.isFinite(slope)||!Number.isFinite(intercept))return null;return{slope,intercept}}
+    function formatEq(s,i){return`y=${s.toFixed(4)}x${i>=0?"+":"-"}${Math.abs(i).toFixed(3)}`}
+    function rMG(container,points,opts){
+      const{xField,xTitle,prefix,scatterOnly,showFitLines,metrics=SUMMARY_METRICS,emptyLabel="summary"}=opts;container.innerHTML="";if(!points.length){container.innerHTML=`<div class='empty-box'>No ${emptyLabel} data.</div>`;return}
+      metrics.forEach((metric,idx)=>{const card=document.createElement("article");card.className="plot-card";const t=document.createElement("h3");t.className="card-title";t.textContent=metric;const plot=document.createElement("div");plot.className="plot-compact";plot.id=`${prefix}Plot${idx}`;card.appendChild(t);card.appendChild(plot);container.appendChild(card);const mp=points.filter(p=>p.metricName===metric&&p[xField]!==null&&p.metricValue!==null);if(!mp.length){rEP(plot.id,metric);return}const grp=gB(mp,p=>p.temperatureC),traces=[],ann=[];const cIdx=["#22577a","#4f9d69","#c33434","#ff7f0e"];let ci=0;for(const[key,group]of[...grp.entries()].sort((a,b)=>a[0].localeCompare(b[0]))){const sorted=[...group].sort((a,b)=>a[xField]-b[xField]),s=sorted[0],isSupp=s.temperatureC==="Supplier75",sn=isSupp?"Supplier 75C":`${s.temperatureC}C`,color=cIdx[ci%cIdx.length];ci++;traces.push({x:sorted.map(p=>p[xField]),y:sorted.map(p=>p.metricValue),text:sorted.map(p=>`Chip ${p.chip}`),type:"scatter",mode:scatterOnly?"markers":"markers+lines",name:sn,legendgroup:sn,marker:{size:8,symbol:isSupp?"triangle-up":"circle",color},line:scatterOnly?undefined:{width:2,dash:isSupp?"dash":"solid",color},hovertemplate:`${xTitle}=%{x}<br>${metric}=%{y:.4f}<br>%{text}<extra>%{fullData.name}</extra>`});if(showFitLines){const pts=sorted.map(p=>({x:p[xField],y:p.metricValue}));const fit=linearRegression(pts);if(fit){const xv=pts.map(p=>p.x),xmn=Math.min(...xv),xmx=Math.max(...xv);traces.push({x:[xmn,xmx],y:[(fit.slope*xmn)+fit.intercept,(fit.slope*xmx)+fit.intercept],type:"scatter",mode:"lines",name:`${sn} fit`,line:{width:2,dash:"dash",color},hovertemplate:`${sn}<br>${formatEq(fit.slope,fit.intercept)}<extra>Fit</extra>`});ann.push({x:0.02,y:0.98-(ann.length*0.09),xref:"paper",yref:"paper",xanchor:"left",yanchor:"top",text:`${sn}: ${formatEq(fit.slope,fit.intercept)}`,showarrow:false,align:"left",font:{size:11,color:"#3f3833"},bgcolor:"rgba(255,250,243,0.9)",bordercolor:"rgba(29,24,21,0.14)",borderwidth:1,borderpad:4})}}}
+        rP(plot.id,traces,{title:metric,template:"plotly_white",height:500,hovermode:"closest",paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(255,255,255,0.55)",margin:{l:60,r:showFitLines?160:28,t:58,b:58},xaxis:{title:xTitle},yaxis:{title:metric},annotations:ann,legend:{orientation:"v",x:1.02,xanchor:"left",y:1,yanchor:"top",font:{size:11}}})});
     }
 
-    function downloadKinkTxt() {
-      const content = buildKinkTxtContent();
-      const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      const stamp = new Date().toISOString().replace(/[:.]/g, "-");
-      link.href = url;
-      link.download = `kink_detection_${stamp}.txt`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
+    function cT(el,cols,rows){if(!rows.length||!cols.length){el.innerHTML="<tbody><tr><td class='empty-box'>No data.</td></tr></tbody>";return}el.innerHTML=`<thead><tr>${cols.map(c=>`<th>${c}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${cols.map(c=>`<td>${r[c]??""}</td>`).join("")}</tr>`).join("")}</tbody>`}
+
+    function rA(){const fs=cFS(),sfs=cSFS();if(curMode===MODE.LIV){rLDP();rC(fs);rSuP(fs);rKT(fs);rFKP(fs);rKVRP(fs)}else{rSpP(sfs);rWDP();rSpWP(fs)}}
+
+    function rFKP(fs){const filt=st.kinks.filter(e=>fs.workbooks.has(e.workbookName)&&fs.sources.has(e.source)&&fs.temperatures.has(e.temperatureC)&&fs.chips.has(e.chip));if(!filt.length){rEP("firstKinkPlot","First Kink Current vs Chip Number");return}const byChip=new Map();filt.forEach(e=>{const k=`${e.workbookName}|${e.source}|${e.temperatureC}|${e.chip}`;const ex=byChip.get(k);if(!ex){byChip.set(k,e);return}if(e.isPrimary&&!ex.isPrimary){byChip.set(k,e);return}if(!e.isPrimary&&!ex.isPrimary&&e.currentMa<ex.currentMa)byChip.set(k,e)});const fk=[...byChip.values()].map(e=>({...e,chipNumeric:cv(e.chip)})).filter(e=>e.chipNumeric!==null);if(!fk.length){rEP("firstKinkPlot","First Kink");return}const grp=gB(fk,e=>`${e.workbookName}|${e.source}|${e.temperatureC}`),traces=[];const cIdx=["#22577a","#4f9d69","#c33434","#ff7f0e"];let ci=0;for(const[key,group]of[...grp.entries()].sort((a,b)=>a[0].localeCompare(b[0]))){const sorted=[...group].sort((a,b)=>a.chipNumeric-b.chipNumeric),s=sorted[0],color=cIdx[ci%cIdx.length];ci++;traces.push({x:sorted.map(e=>e.chipNumeric),y:sorted.map(e=>e.currentMa),text:sorted.map(e=>`Chip ${e.chip}`),type:"scatter",mode:"markers+lines",name:`${s.workbookName} | ${s.source} | ${s.temperatureC}C`,marker:{size:8,color},line:{width:2,color},hovertemplate:"Chip=%{x}<br>First Kink Current=%{y:.3f} mA<br>%{text}<extra>%{fullData.name}</extra>"})}rP("firstKinkPlot",traces,{title:"First Kink Current vs Chip Number",template:"plotly_white",height:560,hovermode:"closest",paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(255,255,255,0.55)",margin:{l:64,r:220,t:64,b:60},xaxis:{title:"Chip Number"},yaxis:{title:"First Kink Current (mA)"},legend:{orientation:"v",x:1.02,xanchor:"left",y:1,yanchor:"top",font:{size:11}}})}
+
+    function gRWC(wb,chip){const nc=nci(chip),f=st.sumP.find(p=>p.workbookName===wb&&nci(p.chip)===nc&&p.ridgeWidthUm!==null);return f?f.ridgeWidthUm:null}
+    function rKVRP(fs){const filt=st.kinks.filter(e=>fs.workbooks.has(e.workbookName)&&fs.sources.has(e.source)&&fs.temperatures.has(e.temperatureC)&&fs.chips.has(e.chip));if(!filt.length){rEP("kinkVsRidgeWidthPlot","First Kink Current vs Ridge Width");return}const byChip=new Map();filt.forEach(e=>{const k=`${e.workbookName}|${e.source}|${e.temperatureC}|${e.chip}`;const ex=byChip.get(k);if(!ex){byChip.set(k,e);return}if(e.isPrimary&&!ex.isPrimary){byChip.set(k,e);return}if(!e.isPrimary&&!ex.isPrimary&&e.currentMa<ex.currentMa)byChip.set(k,e)});const fk=[...byChip.values()].map(e=>({...e,ridgeWidthUm:gRWC(e.workbookName,e.chip)})).filter(e=>e.ridgeWidthUm!==null);if(!fk.length){rEP("kinkVsRidgeWidthPlot","Kink vs Ridge","No ridge width data");return}const grp=gB(fk,e=>`${e.workbookName}|${e.source}|${e.temperatureC}`),traces=[],ann=[];const cIdx=["#22577a","#4f9d69","#c33434","#ff7f0e"];let ci=0;for(const[key,group]of[...grp.entries()].sort((a,b)=>a[0].localeCompare(b[0]))){const sorted=[...group].sort((a,b)=>a.ridgeWidthUm-b.ridgeWidthUm),s=sorted[0],color=cIdx[ci%cIdx.length];ci++;const tn=`${s.workbookName} | ${s.source} | ${s.temperatureC}C`;traces.push({x:sorted.map(e=>e.ridgeWidthUm),y:sorted.map(e=>e.currentMa),text:sorted.map(e=>`Chip ${e.chip}`),type:"scatter",mode:"markers",name:tn,marker:{size:10,color},hovertemplate:"Ridge Width=%{x:.3f} um<br>First Kink=%{y:.3f} mA<br>%{text}<extra>%{fullData.name}</extra>"});const pts=sorted.map(e=>({x:e.ridgeWidthUm,y:e.currentMa}));const fit=linearRegression(pts);if(fit){const xv=pts.map(p=>p.x),xmn=Math.min(...xv),xmx=Math.max(...xv);traces.push({x:[xmn,xmx],y:[(fit.slope*xmn)+fit.intercept,(fit.slope*xmx)+fit.intercept],type:"scatter",mode:"lines",name:`${tn} fit`,line:{width:2,dash:"dash",color},hovertemplate:`${tn}<br>${formatEq(fit.slope,fit.intercept)}<extra>Fit</extra>`});ann.push({x:0.02,y:0.98-(ann.length*0.09),xref:"paper",yref:"paper",xanchor:"left",yanchor:"top",text:`${tn}: ${formatEq(fit.slope,fit.intercept)}`,showarrow:false,align:"left",font:{size:11,color:"#3f3833"},bgcolor:"rgba(255,250,243,0.9)",bordercolor:"rgba(29,24,21,0.14)",borderwidth:1,borderpad:4})}}rP("kinkVsRidgeWidthPlot",traces,{title:"First Kink Current vs Ridge Width",template:"plotly_white",height:560,hovermode:"closest",paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(255,255,255,0.55)",margin:{l:64,r:220,t:64,b:60},xaxis:{title:"Ridge Width (um)"},yaxis:{title:"First Kink Current (mA)"},annotations:ann,legend:{orientation:"v",x:1.02,xanchor:"left",y:1,yanchor:"top",font:{size:11}}})}
+
+    function bKTC(fs=cFS()){const rows=st.kinks.filter(e=>fs.workbooks.has(e.workbookName)&&fs.sources.has(e.source)&&fs.temperatures.has(e.temperatureC)&&fs.chips.has(e.chip)).sort(cKE);const lines=["Laser Data Analysis - Kink Detection",`Generated: ${new Date().toISOString()}`,"","Workbook\tSource\tTemperature_C\tChip\tKinkCurrent_mA\tAvg_dP_dI\tAnomaly_dP_dI\tChange_percent"];rows.forEach(e=>lines.push([e.workbookName,e.source,e.temperatureC,e.chip,e.currentMa.toFixed(4),e.avgDpDi.toFixed(4),e.anomalyDpDi.toFixed(4),(e.deviationPercent??-e.absDeviationPercent).toFixed(4)].join("\t")));if(!rows.length)lines.push("No kinks.");return lines.join("\n")}
+    function dKT(){const c=bKTC();const b=new Blob([c],{type:"text/plain;charset=utf-8"}),u=URL.createObjectURL(b),l=document.createElement("a"),s=new Date().toISOString().replace(/[:.]/g,"-");l.href=u;l.download=`kink_${s}.txt`;document.body.appendChild(l);l.click();document.body.removeChild(l);URL.revokeObjectURL(u)}
+
+    function rSpWP(fs){
+      const wm=dWM(st.sumP);[el.sswg,el.srwg].forEach(g=>g.innerHTML="");
+      // Chip vs Wavelength
+      const sp=st.sumP.filter(p=>p.temperatureC!=="Supplier75"&&wm.includes(p.metricName)&&p.metricValue!==null&&p.chipNumeric!==null);
+      if(sp.length){const card=document.createElement("article");card.className="plot-card";const t=document.createElement("h3");t.className="card-title";t.textContent="Chip vs Wavelength";const plot=document.createElement("div");plot.className="plot";plot.id="specWavelengthPlot";card.appendChild(t);card.appendChild(plot);el.sswg.appendChild(card);const grp=gB(sp,p=>`${p.temperatureC}|${p.metricName}`),traces=[];for(const[key,group]of[...grp.entries()].sort((a,b)=>a[0].localeCompare(b[0]))){const sorted=[...group].sort((a,b)=>a.chipNumeric-b.chipNumeric),s=sorted[0];traces.push({x:sorted.map(p=>p.chipNumeric),y:sorted.map(p=>p.metricValue),text:sorted.map(p=>`Chip ${p.chip}`),type:"scatter",mode:"markers+lines",name:`${s.temperatureC}C ${s.metricName}`,marker:{size:7},line:{width:1.6},hovertemplate:"Chip=%{x}<br>%{fullData.name}=%{y:.2f} nm<br>%{text}<extra></extra>"})}rP(plot.id,traces,{title:t.textContent,template:"plotly_white",height:520,paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(255,255,255,0.55)",margin:{l:64,r:180,t:56,b:56},xaxis:{title:"Chip Number"},yaxis:{title:"Wavelength (nm)"},legend:{orientation:"v",x:1.02,xanchor:"left",y:1,font:{size:10}}})}else el.sswg.innerHTML='<div class="empty-box">No wavelength data.</div>';
+
+      // Ridge Width vs Wavelength with linear fits
+      const rp=st.sumP.filter(p=>p.temperatureC!=="Supplier75"&&wm.includes(p.metricName)&&p.metricValue!==null&&p.ridgeWidthUm!==null);
+      if(rp.length){wm.forEach((metric,idx)=>{const card=document.createElement("article");card.className="plot-card";const t=document.createElement("h3");t.className="card-title";t.textContent=`Ridge Width vs ${metric}`;const plot=document.createElement("div");plot.className="plot-compact";plot.id=`specRidgeWlPlot${idx}`;card.appendChild(t);card.appendChild(plot);el.srwg.appendChild(card);const mp=rp.filter(p=>p.metricName===metric);if(!mp.length){rEP(plot.id,t.textContent);return}const grp=gB(mp,p=>p.temperatureC),traces=[],ann=[];const cIdx=["#22577a","#4f9d69","#c33434","#ff7f0e"];let ci=0;for(const[key,group]of[...grp.entries()].sort((a,b)=>a[0].localeCompare(b[0]))){const sorted=[...group].sort((a,b)=>a.ridgeWidthUm-b.ridgeWidthUm),s=sorted[0],color=cIdx[ci%cIdx.length];ci++;traces.push({x:sorted.map(p=>p.ridgeWidthUm),y:sorted.map(p=>p.metricValue),text:sorted.map(p=>`Chip ${p.chip}`),type:"scatter",mode:"markers",name:`${s.temperatureC}C`,marker:{size:8,color},hovertemplate:"Ridge Width=%{x:.3f} um<br>Wavelength=%{y:.2f} nm<br>%{text}<extra>%{fullData.name}</extra>"});const pts=sorted.map(p=>({x:p.ridgeWidthUm,y:p.metricValue}));const fit=linearRegression(pts);if(fit){const xv=pts.map(p=>p.x),xmn=Math.min(...xv),xmx=Math.max(...xv);traces.push({x:[xmn,xmx],y:[(fit.slope*xmn)+fit.intercept,(fit.slope*xmx)+fit.intercept],type:"scatter",mode:"lines",name:`${s.temperatureC}C fit`,line:{width:2,dash:"dash",color},hovertemplate:`${s.temperatureC}C: ${formatEq(fit.slope,fit.intercept)}<extra>Fit</extra>`});ann.push({x:0.02,y:0.98-(ann.length*0.09),xref:"paper",yref:"paper",xanchor:"left",yanchor:"top",text:`${s.temperatureC}C: ${formatEq(fit.slope,fit.intercept)}`,showarrow:false,align:"left",font:{size:11,color:"#3f3833"},bgcolor:"rgba(255,250,243,0.9)",bordercolor:"rgba(29,24,21,0.14)",borderwidth:1,borderpad:4})}}rP(plot.id,traces,{title:t.textContent,template:"plotly_white",height:420,paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(255,255,255,0.55)",margin:{l:64,r:28,t:56,b:56},xaxis:{title:"Ridge Width (um)"},yaxis:{title:"Wavelength (nm)"},annotations:ann,legend:{orientation:"h",y:-0.24}})})}else el.srwg.innerHTML='<div class="empty-box">No ridge width vs wavelength data.</div>';
     }
 
-    elements.selectFolderButton.addEventListener("click", () => {
-      pickFolder();
-    });
-
-    elements.selectFolderButton.addEventListener("keydown", (event) => {
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        pickFolder();
-      }
-    });
-
-    elements.folderPicker.addEventListener("change", async (event) => {
-      state.directoryHandle = null;
-      await loadSelectedFiles(event.target.files, { preserveFilters: false });
-    });
-
-    elements.reloadButton.addEventListener("click", async () => {
-      await refreshFolderData();
-    });
-
-    elements.clearButton.addEventListener("click", async () => {
-      elements.folderPicker.value = "";
-      await clearData("Cleared dashboard data.");
-    });
-
-    elements.downloadKinkTxtButton.addEventListener("click", downloadKinkTxt);
-
-    initCheckboxDragging();
-
-    [
-      elements.showKinksToggle,
-      elements.showDpDiToggle,
-      elements.showD2pDi2Toggle,
-      elements.showSupplierSummaryToggle,
-      elements.showSpectrumPlotsToggle,
-    ].forEach((element) => element.addEventListener("change", () => {
-      updateSpectrumSectionVisibility();
-      scheduleRender();
-    }));
-
-    [
-      elements.spectrumChipFilter,
-      elements.spectrumTemperatureFilter,
-      elements.spectrumCurrentFilter,
-      elements.spectrumWorkbookFilter,
-    ].forEach((element) => element.addEventListener("change", scheduleRender));
-
-    elements.kinkCriterion.addEventListener("change", () => {
-      recomputeKinks();
-      updateStats();
-      scheduleRender();
-    });
-
-    elements.kinkLimit.addEventListener("change", () => {
-      recomputeKinks();
-      updateStats();
-      scheduleRender();
-    });
-
-    updateSpectrumSectionVisibility();
-    restoreLastFolderOnStartup();
+    el.sfb.onclick=()=>pF();el.fp.onchange=async e=>{st.dh=null;await lSF(e.target.files,{preserveFilters:false})};el.rb.onclick=async()=>{await rFD()};el.cb.onclick=async()=>{el.fp.value="";await cD("Cleared.")};el.dkb.onclick=dKT;iCD();
+    [el.skt,el.sdp,el.sd2,el.sss,el.sspt].forEach(e=>e.addEventListener("change",sched));
+    [el.scf,el.stf,el.scuf,el.swf].forEach(e=>e.addEventListener("change",sched));
+    el.kcr.addEventListener("change",()=>{rK();uS();sched()});el.kli.addEventListener("change",()=>{rK();uS();sched()});
+    el.rpb.addEventListener("click",async()=>{sS('Run: python liv_plotter.py --mode both --measurements liv in the data folder.');el.rpb.style.display="none"});
+    setMode(MODE.LIV);rLFS();
   </script>
 </body>
 </html>

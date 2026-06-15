@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import math
+import subprocess
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -245,14 +247,65 @@ def build_summary_figure(df: pd.DataFrame, x_field: str, metric_name: str, title
     return figure
 
 
+def run_liv_plotter(parent_folder: Path) -> bool:
+    """Run liv_plotter.py with ENABLE_LIV_EXCEL_EXPORT = True to generate Excel files."""
+    try:
+        script_path = Path(__file__).parent / "liv_plotter.py"
+        if not script_path.exists():
+            st.error(f"liv_plotter.py not found at {script_path}")
+            return False
+
+        result = subprocess.run(
+            [sys.executable, str(script_path), "--parent-folder", str(parent_folder)],
+            capture_output=True, text=True, timeout=300,
+        )
+        if result.returncode == 0:
+            return True
+        else:
+            st.warning(f"liv_plotter.py exited with code {result.returncode}")
+            return False
+    except subprocess.TimeoutExpired:
+        st.warning("liv_plotter.py timed out after 5 minutes")
+        return False
+    except Exception as e:
+        st.warning(f"Could not run liv_plotter.py: {e}")
+        return False
+
+
 def main() -> None:
     st.set_page_config(page_title="LIV Dashboard", layout="wide")
-    st.title("LIV Dashboard")
+    st.title("Laser Analysis Dashboard")
+
+    # Mode toggle
+    analysis_mode = st.radio(
+        "Analysis Mode",
+        options=["LIV Analysis", "Spectral Analysis"],
+        horizontal=True,
+        label_visibility="collapsed",
+    )
+
+    is_liv_mode = analysis_mode == "LIV Analysis"
 
     folder_text = st.text_input("Excel folder path", value=str(Path.cwd()))
     folder = Path(folder_text)
     if not folder.exists() or not folder.is_dir():
         st.warning("Provide a valid folder path containing exported LIV Excel files.")
+        return
+
+    # Check if Excel files exist; if not, offer to generate them
+    xlsx_files = list(folder.glob("*.xlsx"))
+    if not xlsx_files:
+        col1, col2 = st.columns([3, 1])
+        with col1:
+            st.warning("No .xlsx files found in the selected folder.")
+        with col2:
+            if st.button("Generate Excel Files from Source Data", type="primary"):
+                with st.spinner("Running liv_plotter.py to generate Excel files..."):
+                    if run_liv_plotter(folder):
+                        st.success("Excel files generated! Reloading...")
+                        st.rerun()
+                    else:
+                        st.error("Failed to generate Excel files. Check the terminal output.")
         return
 
     liv_df, summary_df = load_folder(folder)
@@ -262,73 +315,128 @@ def main() -> None:
 
     st.caption(f"Loaded {len(liv_df)} LIV points and {len(summary_df)} summary points from {folder}")
 
-    tab_liv, tab_summary = st.tabs(["Interactive LIV", "Summary Compare"])
+    if is_liv_mode:
+        # ============ LIV ANALYSIS ============
+        tab_liv, tab_summary = st.tabs(["Interactive LIV", "Summary Compare"])
 
-    with tab_liv:
-        if liv_df.empty:
-            st.info("No LIV points found.")
-        else:
-            workbook_options = sorted(liv_df["workbook_name"].dropna().unique().tolist())
-            source_options = sorted(liv_df["source"].dropna().unique().tolist())
-            temperature_options = sorted(liv_df["temperature_c"].dropna().unique().tolist(), key=lambda x: (x != "Supplier75", x))
-            chip_options = sorted(liv_df["chip"].dropna().unique().tolist(), key=lambda value: coerce_float(value) or 1e9)
-
-            selected_workbooks = st.multiselect("Workbook", workbook_options, default=workbook_options)
-            selected_sources = st.multiselect("Source", source_options, default=source_options)
-            selected_temperatures = st.multiselect("Temperature", temperature_options, default=temperature_options)
-            selected_chips = st.multiselect("Chips", chip_options, default=chip_options[: min(10, len(chip_options))])
-
-            filtered = liv_df[
-                liv_df["workbook_name"].isin(selected_workbooks)
-                & liv_df["source"].isin(selected_sources)
-                & liv_df["temperature_c"].isin(selected_temperatures)
-                & liv_df["chip"].isin(selected_chips)
-            ].copy()
-
-            curve_type = st.radio("Curve", ("LI (Power vs Current)", "IV (Voltage vs Current)"), horizontal=True)
-            if curve_type.startswith("LI"):
-                figure = build_liv_curve_figure(filtered.dropna(subset=["power_mw"]), "power_mw", "LI Curves")
+        with tab_liv:
+            if liv_df.empty:
+                st.info("No LIV points found.")
             else:
-                figure = build_liv_curve_figure(filtered.dropna(subset=["voltage_v"]), "voltage_v", "IV Curves")
-            st.plotly_chart(figure, use_container_width=True)
+                workbook_options = sorted(liv_df["workbook_name"].dropna().unique().tolist())
+                source_options = sorted(liv_df["source"].dropna().unique().tolist())
+                temperature_options = sorted(liv_df["temperature_c"].dropna().unique().tolist(), key=lambda x: (x != "Supplier75", x))
+                chip_options = sorted(liv_df["chip"].dropna().unique().tolist(), key=lambda value: coerce_float(value) or 1e9)
 
-    with tab_summary:
-        if summary_df.empty:
-            st.info("No summary data found.")
-        else:
-            summary_df = summary_df.copy()
-            summary_df["chip_numeric"] = summary_df["chip"].apply(lambda value: coerce_float(value))
+                selected_workbooks = st.multiselect("Workbook", workbook_options, default=workbook_options)
+                selected_sources = st.multiselect("Source", source_options, default=source_options)
+                selected_temperatures = st.multiselect("Temperature", temperature_options, default=temperature_options)
+                # Default to only first chip for faster load
+                selected_chips = st.multiselect("Chips", chip_options, default=chip_options[:1])
 
-            metric_options = sorted(summary_df["metric_name"].dropna().unique().tolist())
-            workbook_options = sorted(summary_df["workbook_name"].dropna().unique().tolist())
-            temperature_options = sorted(summary_df["temperature_c"].dropna().unique().tolist(), key=lambda x: (x == "Supplier75", x))
-            chip_options = sorted(summary_df["chip"].dropna().unique().tolist(), key=lambda value: coerce_float(value) or 1e9)
+                filtered = liv_df[
+                    liv_df["workbook_name"].isin(selected_workbooks)
+                    & liv_df["source"].isin(selected_sources)
+                    & liv_df["temperature_c"].isin(selected_temperatures)
+                    & liv_df["chip"].isin(selected_chips)
+                ].copy()
 
-            selected_metric = st.selectbox("Metric", metric_options)
-            x_mode = st.radio("X-axis", ("Chip Number", "Ridge Width"), horizontal=True)
-            selected_workbooks = st.multiselect("Workbook", workbook_options, default=workbook_options)
-            selected_temperatures = st.multiselect("Temperature", temperature_options, default=temperature_options)
-            selected_chips = st.multiselect("Chips", chip_options, default=chip_options)
+                curve_type = st.radio("Curve", ("LI (Power vs Current)", "IV (Voltage vs Current)"), horizontal=True)
+                if curve_type.startswith("LI"):
+                    figure = build_liv_curve_figure(filtered.dropna(subset=["power_mw"]), "power_mw", "LI Curves")
+                else:
+                    figure = build_liv_curve_figure(filtered.dropna(subset=["voltage_v"]), "voltage_v", "IV Curves")
+                st.plotly_chart(figure, use_container_width=True)
 
-            filtered = summary_df[
-                summary_df["metric_name"].eq(selected_metric)
-                & summary_df["workbook_name"].isin(selected_workbooks)
-                & summary_df["temperature_c"].isin(selected_temperatures)
-                & summary_df["chip"].isin(selected_chips)
-            ].dropna(subset=["metric_value"])
-
-            if x_mode == "Chip Number":
-                filtered = filtered.dropna(subset=["chip_numeric"])
-                figure = build_summary_figure(filtered, "chip_numeric", selected_metric, f"{selected_metric} vs Chip")
+        with tab_summary:
+            if summary_df.empty:
+                st.info("No summary data found.")
             else:
-                filtered = filtered.dropna(subset=["ridge_width_um"])
-                figure = build_summary_figure(
-                    filtered,
-                    "ridge_width_um",
-                    selected_metric,
-                    f"{selected_metric} vs Ridge Width",
-                )
-            st.plotly_chart(figure, use_container_width=True)
+                summary_df_view = summary_df.copy()
+                summary_df_view["chip_numeric"] = summary_df_view["chip"].apply(lambda value: coerce_float(value))
+
+                metric_options = sorted(summary_df_view["metric_name"].dropna().unique().tolist())
+                workbook_options = sorted(summary_df_view["workbook_name"].dropna().unique().tolist())
+                temperature_options = sorted(summary_df_view["temperature_c"].dropna().unique().tolist(), key=lambda x: (x == "Supplier75", x))
+                chip_options = sorted(summary_df_view["chip"].dropna().unique().tolist(), key=lambda value: coerce_float(value) or 1e9)
+
+                selected_metric = st.selectbox("Metric", metric_options)
+                x_mode = st.radio("X-axis", ("Chip Number", "Ridge Width"), horizontal=True)
+                selected_workbooks = st.multiselect("Workbook", workbook_options, default=workbook_options)
+                selected_temperatures = st.multiselect("Temperature", temperature_options, default=temperature_options)
+                selected_chips = st.multiselect("Chips", chip_options, default=chip_options[:1])
+
+                filtered = summary_df_view[
+                    summary_df_view["metric_name"].eq(selected_metric)
+                    & summary_df_view["workbook_name"].isin(selected_workbooks)
+                    & summary_df_view["temperature_c"].isin(selected_temperatures)
+                    & summary_df_view["chip"].isin(selected_chips)
+                ].dropna(subset=["metric_value"])
+
+                if x_mode == "Chip Number":
+                    filtered = filtered.dropna(subset=["chip_numeric"])
+                    figure = build_summary_figure(filtered, "chip_numeric", selected_metric, f"{selected_metric} vs Chip")
+                else:
+                    filtered = filtered.dropna(subset=["ridge_width_um"])
+                    figure = build_summary_figure(
+                        filtered,
+                        "ridge_width_um",
+                        selected_metric,
+                        f"{selected_metric} vs Ridge Width",
+                    )
+                st.plotly_chart(figure, use_container_width=True)
+    else:
+        # ============ SPECTRAL ANALYSIS ============
+        st.header("Spectral Analysis")
+        st.caption("Spectrum plots and statistical distributions of summary metrics across all chips.")
+
+        # Distribution plots - show distributions of all summary metrics using violin/box plots
+        if not summary_df.empty:
+            st.subheader("Summary Metric Distributions")
+
+            # Filter out supplier data for distribution plots
+            dist_df = summary_df[summary_df["temperature_c"] != "Supplier75"].copy()
+            if not dist_df.empty:
+                metrics = sorted(dist_df["metric_name"].dropna().unique().tolist())
+                selected_dist_metric = st.selectbox("Metric", metrics)
+
+                dist_subset = dist_df[dist_df["metric_name"] == selected_dist_metric].dropna(subset=["metric_value"])
+
+                if not dist_subset.empty:
+                    fig = go.Figure()
+                    temperatures = sorted(dist_subset["temperature_c"].dropna().unique().tolist())
+
+                    for temp in temperatures:
+                        temp_data = dist_subset[dist_subset["temperature_c"] == temp]["metric_value"]
+
+                        fig.add_trace(go.Violin(
+                            y=temp_data,
+                            name=f"{temp}°C",
+                            box_visible=True,
+                            meanline_visible=True,
+                            opacity=0.6,
+                        ))
+
+                        # Add strip points
+                        fig.add_trace(go.Scatter(
+                            y=temp_data,
+                            x=[f"{temp}°C"] * len(temp_data),
+                            mode="markers",
+                            name=f"{temp}°C (points)",
+                            marker=dict(size=6, opacity=0.7),
+                            showlegend=False,
+                        ))
+
+                    fig.update_layout(
+                        title=f"Distribution of {selected_dist_metric} by Temperature",
+                        template="plotly_white",
+                        height=500,
+                        yaxis_title=selected_dist_metric,
+                        xaxis_title="Temperature",
+                    )
+                    st.plotly_chart(fig, use_container_width=True)
+        else:
+            st.info("No summary data available for distribution plots.")
 
 
 if __name__ == "__main__":
