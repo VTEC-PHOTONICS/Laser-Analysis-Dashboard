@@ -451,8 +451,8 @@
       return{x,y};
     }
 
-    function rLDP(){
-      const pts=st.sumP.filter(p=>p.temperatureC!=="Supplier75"&&p.metricValue!==null);
+    function rLDP(fs){
+      const pts=st.sumP.filter(p=>p.temperatureC!=="Supplier75"&&p.metricValue!==null&&fs.workbooks.has(p.workbookName));
       if(!pts.length){rEP("livDistributionPlot","Parameter Distributions");return}
       const metrics=SUMMARY_METRICS.filter(m=>pts.some(p=>p.metricName===m)),temps=us(pts.map(p=>p.temperatureC),nos);
       if(!metrics.length){rEP("livDistributionPlot","Parameter Distributions");return}
@@ -474,8 +474,8 @@
       rP("livDistributionPlot",figData,{title:{text:"Parameter Distributions Across All Chips",font:{size:14}},template:"plotly_white",height:700,hovermode:"x unified",paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(255,255,255,0.55)",margin:{l:48,r:24,t:56,b:80},grid:{rows:nr,columns:nc,pattern:"independent"},...xaxes,...yaxes,annotations:anns,legend:{orientation:"h",y:-0.06,x:.5,xanchor:"center",font:{size:12}}});
     }
 
-    function rWDP(){
-      const wm=dWM(st.sumP);const pts=st.sumP.filter(p=>p.temperatureC!=="Supplier75"&&wm.includes(p.metricName)&&p.metricValue!==null);
+    function rWDP(fs){
+      const wm=dWM(st.sumP);const pts=st.sumP.filter(p=>p.temperatureC!=="Supplier75"&&wm.includes(p.metricName)&&p.metricValue!==null&&fs.workbooks.has(p.workbookName));
       if(!pts.length){rEP("wavelengthDistributionPlot","Wavelength Distributions");return}
       const metrics=wm.filter(m=>pts.some(p=>p.metricName===m));
       const temps=us(pts.map(p=>p.temperatureC),nos);
@@ -570,7 +570,7 @@
 
     function cT(el,cols,rows){if(!rows.length||!cols.length){el.innerHTML="<tbody><tr><td class='empty-box'>No data.</td></tr></tbody>";return}el.innerHTML=`<thead><tr>${cols.map(c=>`<th>${c}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${cols.map(c=>`<td>${r[c]??""}</td>`).join("")}</tr>`).join("")}</tbody>`}
 
-    function rA(){const fs=cFS(),sfs=cSFS();if(curMode===MODE.LIV){rLDP();rC(fs);rSuP(fs);rKT(fs);rFKP(fs);rKVRP(fs)}else{rSpP(sfs);rWDP();rSpWP(fs)}}
+    function rA(){const fs=cFS(),sfs=cSFS();if(curMode===MODE.LIV){rLDP(fs);rC(fs);rSuP(fs);rKT(fs);rFKP(fs);rKVRP(fs)}else{rSpP(sfs);rWDP(fs);rSpWP(fs)}}
 
     function rFKP(fs){const filt=st.kinks.filter(e=>fs.workbooks.has(e.workbookName)&&fs.sources.has(e.source)&&fs.temperatures.has(e.temperatureC)&&fs.chips.has(e.chip));if(!filt.length){rEP("firstKinkPlot","First Kink Current vs Chip Number");return}const byChip=new Map();filt.forEach(e=>{const k=`${e.workbookName}|${e.source}|${e.temperatureC}|${e.chip}`;const ex=byChip.get(k);if(!ex){byChip.set(k,e);return}if(e.isPrimary&&!ex.isPrimary){byChip.set(k,e);return}if(!e.isPrimary&&!ex.isPrimary&&e.currentMa<ex.currentMa)byChip.set(k,e)});const fk=[...byChip.values()].map(e=>({...e,chipNumeric:cv(e.chip)})).filter(e=>e.chipNumeric!==null);if(!fk.length){rEP("firstKinkPlot","First Kink");return}const grp=gB(fk,e=>`${e.workbookName}|${e.source}|${e.temperatureC}`),traces=[];const cIdx=["#22577a","#4f9d69","#c33434","#ff7f0e"];let ci=0;for(const[key,group]of[...grp.entries()].sort((a,b)=>a[0].localeCompare(b[0]))){const sorted=[...group].sort((a,b)=>a.chipNumeric-b.chipNumeric),s=sorted[0],color=cIdx[ci%cIdx.length];ci++;traces.push({x:sorted.map(e=>e.chipNumeric),y:sorted.map(e=>e.currentMa),text:sorted.map(e=>`Chip ${e.chip}`),type:"scatter",mode:"markers+lines",name:`${s.workbookName} | ${s.source} | ${s.temperatureC}C`,marker:{size:8,color},line:{width:2,color},hovertemplate:"Chip=%{x}<br>First Kink Current=%{y:.3f} mA<br>%{text}<extra>%{fullData.name}</extra>"})}rP("firstKinkPlot",traces,{title:"First Kink Current vs Chip Number",template:"plotly_white",height:560,hovermode:"closest",paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(255,255,255,0.55)",margin:{l:64,r:220,t:64,b:60},xaxis:{title:"Chip Number"},yaxis:{title:"First Kink Current (mA)"},legend:{orientation:"v",x:1.02,xanchor:"left",y:1,yanchor:"top",font:{size:11}}})}
 
